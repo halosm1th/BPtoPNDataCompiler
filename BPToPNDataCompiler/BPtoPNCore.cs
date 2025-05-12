@@ -13,7 +13,7 @@ public class BPtoPNCore
 
     #region main and arg parsing
 
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         try
         {
@@ -307,16 +307,56 @@ public class BPtoPNCore
 
     #endregion
 
-    private static void Core()
+    private static async Task Core()
     {
+        Console.WriteLine($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
+
         //This will check 
         var gitHandler = new GitFolderHandler();
         //If we have the git folder. Normally will error out before this if it cannot be found. 
         //AS such we'll just let hte exceptions bubble up.
-        gitHandler.GitBiblioDirectoryCheck();
+        var biblioPath = gitHandler.GitBiblioDirectoryCheck();
+        ;
+
+        Console.Write("Creating BPEntryGatherer. ");
         var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
-        var XMLEntryGatherer = new XMLEntryGatherer();
-        var bpEntries = BPEntryGatherer.GatherEntries();
-        var xmlEntries = XMLEntryGatherer.GatherEntries();
+        Console.Write("BPEntryGather Created.\nCreating XMLEntryGatherer. ");
+        var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
+
+        var bpEntryTask = BPEntryGatherer.GatherEntries();
+        var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+
+        Console.Write("XMLEntryGatherer has been created.\nBeginning to gather bp entries. ");
+        var dm = new DataMatcher(await xmlEntryTask, await bpEntryTask);
+    }
+}
+
+class DataMatcher
+{
+    public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
+    {
+        XmlEntries = xmlEntries;
+        BPEntries = bpEntries;
+    }
+
+    private List<XMLDataEntry> XmlEntries { get; set; }
+    private List<BPDataEntry> BPEntries { get; set; }
+
+    public void MatchEntries()
+    {
+        var newForXML = new List<BPDataEntry>();
+        foreach (var entry in BPEntries)
+        {
+            Console.WriteLine($"Trying entry: {entry.Name}");
+            if (XmlEntries.Any(x => x.AnyMatch(entry)))
+            {
+                Console.WriteLine("Found match. Rating Quality");
+            }
+            else
+            {
+                Console.WriteLine("No match found, this is a new entry.");
+                newForXML.Add(entry);
+            }
+        }
     }
 }

@@ -8,4 +8,16 @@ public class XMLDataEntry : BPDataEntry
     }
 
     public string PNFileName { get; set; }
+    public string PNNumber { get; set; }
+
+    public bool AnyMatch(BPDataEntry entry)
+    {
+        bool anyMatch = (entry.Name == Name) || (entry.Internet == Internet) || (entry.Publication == Publication)
+                        || (entry.Resume == Resume) || (entry.Title == Title) || (entry.Index == Index) ||
+                        (entry.IndexBis == IndexBis)
+                        || (entry.No == No) || (entry.CR == CR) || (entry.BPNumber == BPNumber) ||
+                        (entry.SBandSEG == SBandSEG);
+
+        return anyMatch;
+    }
 }
