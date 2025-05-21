@@ -15,7 +15,6 @@ public class XMLEntryGatherer
     {
         var entry = new XMLDataEntry(filePath);
 
-        Console.WriteLine(filePath);
         var doc = new XmlDocument();
         doc.Load(filePath);
 
@@ -65,20 +64,9 @@ public class XMLEntryGatherer
                 Console.WriteLine("Internet hit");
                 entry.Internet = node.InnerText;
             }
-            else if (node.LocalName == "seg" && node.OuterXml.Contains("subtype=\"SBandSEG\""))
+            else if (node.LocalName == "seg" && node.OuterXml.Contains("subtype=\"sbSeg\""))
             {
-                Console.WriteLine("SBandSEG hit");
                 entry.SBandSEG = node.InnerText;
-            }
-            else if (node.LocalName == "seg" && node.OuterXml.Contains("subtype=\"no\""))
-            {
-                Console.WriteLine("No. hit");
-                entry.No = node.InnerText;
-            }
-            else if (node.LocalName == "seg" && node.OuterXml.Contains("subtype=\"annee\""))
-            {
-                Console.WriteLine("Annee hit");
-                entry.Annee = node.InnerText;
             }
         }
 
@@ -116,6 +104,7 @@ public class XMLEntryGatherer
 
         foreach (var folder in folders)
         {
+            Console.WriteLine($"adding files in : {folder}");
             var getEntries = GetEntriesFromFolder(folder);
             ranges.Add(getEntries);
         }

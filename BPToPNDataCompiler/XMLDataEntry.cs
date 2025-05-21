@@ -20,4 +20,17 @@ public class XMLDataEntry : BPDataEntry
 
         return anyMatch;
     }
+
+    public bool FullMatch(BPDataEntry entry)
+    {
+        
+        bool fullMatch = (entry.Name == Name) && (entry.Internet == Internet) 
+                        && (entry.Publication == Publication)
+                        && (entry.Resume == Resume) && (entry.Title == Title) 
+                        && (entry.Index == Index) && (entry.IndexBis == IndexBis)
+                        && (entry.No == No) && (entry.CR == CR) && (entry.BPNumber == BPNumber)
+                        &&(entry.SBandSEG == SBandSEG);
+
+        return fullMatch;
+    }
 }

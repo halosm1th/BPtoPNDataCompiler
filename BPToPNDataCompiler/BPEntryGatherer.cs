@@ -29,67 +29,67 @@ public class BPEntryGatherer
 
         var URL = $"https://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
         var web = new HtmlWeb();
-        var htmlDoc = await web.LoadFromWebAsync(URL);
+            var htmlDoc = web.Load(URL);
 
-        var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
-        if (table != null)
-        {
-            entry = new BPDataEntry($"{yearText}-{indexText}");
+            var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
-            var rowNodes = table.SelectNodes(".//tr");
-            rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
-            foreach (var node in rowNodes)
+            if (table != null)
             {
-                if (node.InnerText.Contains("Indexbis"))
+                entry = new BPDataEntry($"{yearText}-{indexText}");
+
+                var rowNodes = table.SelectNodes(".//tr");
+                rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
+                foreach (var node in rowNodes)
                 {
-                    Console.WriteLine($"Found an Indexbis @ {URL}");
-                }
-                else if (node.InnerText.Contains("Index"))
-                {
-                    var textNode = node.SelectNodes(".//span")[0];
-                    entry.Index = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("Titre"))
-                {
-                    var textNode = node.SelectNodes(".//font")[0];
-                    entry.Title = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("Publication"))
-                {
-                    var textNode = node.SelectNodes(".//font")[0];
-                    entry.Publication = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("Résumé"))
-                {
-                    var textNode = node.SelectNodes(".//font")[0];
-                    entry.Resume = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("N°"))
-                {
-                    var textNode = node.SelectNodes(".//span")[0];
-                    entry.No = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("internet"))
-                {
-                    Console.WriteLine($"Found an internet @ {URL}");
-                }
-                else if (node.InnerText.Contains("C.R."))
-                {
-                    var textNode = node.SelectNodes(".//font")[0];
-                    entry.CR = textNode.InnerText.Trim();
-                }
-                else if (node.InnerText.Contains("SBandSEG"))
-                {
-                    Console.WriteLine($"Found an SBandSEG @ {URL}");
+                    if (node.InnerText.Contains("Indexbis"))
+                    {
+                        Console.WriteLine($"Found an Indexbis @ {URL}");
+                    }
+                    else if (node.InnerText.Contains("Index"))
+                    {
+                        var textNode = node.SelectNodes(".//span")[0];
+                        entry.Index = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("Titre"))
+                    {
+                        var textNode = node.SelectNodes(".//font")[0];
+                        entry.Title = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("Publication"))
+                    {
+                        var textNode = node.SelectNodes(".//font")[0];
+                        entry.Publication = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("Résumé"))
+                    {
+                        var textNode = node.SelectNodes(".//font")[0];
+                        entry.Resume = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("N°"))
+                    {
+                        var textNode = node.SelectNodes(".//span")[0];
+                        entry.No = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("internet"))
+                    {
+                        Console.WriteLine($"Found an internet @ {URL}");
+                    }
+                    else if (node.InnerText.Contains("C.R."))
+                    {
+                        var textNode = node.SelectNodes(".//font")[0];
+                        entry.CR = textNode.InnerText.Trim();
+                    }
+                    else if (node.InnerText.Contains("SBandSEG"))
+                    {
+                        Console.WriteLine($"Found an SBandSEG @ {URL}");
+                    }
                 }
             }
-        }
-        else
-        {
-            entry = null;
-        }
-
+            else
+            {
+                entry = null;
+            }
         return entry;
     }
 
@@ -123,8 +123,8 @@ public class BPEntryGatherer
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write($"Entry {currentYear}-{entryIndex} was found. ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                await WriteEntry(entry);
+                Console.ForegroundColor = ConsoleColor.Gray; 
+                WriteEntry(entry);
             }
         }
 
@@ -133,11 +133,11 @@ public class BPEntryGatherer
 
     private async Task WriteEntry(BPDataEntry entry)
     {
-        var fileName = Directory.GetCurrentDirectory() + $"{entry.BPNumber}";
-        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{fileName}\" type=\"book\">" +
+        var fileName = Directory.GetCurrentDirectory() + $"/{entry.BPNumber}.xml";
+        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{fileName}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
-                  $"</bibl>";
+                  $"\n</bibl>";
 
         await File.WriteAllTextAsync(fileName, xml);
     }
@@ -150,8 +150,19 @@ public class BPEntryGatherer
             Directory.SetCurrentDirectory("..");
         }
 
-        Directory.CreateDirectory("BPXMLFiles");
-        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
+        if (Directory.Exists(currentDir + "/BPXMLFiles"))
+        {
+            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
+            currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
+        }
+        else
+        {
+
+            Directory.CreateDirectory("BPXMLFiles");
+            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
+            currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
+        }
+
         return currentDir;
     }
 
@@ -162,23 +173,35 @@ public class BPEntryGatherer
 
         var oldDir = SetDirectory();
 
-        var yearRanges = new List<Task<List<BPDataEntry>>>();
-
-        do
+       /* if (oldDir.ToLower().Contains("BPXMLFiles"))
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"Gather BP Entries for year: {currentYear}.");
-            yearRanges.Add(GetEntriesForYear(currentYear));
-
-            currentYear++;
-        } while (currentYear <= EndYear);
-
-        foreach (var range in yearRanges)
-        {
-            entries.AddRange(await range);
+            foreach (var file in Directory.GetFiles(oldDir))
+            {
+                entries.Add(BPDataEntryFromFile(File.ReadAllText(file)));
+            }
         }
+        else
+        {
+*/
+            var yearRanges = new List<Task<List<BPDataEntry>>>();
 
-        Directory.SetCurrentDirectory(oldDir);
-        return entries;
+            do
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
+                yearRanges.Add(GetEntriesForYear(currentYear));
+
+                currentYear++;
+            } while (currentYear <= EndYear);
+
+            foreach (var range in yearRanges)
+            {
+                var values = await range;
+                entries.AddRange(values);
+            }
+
+            Directory.SetCurrentDirectory(oldDir);
+            return entries;
+        //}
     }
 }
