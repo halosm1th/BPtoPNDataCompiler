@@ -38,9 +38,19 @@ public class XMLEntryGatherer
         var doc = new XmlDocument();
         doc.Load(filePath);
 
-        foreach (XmlElement node in doc?.DocumentElement?.ChildNodes)
+        //Console.WriteLine($"getting: {filePath}");
+        
+        foreach (var rawNode in doc?.DocumentElement?.ChildNodes)
         {
-            await SetEntryAttributes(node, entry);
+            if (rawNode.GetType() == typeof(XmlElement))
+            {
+                var node = ((XmlElement)rawNode);
+                await SetEntryAttributes(node, entry);
+            }
+            else
+            {
+                Console.WriteLine($"getting: {filePath}");
+            }
         }
 
         return entry;

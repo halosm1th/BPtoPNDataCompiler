@@ -44,14 +44,21 @@ class DataMatcher
             Console.WriteLine(
                 $"Entry has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for entry: {entry}");
             return;
-        }
-
-        if (matchingEntries.Count() > 1)
+        } else if (matchingEntries.Count() > 1)
         {
-            matchingEntries = matchingEntries.Where(x => x.StrongMatch(entry));
+            var shortList = new List<XMLDataEntry>();
+
+            foreach (var match in matchingEntries)
+            {
+                if (match.StrongMatch(entry))
+                {
+                    Console.WriteLine("strong match");
+                    shortList.Add(match);
+                }
+            }
 
             Console.WriteLine("Found more than one match");
-            foreach (var match in matchingEntries)
+            foreach (var match in shortList)
             {
                 Console.WriteLine($"Match: {match.Name}");
             }
@@ -136,19 +143,19 @@ class DataMatcher
 
     private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
-        var matches = new bool[11];
-        matches[((int) Comparisons.bpNumMatch)] = entry.BPNumber == matchingEntry.BPNumber;
-        matches[((int) Comparisons.crMatch)] = entry.CR == matchingEntry.CR;
-        matches[((int) Comparisons.indexMatch)] = entry.Name == matchingEntry.Index;
-        matches[((int) Comparisons.indexBisMatch)] = entry.Name == matchingEntry.IndexBis;
-        matches[((int) Comparisons.internetMatch)] = entry.Name == matchingEntry.Internet;
-        matches[((int) Comparisons.nameMatch)] = entry.Name == matchingEntry.Name;
-        matches[((int) Comparisons.publicationMatch)] = entry.Name == matchingEntry.Publication;
-        matches[((int) Comparisons.resumeMatch)] = entry.Name == matchingEntry.Resume;
-        matches[((int) Comparisons.sbandsegMatch)] = entry.Name == matchingEntry.SBandSEG;
-        matches[((int) Comparisons.titleMatch)] = entry.Name == matchingEntry.Title;
-        matches[((int) Comparisons.anneeMatch)] = entry.Name == matchingEntry.Annee;
-        matches[((int) Comparisons.noMatch)] = entry.No == matchingEntry.No;
+        var matches = new bool[12];
+        matches[((int) Comparisons.bpNumMatch)] = (entry.HasBPNum && matchingEntry.HasBPNum) && (entry.BPNumber == matchingEntry.BPNumber);
+        matches[((int) Comparisons.crMatch)] = (entry.HasCR && matchingEntry.HasCR) && (entry.CR == matchingEntry.CR);
+        matches[((int) Comparisons.indexMatch)] = (entry.HasBPNum && matchingEntry.HasIndex) &&  (entry.Index == matchingEntry.Index);
+        matches[((int) Comparisons.indexBisMatch)] = (entry.HasBPNum && matchingEntry.HasIndexBis) &&  (entry.IndexBis == matchingEntry.IndexBis);
+        matches[((int) Comparisons.internetMatch)] = (entry.HasBPNum && matchingEntry.HasInternet) &&  (entry.Internet == matchingEntry.Internet);
+        matches[((int) Comparisons.nameMatch)] = (entry.HasBPNum && matchingEntry.HasName) &&  (entry.Name == matchingEntry.Name);
+        matches[((int) Comparisons.publicationMatch)] = (entry.HasPublication && matchingEntry.HasPublication) &&  (entry.Publication == matchingEntry.Publication);
+        matches[((int) Comparisons.resumeMatch)] = (entry.HasResume && matchingEntry.HasResume) &&  (entry.Resume == matchingEntry.Resume);
+        matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSBandSEG && matchingEntry.HasSBandSEG) &&  (entry.SBandSEG == matchingEntry.SBandSEG);
+        matches[((int) Comparisons.titleMatch)] = (entry.HasTitle && matchingEntry.HasTitle) &&  (entry.Title == matchingEntry.Title);
+        matches[((int) Comparisons.anneeMatch)] = (entry.HasAnnee && matchingEntry.HasAnnee) &&  (entry.Annee == matchingEntry.Annee);
+        matches[((int) Comparisons.noMatch)] = (entry.HasNo && matchingEntry.HasNo) &&  (entry.No == matchingEntry.No);
 
         return matches;
     }
