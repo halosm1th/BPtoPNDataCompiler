@@ -172,17 +172,6 @@ public class BPEntryGatherer
         var currentYear = StartYear;
 
         var oldDir = SetDirectory();
-
-       /* if (oldDir.ToLower().Contains("BPXMLFiles"))
-        {
-            foreach (var file in Directory.GetFiles(oldDir))
-            {
-                entries.Add(BPDataEntryFromFile(File.ReadAllText(file)));
-            }
-        }
-        else
-        {
-*/
             var yearRanges = new List<Task<List<BPDataEntry>>>();
 
             do
@@ -202,6 +191,5 @@ public class BPEntryGatherer
 
             Directory.SetCurrentDirectory(oldDir);
             return entries;
-        //}
     }
 }

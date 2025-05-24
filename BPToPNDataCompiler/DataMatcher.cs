@@ -20,8 +20,10 @@ class DataMatcher
     
     public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
     {
+        Console.WriteLine("Creating Data matcher?");
         XmlEntries = xmlEntries;
         BPEntries = bpEntries;
+        Console.WriteLine("Saved the entry lists?");
     }
 
     private List<XMLDataEntry> XmlEntries { get; set; }

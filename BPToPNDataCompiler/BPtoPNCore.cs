@@ -322,9 +322,12 @@ public class BPtoPNCore
         var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
         Console.Write("BPEntryGather Created.\nCreating XMLEntryGatherer. ");
         var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
+        Console.WriteLine("XML Entry Gatherer created.  ");
 
-        var bpEntryTask = await BPEntryGatherer.GatherEntries();
+        var bpEntryTask =  await BPEntryGatherer.GatherEntries();
         var xmlEntryTask = await XMLEntryGatherer.GatherEntries();
+        Console.WriteLine("Gathered the stuff");
+        
 
         Console.Write("Preparing to start data matcher. ");
         var dm = new DataMatcher(xmlEntryTask, bpEntryTask);
