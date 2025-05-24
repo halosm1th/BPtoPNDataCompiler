@@ -1,4 +1,6 @@
-namespace DefaultNamespace;
+using DefaultNamespace;
+
+namespace BPtoPNDataCompiler;
 
 class DataMatcher
 {
@@ -14,7 +16,7 @@ class DataMatcher
     }
 
     private List<XMLDataEntry> XmlEntries { get; set; }
-    private List<(List<BPDataEntry>, List<XMLDataEntry>)> ProblemMultipleEntries { get; set; }
+    private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
     private List<BPDataEntry> BPEntries { get; set; }
     private List<BPDataEntry> NewXMLEntriesToAdd { get; set; } = new List<BPDataEntry>();
     private List<BPDataEntry> BPEntriesToUpdate { get; set; } = new List<BPDataEntry>(); // New list for BP updates
@@ -46,17 +48,18 @@ class DataMatcher
     {
         Console.WriteLine($"Entry is: {entry.Name}");
         var matchingEntries = XmlEntries.Where(x => x.WeakMatch(entry));
-        if (matchingEntries.Count() == 1 && matchingEntries.First().FullMatch(entry))
+        var xmlDataEntries = matchingEntries as XMLDataEntry[] ?? matchingEntries.ToArray();
+        if (xmlDataEntries.Count() == 1 && xmlDataEntries.First().FullMatch(entry))
         {
             Console.WriteLine(
                 $"Entry has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for entry: {entry.Title}");
             return;
         }
-        else if (matchingEntries.Count() > 1)
+        else if (xmlDataEntries.Count() > 1)
         {
             var shortList = new List<XMLDataEntry>();
 
-            foreach (var match in matchingEntries)
+            foreach (var match in xmlDataEntries)
             {
                 if (match.StrongMatch(entry))
                 {
@@ -72,10 +75,10 @@ class DataMatcher
             // TODO: Handle multiple strong matches, e.g., by prompting the user to select one
         }
 
-        if (matchingEntries.Count() == 1 && !matchingEntries.First().FullMatch(entry))
+        if (xmlDataEntries.Count() == 1 && !xmlDataEntries.First().FullMatch(entry))
         {
             Console.WriteLine("Found editable match");
-            HandleNonMatchingEntries(entry, matchingEntries.First());
+            HandleNonMatchingEntries(entry, xmlDataEntries.First());
         }
     }
 
@@ -401,7 +404,7 @@ class DataMatcher
             PrintWrappedRow(1, "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
                 entriesMatches[(int) Comparisons.bpNumMatch], selectedRow == 1, _editedChoices.GetValueOrDefault(1));
 
-        if (HasStringData(entry.CR, matchingEntry.CR))
+        if (matchingEntry.CR != null && entry.CR != null && HasStringData(entry.CR, matchingEntry.CR))
             PrintWrappedRow(2, "CR", entry.CR, matchingEntry.CR,
                 entriesMatches[(int) Comparisons.crMatch], selectedRow == 2, _editedChoices.GetValueOrDefault(2));
 
