@@ -47,37 +47,28 @@ public class XMLDataEntry : BPDataEntry
 
     private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry)
     {
-        var matches = new bool[12];
-        matches[((int) Comparisons.bpNumMatch)] = (entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber);
-        matches[((int) Comparisons.crMatch)] = (entry.HasCR && HasCR) && (entry.CR == CR);
-        matches[((int) Comparisons.indexMatch)] = (entry.HasBPNum && HasIndex) &&  (entry.Index == Index);
-        matches[((int) Comparisons.indexBisMatch)] = (entry.HasBPNum && HasIndexBis) &&  (entry.IndexBis == IndexBis);
-        matches[((int) Comparisons.internetMatch)] = (entry.HasBPNum && HasInternet) &&  (entry.Internet == Internet);
-        matches[((int) Comparisons.nameMatch)] = (entry.HasBPNum && HasName) &&  (entry.Name == Name);
-        matches[((int) Comparisons.noMatch)] = (entry.HasNo && HasNo) &&  (entry.No == No);
-        matches[((int) Comparisons.publicationMatch)] = (entry.HasPublication && HasPublication) &&  (entry.Publication == Publication);
-        matches[((int) Comparisons.resumeMatch)] = (entry.HasResume && HasResume) &&  (entry.Resume == Resume);
-        matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSBandSEG && HasSBandSEG) &&  (entry.SBandSEG == SBandSEG);
-        matches[((int) Comparisons.titleMatch)] = (entry.HasTitle && HasTitle) &&  (entry.Title == Title);
-        matches[((int) Comparisons.anneeMatch)] = (entry.HasAnnee && HasAnnee) &&  (entry.Annee == Annee);
+        var matches = new bool[11];
+        matches[((int) Comparisons.bpNumMatch)] = entry.BPNumber == BPNumber;
+        matches[((int) Comparisons.crMatch)] = entry.CR == CR;
+        matches[((int) Comparisons.indexMatch)] = entry.Name == Index;
+        matches[((int) Comparisons.indexBisMatch)] = entry.Name == IndexBis;
+        matches[((int) Comparisons.internetMatch)] = entry.Name == Internet;
+        matches[((int) Comparisons.nameMatch)] = entry.Name == Name;
+        matches[((int) Comparisons.publicationMatch)] = entry.Name == Publication;
+        matches[((int) Comparisons.resumeMatch)] = entry.Name == Resume;
+        matches[((int) Comparisons.sbandsegMatch)] = entry.Name == SBandSEG;
+        matches[((int) Comparisons.titleMatch)] = entry.Name == Title;
+        matches[((int) Comparisons.anneeMatch)] = entry.Name == Annee;
+        matches[((int) Comparisons.noMatch)] = entry.No == No;
 
         return matches;
     }
 
     public bool StrongMatch(BPDataEntry entry)
     {
-        try
-        {
-            var matchStrength = GetComparisonsOfEntriesByLine(entry);
-            var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
-            return truthCount >= 3;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-
-        return false;
+        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
+        return truthCount > 6;
     }
 
     enum Comparisons
