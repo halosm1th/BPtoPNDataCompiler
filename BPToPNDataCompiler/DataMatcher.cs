@@ -51,7 +51,7 @@ class DataMatcher
             Console.WriteLine("Found more than one match");
             foreach (var match in matchingEntries)
             {
-                Console.WriteLine($"Match: {match}");
+                Console.WriteLine($"Match: {match.Name}");
             }
         }
 
