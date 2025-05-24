@@ -38,6 +38,7 @@ class DataMatcher
 
     private void HandleMatch(BPDataEntry entry)
     {
+        Console.WriteLine($"Entry is: {entry}");
         var matchingEntries = XmlEntries.Where(x => x.AnyMatch(entry));
         if (matchingEntries.Count() == 1 && matchingEntries.First().FullMatch(entry))
         {
