@@ -78,17 +78,26 @@ public class XMLEntryGatherer
 
     public async Task<List<XMLDataEntry>> GatherEntries()
     {
-        var entries = new List<XMLDataEntry>();
-
-        foreach (var folder in Directory.GetDirectories(BiblioPath))
+        try
         {
-            Console.WriteLine($"adding files in : {folder}");
-            await foreach (var entry in GetEntriesFromFolder(folder))
+            var entries = new List<XMLDataEntry>();
+
+            foreach (var folder in Directory.GetDirectories(BiblioPath))
             {
-                entries.Add(entry);
+                Console.WriteLine($"adding files in : {folder}");
+                await foreach (var entry in GetEntriesFromFolder(folder))
+                {
+                    entries.Add(entry);
+                }
             }
+
+            return entries;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
 
-        return entries;
+        return null;
     }
 }

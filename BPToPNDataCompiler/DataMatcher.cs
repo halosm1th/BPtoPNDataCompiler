@@ -18,6 +18,8 @@ class DataMatcher
     public void MatchEntries()
     {
         Console.WriteLine("Starting Entry Checker");
+        Console.WriteLine($"Parsing: {BPEntries.Count} entries");
+
         foreach (var entry in BPEntries)
         {
             Console.WriteLine($"Trying entry: {entry.Name}");
@@ -46,10 +48,16 @@ class DataMatcher
 
         if (matchingEntries.Count() > 1)
         {
+            Console.WriteLine("Found more than one match");
+            foreach (var match in matchingEntries)
+            {
+                Console.WriteLine($"Match: {match}");
+            }
         }
 
         if (matchingEntries.Count() == 1 && !matchingEntries.First().FullMatch(entry))
         {
+            Console.WriteLine("Found editable match");
             HandleNonMatchingEntries(entry, matchingEntries.First());
         }
     }
