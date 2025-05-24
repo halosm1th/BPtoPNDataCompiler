@@ -112,7 +112,15 @@ public class BPEntryGatherer
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
-            var entry = await GetEntry(currentYear, entryIndex);
+            BPDataEntry? entry = null;
+            try
+            {
+                entry = await GetEntry(currentYear, entryIndex);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             if (entry == null)
             {

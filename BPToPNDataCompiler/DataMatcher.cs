@@ -2,6 +2,9 @@ namespace DefaultNamespace;
 
 class DataMatcher
 {
+    // New dictionary to store edited choices for each row
+    private Dictionary<int, string> _editedChoices = new Dictionary<int, string>();
+
     public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
     {
         Console.WriteLine("Creating Data matcher?");
@@ -14,6 +17,9 @@ class DataMatcher
     private List<(List<BPDataEntry>, List<XMLDataEntry>)> ProblemMultipleEntries { get; set; }
     private List<BPDataEntry> BPEntries { get; set; }
     private List<BPDataEntry> NewXMLEntriesToAdd { get; set; } = new List<BPDataEntry>();
+    private List<BPDataEntry> BPEntriesToUpdate { get; set; } = new List<BPDataEntry>(); // New list for BP updates
+    private List<XMLDataEntry> PNEntriesToUpdate { get; set; } = new List<XMLDataEntry>(); // New list for PN updates
+
 
     public void MatchEntries()
     {
@@ -63,6 +69,7 @@ class DataMatcher
             {
                 Console.WriteLine($"Match: {match.Title}");
             }
+            // TODO: Handle multiple strong matches, e.g., by prompting the user to select one
         }
 
         if (matchingEntries.Count() == 1 && !matchingEntries.First().FullMatch(entry))
@@ -74,32 +81,193 @@ class DataMatcher
 
     private void HandleNonMatchingEntries(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
-        try
+        Commands command = Commands.Help;
+        int? selectedRow = null; // To keep track of the selected row for editing
+        _editedChoices.Clear(); // Clear any previous edits for a new entry
+
+        while (command != Commands.Finished)
         {
-            var command = Commands.Help;
-            var entries = GetComparisonsOfEntriesByLine(entry, matchingEntry);
-            PrintNonMatchEntryMenu(entry, matchingEntry, entries);
-            PrintCommandMenu(command);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+            try
+            {
+                var entries = GetComparisonsOfEntriesByLine(entry, matchingEntry);
+                // Pass the _editedChoices dictionary to the menu printer
+                PrintNonMatchEntryMenu(entry, matchingEntry, entries, selectedRow, _editedChoices);
+                PrintCommandMenu(command); // This will print the command prompt
+
+                Console.Write("Command: ");
+                Console.Out.Flush(); // Ensure prompt is displayed before reading input
+                string input = Console.ReadLine()?.ToLower().Trim();
+
+                command = ParseCommand(input);
+
+                switch (command)
+                {
+                    case Commands.Help:
+                        // Help message is already printed by PrintCommandMenu (if command was Help)
+                        // This case just ensures the loop continues
+                        break;
+                    case Commands.Edit:
+                        HandleEditCommand(entry, matchingEntry, entries, ref selectedRow);
+                        break;
+                    case Commands.Finished:
+                        // Exit loop
+                        break;
+                    case Commands.Invalid:
+                        Console.WriteLine("Invalid command. Type 'h' or 'help' for options.");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                command = Commands.Invalid; // Reset to invalid to show menu again
+            }
         }
     }
 
+    private void HandleEditCommand(BPDataEntry bpEntry, XMLDataEntry xmlEntry, bool[] entriesMatches,
+        ref int? selectedRow)
+    {
+        Console.Write("Enter the row number to edit: ");
+        // Now there are 12 potential rows based on the Comparisons enum
+        if (int.TryParse(Console.ReadLine(), out int rowNum) && rowNum >= 1 && rowNum <= 12)
+        {
+            selectedRow = rowNum;
+            // Print the name of the selected row
+            Console.WriteLine(
+                $"Selected row {rowNum} [{GetCategoryName(rowNum)}]. Enter 'B' for BP correct, 'P' for PN correct, 'N' for neither, or 'S' for Shared/Both.");
+            Console.Write("Choice (B/P/N/S): ");
+            string choice = Console.ReadLine()?.ToUpper().Trim();
+
+            if (choice == "B" || choice == "P" || choice == "N" || choice == "S")
+            {
+                Console.WriteLine(
+                    $"Mark row {rowNum} [{GetCategoryName(rowNum)}] as {(choice == "B" ? "BP" : (choice == "P" ? "PN" : (choice == "S" ? "Shared/Both" : "Neither")))} being the correct choice: y/n?");
+                Console.Write("Confirm (y/n): ");
+                string confirm = Console.ReadLine()?.ToLower().Trim();
+
+                if (confirm == "y")
+                {
+                    UpdateEntryBasedOnChoice(bpEntry, xmlEntry, rowNum, choice);
+                    _editedChoices[rowNum] = choice; // Store the edited choice
+                    selectedRow = null; // Deselect row after update
+                    Console.WriteLine("Entry updated. Press ENTER to continue."); // Changed prompt
+                    Console.ReadLine(); // Just use ReadLine to wait for user to press Enter
+                }
+                else
+                {
+                    Console.WriteLine("Edit cancelled.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please enter 'B', 'P', 'N', or 'S'.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid row number.");
+        }
+    }
+
+    private string GetCategoryName(int rowNum)
+    {
+        // rowNum directly corresponds to (Comparisons enum value + 1)
+        if (rowNum >= 1 && rowNum <= 12)
+        {
+            return ((Comparisons) (rowNum - 1)).ToString().Replace("Match", "");
+        }
+
+        return "Unknown";
+    }
+
+    private void UpdateEntryBasedOnChoice(BPDataEntry bpEntry, XMLDataEntry xmlEntry, int rowNum, string choice)
+    {
+        Console.WriteLine($"Updating based on choice for row {rowNum}...");
+
+        // Remove from both lists first to ensure clean state before re-adding
+        if (BPEntriesToUpdate.Contains(bpEntry))
+        {
+            BPEntriesToUpdate.Remove(bpEntry);
+            Console.WriteLine($"Removed BP entry (Title: {bpEntry.Title}) from BPEntriesToUpdate.");
+        }
+
+        if (PNEntriesToUpdate.Contains(xmlEntry))
+        {
+            PNEntriesToUpdate.Remove(xmlEntry);
+            Console.WriteLine($"Removed PN entry (Title: {xmlEntry.Title}) from PNEntriesToUpdate.");
+        }
+
+        if (choice == "B") // BP is correct, so PN entry should be updated
+        {
+            if (!PNEntriesToUpdate.Contains(xmlEntry))
+            {
+                PNEntriesToUpdate.Add(xmlEntry);
+                Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate.");
+            }
+        }
+        else if (choice == "P") // PN is correct, so BP entry should be updated
+        {
+            if (!BPEntriesToUpdate.Contains(bpEntry))
+            {
+                BPEntriesToUpdate.Add(bpEntry);
+                Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate.");
+            }
+        }
+        else if (choice == "S") // Both are correct/shared
+        {
+            if (!BPEntriesToUpdate.Contains(bpEntry))
+            {
+                BPEntriesToUpdate.Add(bpEntry);
+                Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate (Shared).");
+            }
+
+            if (!PNEntriesToUpdate.Contains(xmlEntry))
+            {
+                PNEntriesToUpdate.Add(xmlEntry);
+                Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate (Shared).");
+            }
+        }
+        else if (choice == "N") // Neither is correct
+        {
+            Console.WriteLine("Neither BP nor PN was chosen as correct for this field, removed from update lists.");
+        }
+    }
+
+
+    private Commands ParseCommand(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return Commands.Invalid;
+
+        switch (input)
+        {
+            case "h":
+            case "help":
+                return Commands.Help;
+            case "e":
+            case "edit":
+                return Commands.Edit;
+            case "f":
+            case "finished":
+                return Commands.Finished;
+            default:
+                return Commands.Invalid;
+        }
+    }
+
+
     private void PrintCommandMenu(Commands command)
     {
-        if (command == Commands.Invalid)
+        // This method will now primarily print the prompt for the user
+        // and a help message if the 'help' command was entered.
+
+        if (command == Commands.Help)
         {
-        }
-        else if (command == Commands.Finished)
-        {
-        }
-        else if (command == Commands.Edit)
-        {
-        }
-        else if (command == Commands.Help)
-        {
+            Console.WriteLine("\n--- Commands ---");
+            Console.WriteLine("h / help   : Show this help menu");
+            Console.WriteLine("e / edit   : Edit a specific row's value");
+            Console.WriteLine("f / finished : Finish editing this entry and proceed");
+            Console.WriteLine("----------------");
         }
     }
 
@@ -109,15 +277,21 @@ class DataMatcher
         else Console.ForegroundColor = ConsoleColor.Red;
     }
 
-    private void PrintNonMatchEntryMenu(BPDataEntry entry, XMLDataEntry matchingEntry, bool[] entriesMatches)
+    private void PrintNonMatchEntryMenu(BPDataEntry entry, XMLDataEntry matchingEntry, bool[] entriesMatches,
+        int? selectedRow, Dictionary<int, string> editedChoices) // Added editedChoices parameter
     {
+        Console.Clear(); // Clear console for cleaner display
+        Console.Out.Flush(); // Added flush after clear to ensure buffer is truly empty and ready for new output
+
         int numberWidth = 6;
         int categoryWidth = 12;
         int dataWidth = 40;
-        int totalWidth = numberWidth + categoryWidth + dataWidth * 2 + 5;
+        int statusWidth = 3; // Width for the status column (checkmark, X, B/P/N, or arrow)
+        int totalWidth = numberWidth + categoryWidth + dataWidth * 2 + 5 + statusWidth; // Adjusted total width
 
         string horizontalLine = "+" + new string('-', numberWidth) + "+" + new string('-', categoryWidth) + "+" +
-                                new string('-', dataWidth) + "+" + new string('-', dataWidth) + "+";
+                                new string('-', dataWidth) + "+" + new string('-', dataWidth) + "+" +
+                                new string('-', statusWidth) + "+"; // Adjusted line
 
         string headerText = " COLLISION FOUND ";
         int paddingLeft = (totalWidth - headerText.Length) / 2;
@@ -132,9 +306,11 @@ class DataMatcher
             "|" + "Number".PadRight(numberWidth) +
             "|" + "Category".PadRight(categoryWidth) +
             "|" + "Data from BP".PadRight(dataWidth) +
-            "|" + $"Data from PN ({matchingEntry.PNFileName})".PadRight(dataWidth) + "|"
+            "|" + $"Data from PN".PadRight(dataWidth) + // Removed filename from header to place below
+            "|" + "Stat".PadRight(statusWidth) + "|" // New header for status
         );
         Console.WriteLine(horizontalLine);
+        Console.Out.Flush(); // Explicitly flush the console output buffer
 
         // Wrapping and printing helpers unchanged
         static List<string> WrapText(string text, int maxWidth)
@@ -164,7 +340,8 @@ class DataMatcher
             return lines;
         }
 
-        void PrintWrappedRow(string number, string category, string bpData, string pnData, bool match)
+        void PrintWrappedRow(int rowNumber, string category, string bpData, string pnData, bool match, bool isSelected,
+            string editedStatus)
         {
             var bpLines = WrapText(bpData ?? "", dataWidth);
             var pnLines = WrapText(pnData ?? "", dataWidth);
@@ -173,12 +350,39 @@ class DataMatcher
             SetConsoleColour(match);
             for (int i = 0; i < maxLines; i++)
             {
-                string numPart = (i == 0) ? number.PadRight(numberWidth) : new string(' ', numberWidth);
+                string numPart =
+                    (i == 0) ? rowNumber.ToString("D2").PadRight(numberWidth) : new string(' ', numberWidth);
                 string catPart = (i == 0) ? category.PadRight(categoryWidth) : new string(' ', categoryWidth);
                 string bpPart = i < bpLines.Count ? bpLines[i].PadRight(dataWidth) : new string(' ', dataWidth);
                 string pnPart = i < pnLines.Count ? pnLines[i].PadRight(dataWidth) : new string(' ', dataWidth);
 
-                Console.WriteLine($"|{numPart}|{catPart}|{bpPart}|{pnPart}|");
+                string statusPart;
+                if (i == 0) // Only display status on the first line of a wrapped row
+                {
+                    if (isSelected)
+                    {
+                        statusPart = " <--"; // Arrow for currently selected row
+                    }
+                    else if (!string.IsNullOrEmpty(editedStatus))
+                    {
+                        statusPart = $" {editedStatus} "; // Display edited choice (B/P/N/S)
+                    }
+                    else if (match)
+                    {
+                        statusPart = " ✓ "; // Checkmark for match
+                    }
+                    else
+                    {
+                        statusPart = " X "; // X for unedited difference
+                    }
+                }
+                else
+                {
+                    statusPart = new string(' ', statusWidth); // Empty for subsequent wrapped lines
+                }
+
+
+                Console.WriteLine($"|{numPart}|{catPart}|{bpPart}|{pnPart}|{statusPart}|");
             }
 
             Console.ResetColor();
@@ -186,46 +390,61 @@ class DataMatcher
             Console.WriteLine(horizontalLine);
         }
 
-        bool BothNullOrEmpty(string s1, string s2) => string.IsNullOrWhiteSpace(s1) && string.IsNullOrWhiteSpace(s2);
+        // Renamed local functions to avoid ambiguity
+        bool HasStringData(string s1, string s2) => !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2);
+        bool HasBoolData(bool b1, bool b2) => b1 || b2; // For boolean Has properties
+        bool HasNullableIntData(int? i1, int? i2) => i1.HasValue || i2.HasValue; // For nullable int
 
-        // Print only non-empty rows
-        if (!BothNullOrEmpty(entry.BPNumber, matchingEntry.BPNumber))
-            PrintWrappedRow("01", "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
-                entriesMatches[(int) Comparisons.bpNumMatch]);
 
-        if (!BothNullOrEmpty(entry.Index, matchingEntry.Index))
-            PrintWrappedRow("02", "Index", entry.Index, matchingEntry.Index,
-                entriesMatches[(int) Comparisons.indexMatch]);
+        // Print rows conditionally based on data presence, using renamed functions
+        if (HasStringData(entry.BPNumber, matchingEntry.BPNumber))
+            PrintWrappedRow(1, "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
+                entriesMatches[(int) Comparisons.bpNumMatch], selectedRow == 1, _editedChoices.GetValueOrDefault(1));
 
-        if (!BothNullOrEmpty(entry.IndexBis, matchingEntry.IndexBis))
-            PrintWrappedRow("03", "IndexBis", entry.IndexBis, matchingEntry.IndexBis,
-                entriesMatches[(int) Comparisons.indexBisMatch]);
+        if (HasStringData(entry.CR, matchingEntry.CR))
+            PrintWrappedRow(2, "CR", entry.CR, matchingEntry.CR,
+                entriesMatches[(int) Comparisons.crMatch], selectedRow == 2, _editedChoices.GetValueOrDefault(2));
 
-        if (!BothNullOrEmpty(entry.Internet, matchingEntry.Internet))
-            PrintWrappedRow("04", "Internet", entry.Internet, matchingEntry.Internet,
-                entriesMatches[(int) Comparisons.internetMatch]);
+        if (HasStringData(entry.Index, matchingEntry.Index))
+            PrintWrappedRow(3, "Index", entry.Index, matchingEntry.Index,
+                entriesMatches[(int) Comparisons.indexMatch], selectedRow == 3, _editedChoices.GetValueOrDefault(3));
 
-        if (!BothNullOrEmpty(entry.Name, matchingEntry.Name))
-            PrintWrappedRow("05", "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.nameMatch]);
+        if (HasStringData(entry.IndexBis, matchingEntry.IndexBis))
+            PrintWrappedRow(4, "IndexBis", entry.IndexBis, matchingEntry.IndexBis,
+                entriesMatches[(int) Comparisons.indexBisMatch], selectedRow == 4, _editedChoices.GetValueOrDefault(4));
 
-        if (!BothNullOrEmpty(entry.Publication, matchingEntry.Publication))
-            PrintWrappedRow("06", "Publication", entry.Publication, matchingEntry.Publication,
-                entriesMatches[(int) Comparisons.publicationMatch]);
+        if (HasStringData(entry.Internet, matchingEntry.Internet))
+            PrintWrappedRow(5, "Internet", entry.Internet, matchingEntry.Internet,
+                entriesMatches[(int) Comparisons.internetMatch], selectedRow == 5, _editedChoices.GetValueOrDefault(5));
 
-        if (!BothNullOrEmpty(entry.Resume, matchingEntry.Resume))
-            PrintWrappedRow("07", "Resume", entry.Resume, matchingEntry.Resume,
-                entriesMatches[(int) Comparisons.resumeMatch]);
+        if (HasStringData(entry.Name, matchingEntry.Name))
+            PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.nameMatch],
+                selectedRow == 6, _editedChoices.GetValueOrDefault(6));
 
-        if (!BothNullOrEmpty(entry.SBandSEG, matchingEntry.SBandSEG))
-            PrintWrappedRow("08", "Segs", entry.SBandSEG, matchingEntry.SBandSEG,
-                entriesMatches[(int) Comparisons.sbandsegMatch]);
+        if (HasStringData(entry.No, matchingEntry.No)) // Moved 'No' to after 'Name'
+            PrintWrappedRow(7, "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.noMatch],
+                selectedRow == 7, _editedChoices.GetValueOrDefault(7));
 
-        if (!BothNullOrEmpty(entry.Title, matchingEntry.Title))
-            PrintWrappedRow("09", "Title", entry.Title, matchingEntry.Title,
-                entriesMatches[(int) Comparisons.titleMatch]);
+        if (HasStringData(entry.Publication, matchingEntry.Publication))
+            PrintWrappedRow(8, "Publication", entry.Publication, matchingEntry.Publication,
+                entriesMatches[(int) Comparisons.publicationMatch], selectedRow == 8,
+                _editedChoices.GetValueOrDefault(8));
 
-        if (!BothNullOrEmpty(entry.No, matchingEntry.No))
-            PrintWrappedRow("10", "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.noMatch]);
+        if (HasStringData(entry.Resume, matchingEntry.Resume))
+            PrintWrappedRow(9, "Resume", entry.Resume, matchingEntry.Resume,
+                entriesMatches[(int) Comparisons.resumeMatch], selectedRow == 9, _editedChoices.GetValueOrDefault(9));
+
+        if (HasStringData(entry.SBandSEG, matchingEntry.SBandSEG))
+            PrintWrappedRow(10, "Segs", entry.SBandSEG, matchingEntry.SBandSEG,
+                entriesMatches[(int) Comparisons.sbandsegMatch], selectedRow == 10,
+                _editedChoices.GetValueOrDefault(10));
+
+        if (HasStringData(entry.Title, matchingEntry.Title))
+            PrintWrappedRow(11, "Title", entry.Title, matchingEntry.Title,
+                entriesMatches[(int) Comparisons.titleMatch], selectedRow == 11, _editedChoices.GetValueOrDefault(11));
+
+        // Print the PN file name below the table
+        Console.WriteLine($"\nPN File: {matchingEntry.PNFileName}");
     }
 
 
@@ -261,10 +480,11 @@ class DataMatcher
 
     private bool CheckEquals(string a, string b)
     {
-        int index = 0;
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
         if (a.Length != b.Length) return false;
 
-        for (index = 0; index < a.Length; index++)
+        for (int index = 0; index < a.Length; index++)
         {
             if (a[index] != b[index])
                 return false;
