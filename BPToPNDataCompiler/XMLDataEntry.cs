@@ -4,8 +4,12 @@ public class XMLDataEntry : BPDataEntry
 {
     public XMLDataEntry(string fileName) : base(null)
     {
+        Console.WriteLine("Test");
+        Console.WriteLine("Test");
+
         PNFileName = fileName;
     }
+
 
     public string PNFileName { get; set; }
     public string PNNumber { get; set; }
@@ -23,13 +27,12 @@ public class XMLDataEntry : BPDataEntry
 
     public bool FullMatch(BPDataEntry entry)
     {
-        
-        bool fullMatch = (entry.Name == Name) && (entry.Internet == Internet) 
-                        && (entry.Publication == Publication)
-                        && (entry.Resume == Resume) && (entry.Title == Title) 
-                        && (entry.Index == Index) && (entry.IndexBis == IndexBis)
-                        && (entry.No == No) && (entry.CR == CR) && (entry.BPNumber == BPNumber)
-                        &&(entry.SBandSEG == SBandSEG);
+        bool fullMatch = (entry.Name == Name) && (entry.Internet == Internet)
+                                              && (entry.Publication == Publication)
+                                              && (entry.Resume == Resume) && (entry.Title == Title)
+                                              && (entry.Index == Index) && (entry.IndexBis == IndexBis)
+                                              && (entry.No == No) && (entry.CR == CR) && (entry.BPNumber == BPNumber)
+                                              && (entry.SBandSEG == SBandSEG);
 
         return fullMatch;
     }

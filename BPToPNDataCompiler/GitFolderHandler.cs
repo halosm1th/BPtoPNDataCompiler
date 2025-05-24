@@ -47,6 +47,9 @@ public class GitFolderHandler
 
     private string BiblioDirectoryCheck(string currentDirectory)
     {
+        Console.WriteLine("Test");
+        Console.WriteLine("Test");
+
         //Get all the folders in our current folder, which should be the idp.data folder. 
         var availableDirectors = Directory.GetDirectories(currentDirectory);
 

@@ -121,6 +121,8 @@ public class BPDataEntry
 
     private string? ReplaceInvalidText(string? value)
     {
+        Console.WriteLine("Test");
+
         value = value?.Replace("&", "&amp;");
         value = value?.Replace("<", "&lt;");
         value = value?.Replace(">", "&gt;");

@@ -16,6 +16,8 @@ public class BPEntryGatherer
 
     private async Task<BPDataEntry?> GetEntry(int currentYear, int currentIndex)
     {
+        Console.WriteLine("Test");
+
         BPDataEntry? entry = null;
         var yearText = Convert.ToString(currentYear);
         var indexText = Convert.ToString(currentIndex);
@@ -29,76 +31,77 @@ public class BPEntryGatherer
 
         var URL = $"https://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
         var web = new HtmlWeb();
-            var htmlDoc = web.Load(URL);
+        var htmlDoc = web.LoadFromWebAsync(URL);
 
 
-            var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
+        var table = (await htmlDoc).DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
-            if (table != null)
+        if (table != null)
+        {
+            entry = new BPDataEntry($"{yearText}-{indexText}");
+
+            var rowNodes = table.SelectNodes(".//tr");
+            rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
+            foreach (var node in rowNodes)
             {
-                entry = new BPDataEntry($"{yearText}-{indexText}");
-
-                var rowNodes = table.SelectNodes(".//tr");
-                rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
-                foreach (var node in rowNodes)
+                if (node.InnerText.Contains("Indexbis"))
                 {
-                    if (node.InnerText.Contains("Indexbis"))
-                    {
-                        Console.WriteLine($"Found an Indexbis @ {URL}");
-                    }
-                    else if (node.InnerText.Contains("Index"))
-                    {
-                        var textNode = node.SelectNodes(".//span")[0];
-                        entry.Index = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("Titre"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.Title = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("Publication"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("Résumé"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("N°"))
-                    {
-                        var textNode = node.SelectNodes(".//span")[0];
-                        entry.No = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("internet"))
-                    {
-                        Console.WriteLine($"Found an internet @ {URL}");
-                    }
-                    else if (node.InnerText.Contains("C.R."))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR = textNode.InnerText.Trim();
-                    }
-                    else if (node.InnerText.Contains("SBandSEG"))
-                    {
-                        Console.WriteLine($"Found an SBandSEG @ {URL}");
-                    }
+                    Console.WriteLine($"Found an Indexbis @ {URL}");
+                }
+                else if (node.InnerText.Contains("Index"))
+                {
+                    var textNode = node.SelectNodes(".//span")[0];
+                    entry.Index = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("Titre"))
+                {
+                    var textNode = node.SelectNodes(".//font")[0];
+                    entry.Title = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("Publication"))
+                {
+                    var textNode = node.SelectNodes(".//font")[0];
+                    entry.Publication = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("Résumé"))
+                {
+                    var textNode = node.SelectNodes(".//font")[0];
+                    entry.Resume = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("N°"))
+                {
+                    var textNode = node.SelectNodes(".//span")[0];
+                    entry.No = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("internet"))
+                {
+                    Console.WriteLine($"Found an internet @ {URL}");
+                }
+                else if (node.InnerText.Contains("C.R."))
+                {
+                    var textNode = node.SelectNodes(".//font")[0];
+                    entry.CR = textNode.InnerText.Trim();
+                }
+                else if (node.InnerText.Contains("SBandSEG"))
+                {
+                    Console.WriteLine($"Found an SBandSEG @ {URL}");
                 }
             }
-            else
-            {
-                entry = null;
-            }
+        }
+        else
+        {
+            entry = null;
+        }
+
         return entry;
     }
 
-    private async Task<List<BPDataEntry>> GetEntriesForYear(int currentYear)
+    private async IAsyncEnumerable<BPDataEntry> GetEntriesForYear(int currentYear)
     {
-        var entries = new List<BPDataEntry>();
         bool hasFailed = false;
 
-        for (int entryIndex = 1; entryIndex <= 9999; entryIndex++)
+        //TODO fix entryIndex <= to 9999
+        for (int entryIndex = 1; entryIndex <= 5; entryIndex++)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
@@ -123,12 +126,11 @@ public class BPEntryGatherer
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write($"Entry {currentYear}-{entryIndex} was found. ");
-                Console.ForegroundColor = ConsoleColor.Gray; 
-                WriteEntry(entry);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                await WriteEntry(entry);
+                yield return entry;
             }
         }
-
-        return entries;
     }
 
     private async Task WriteEntry(BPDataEntry entry)
@@ -150,17 +152,21 @@ public class BPEntryGatherer
             Directory.SetCurrentDirectory("..");
         }
 
+        if (currentDir.ToLower().Contains("BPXMLFiles"))
+        {
+            Directory.SetCurrentDirectory("..");
+        }
+
         if (Directory.Exists(currentDir + "/BPXMLFiles"))
         {
             Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
-            currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
+            //currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
         }
         else
         {
-
             Directory.CreateDirectory("BPXMLFiles");
             Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
-            currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
+            //currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
         }
 
         return currentDir;
@@ -172,24 +178,22 @@ public class BPEntryGatherer
         var currentYear = StartYear;
 
         var oldDir = SetDirectory();
-            var yearRanges = new List<Task<List<BPDataEntry>>>();
 
-            do
+
+        do
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
+
+            await foreach (var entry in GetEntriesForYear(currentYear))
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
-                yearRanges.Add(GetEntriesForYear(currentYear));
-
-                currentYear++;
-            } while (currentYear <= EndYear);
-
-            foreach (var range in yearRanges)
-            {
-                var values = await range;
-                entries.AddRange(values);
+                entries.Add(entry);
             }
 
-            Directory.SetCurrentDirectory(oldDir);
-            return entries;
+            currentYear++;
+        } while (currentYear <= EndYear);
+
+        Directory.SetCurrentDirectory(oldDir);
+        return entries;
     }
 }

@@ -46,6 +46,10 @@ public class BPtoPNCore
         {
             ExceptionInfo(e);
         }
+        catch (Exception e)
+        {
+            ExceptionInfo(e);
+        }
     }
 
     private static void ExceptionInfo(Exception e)
@@ -316,7 +320,7 @@ public class BPtoPNCore
         //If we have the git folder. Normally will error out before this if it cannot be found. 
         //AS such we'll just let hte exceptions bubble up.
         var biblioPath = gitHandler.GitBiblioDirectoryCheck();
-        
+
 
         Console.Write("Creating BPEntryGatherer. ");
         var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
@@ -324,13 +328,13 @@ public class BPtoPNCore
         var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
         Console.WriteLine("XML Entry Gatherer created.  ");
 
-        var bpEntryTask =  await BPEntryGatherer.GatherEntries();
-        var xmlEntryTask = await XMLEntryGatherer.GatherEntries();
+        var bpEntryTask = BPEntryGatherer.GatherEntries();
+        var xmlEntryTask = XMLEntryGatherer.GatherEntries();
         Console.WriteLine("Gathered the stuff");
-        
+
 
         Console.Write("Preparing to start data matcher. ");
-        var dm = new DataMatcher(xmlEntryTask, bpEntryTask);
+        var dm = new DataMatcher(await xmlEntryTask, await bpEntryTask);
         Console.WriteLine("Starting to match entries?");
         dm.MatchEntries();
         Console.WriteLine("Done matching entries. press any key to exit.");
