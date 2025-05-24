@@ -64,10 +64,17 @@ class DataMatcher
 
     private void HandleNonMatchingEntries(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
-        var command = Commands.Help;
-        var entries = GetComparisonsOfEntriesByLine(entry, matchingEntry);
-        PrintNonMatchEntryMenu(entry, matchingEntry, entries);
-        PrintCommandMenu(command);
+        try
+        {
+            var command = Commands.Help;
+            var entries = GetComparisonsOfEntriesByLine(entry, matchingEntry);
+            PrintNonMatchEntryMenu(entry, matchingEntry, entries);
+            PrintCommandMenu(command);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     private void PrintCommandMenu(Commands command)
