@@ -128,18 +128,18 @@ class DataMatcher
     private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
         var matches = new bool[11];
-        matches[(int) Comparisons.bpNumMatch] = entry.BPNumber == matchingEntry.BPNumber;
-        matches[(int) Comparisons.crMatch] = entry.CR == matchingEntry.CR;
-        matches[(int) Comparisons.indexMatch] = entry.Name == matchingEntry.Index;
-        matches[(int) Comparisons.indexBisMatch] = entry.Name == matchingEntry.IndexBis;
-        matches[(int) Comparisons.internetMatch] = entry.Name == matchingEntry.Internet;
-        matches[(int) Comparisons.nameMatch] = entry.Name == matchingEntry.Name;
-        matches[(int) Comparisons.publicationMatch] = entry.Name == matchingEntry.Publication;
-        matches[(int) Comparisons.resumeMatch] = entry.Name == matchingEntry.Resume;
-        matches[(int) Comparisons.sbandsegMatch] = entry.Name == matchingEntry.SBandSEG;
-        matches[(int) Comparisons.titleMatch] = entry.Name == matchingEntry.Title;
-        matches[(int) Comparisons.anneeMatch] = entry.Name == matchingEntry.Annee;
-        matches[(int) Comparisons.noMatch] = entry.No == matchingEntry.No;
+        matches[((int) Comparisons.bpNumMatch)] = entry.BPNumber == matchingEntry.BPNumber;
+        matches[((int) Comparisons.crMatch)] = entry.CR == matchingEntry.CR;
+        matches[((int) Comparisons.indexMatch)] = entry.Name == matchingEntry.Index;
+        matches[((int) Comparisons.indexBisMatch)] = entry.Name == matchingEntry.IndexBis;
+        matches[((int) Comparisons.internetMatch)] = entry.Name == matchingEntry.Internet;
+        matches[((int) Comparisons.nameMatch)] = entry.Name == matchingEntry.Name;
+        matches[((int) Comparisons.publicationMatch)] = entry.Name == matchingEntry.Publication;
+        matches[((int) Comparisons.resumeMatch)] = entry.Name == matchingEntry.Resume;
+        matches[((int) Comparisons.sbandsegMatch)] = entry.Name == matchingEntry.SBandSEG;
+        matches[((int) Comparisons.titleMatch)] = entry.Name == matchingEntry.Title;
+        matches[((int) Comparisons.anneeMatch)] = entry.Name == matchingEntry.Annee;
+        matches[((int) Comparisons.noMatch)] = entry.No == matchingEntry.No;
 
         return matches;
     }
