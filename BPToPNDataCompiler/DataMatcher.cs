@@ -22,8 +22,8 @@ class DataMatcher
 
         foreach (var entry in BPEntries)
         {
-            Console.WriteLine($"Trying entry: {entry.Name}");
-            if (XmlEntries.Any(x => x.AnyMatch(entry)))
+            Console.WriteLine($"Trying entry: {entry.Title}");
+            if (XmlEntries.Any(x => x.WeakMatch(entry)))
             {
                 Console.WriteLine("Found match. Rating Quality");
                 HandleMatch(entry);
@@ -39,11 +39,11 @@ class DataMatcher
     private void HandleMatch(BPDataEntry entry)
     {
         Console.WriteLine($"Entry is: {entry.Name}");
-        var matchingEntries = XmlEntries.Where(x => x.AnyMatch(entry));
+        var matchingEntries = XmlEntries.Where(x => x.WeakMatch(entry));
         if (matchingEntries.Count() == 1 && matchingEntries.First().FullMatch(entry))
         {
             Console.WriteLine(
-                $"Entry has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for entry: {entry}");
+                $"Entry has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for entry: {entry.Title}");
             return;
         }
         else if (matchingEntries.Count() > 1)
@@ -59,10 +59,9 @@ class DataMatcher
                 }
             }
 
-            Console.WriteLine("Found more than one match");
             foreach (var match in shortList)
             {
-                Console.WriteLine($"Match: {match.Name}");
+                Console.WriteLine($"Match: {match.Title}");
             }
         }
 
@@ -112,78 +111,121 @@ class DataMatcher
 
     private void PrintNonMatchEntryMenu(BPDataEntry entry, XMLDataEntry matchingEntry, bool[] entriesMatches)
     {
-        var rows = new List<(string Number, string Category, string BP, string PN, bool Match)>
-        {
-            ("01", "BPNumber", entry.BPNumber ?? "", matchingEntry.BPNumber ?? "",
-                entriesMatches[(int) Comparisons.bpNumMatch]),
-            ("02", "Index", entry.Index ?? "", matchingEntry.Index ?? "", entriesMatches[(int) Comparisons.indexMatch]),
-            ("03", "IndexBis", entry.IndexBis ?? "", matchingEntry.IndexBis ?? "",
-                entriesMatches[(int) Comparisons.indexBisMatch]),
-            ("04", "Internet", entry.Internet ?? "", matchingEntry.Internet ?? "",
-                entriesMatches[(int) Comparisons.internetMatch]),
-            ("05", "Name", entry.Name ?? "", matchingEntry.Name ?? "", entriesMatches[(int) Comparisons.nameMatch]),
-            ("06", "Publication", entry.Publication ?? "", matchingEntry.Publication ?? "",
-                entriesMatches[(int) Comparisons.publicationMatch]),
-            ("07", "Resume", entry.Resume ?? "", matchingEntry.Resume ?? "",
-                entriesMatches[(int) Comparisons.resumeMatch]),
-            ("08", "Segs", entry.SBandSEG ?? "", matchingEntry.SBandSEG ?? "",
-                entriesMatches[(int) Comparisons.sbandsegMatch]),
-            ("09", "Title", entry.Title ?? "", matchingEntry.Title ?? "", entriesMatches[(int) Comparisons.noMatch]),
-            ("10", "No", entry.No ?? "", matchingEntry.No ?? "", entriesMatches[(int) Comparisons.noMatch])
-        };
+        int numberWidth = 6;
+        int categoryWidth = 12;
+        int dataWidth = 40;
+        int totalWidth = numberWidth + categoryWidth + dataWidth * 2 + 5;
 
-        // Minimum widths for nice look
-        int minNumberWidth = 6;
-        int minCategoryWidth = 10;
-        int minDataWidth = 15;
+        string horizontalLine = "+" + new string('-', numberWidth) + "+" + new string('-', categoryWidth) + "+" +
+                                new string('-', dataWidth) + "+" + new string('-', dataWidth) + "+";
 
-        // Calculate max widths but not less than minimums
-        int numberWidth = Math.Max(minNumberWidth, rows.Max(r => r.Number.Length));
-        int categoryWidth = Math.Max(minCategoryWidth, rows.Max(r => r.Category.Length));
-        int bpDataWidth = Math.Max(minDataWidth, rows.Max(r => r.BP.Length));
-        int pnDataWidth = Math.Max(minDataWidth, rows.Max(r => r.PN.Length));
+        string headerText = " COLLISION FOUND ";
+        int paddingLeft = (totalWidth - headerText.Length) / 2;
+        int paddingRight = totalWidth - headerText.Length - paddingLeft;
 
-        // Total table width (borders + spaces)
-        int totalWidth = 1 + numberWidth + 2 + 1 + categoryWidth + 2 + 1 + bpDataWidth + 2 + 1 + pnDataWidth + 2 + 1;
-
-        string horizontalLine = new string('-', totalWidth);
-
-        // Center the header
-        string headerText = "COLLISION FOUND";
-        int headerPadding = (totalWidth - 2 - headerText.Length) / 2;
-        string headerLine = "|" + new string(' ', headerPadding) + headerText +
-                            new string(' ', totalWidth - 2 - headerPadding - headerText.Length) + "|";
-
+        // Always print headers first
         Console.WriteLine(horizontalLine);
-        Console.WriteLine(headerLine);
+        Console.WriteLine(new string(' ', paddingLeft) + headerText + new string(' ', paddingRight));
         Console.WriteLine(horizontalLine);
 
-        // Print column titles
         Console.WriteLine(
-            "|" +
-            "Number".PadRight(numberWidth) + " | " +
-            "Category".PadRight(categoryWidth) + " | " +
-            "Data from BP".PadRight(bpDataWidth) + " | " +
-            "Data from PN".PadRight(pnDataWidth) + " |"
+            "|" + "Number".PadRight(numberWidth) +
+            "|" + "Category".PadRight(categoryWidth) +
+            "|" + "Data from BP".PadRight(dataWidth) +
+            "|" + $"Data from PN ({matchingEntry.PNFileName})".PadRight(dataWidth) + "|"
         );
-
         Console.WriteLine(horizontalLine);
 
-        // Print each row
-        foreach (var row in rows)
+        // Wrapping and printing helpers unchanged
+        static List<string> WrapText(string text, int maxWidth)
         {
-            SetConsoleColour(row.Match);
-            Console.WriteLine(
-                "|" +
-                row.Number.PadRight(numberWidth) + " | " +
-                row.Category.PadRight(categoryWidth) + " | " +
-                row.BP.PadRight(bpDataWidth) + " | " +
-                row.PN.PadRight(pnDataWidth) + " |"
-            );
+            var lines = new List<string>();
+            if (string.IsNullOrEmpty(text))
+            {
+                lines.Add("");
+                return lines;
+            }
+
+            int pos = 0;
+            while (pos < text.Length)
+            {
+                int length = Math.Min(maxWidth, text.Length - pos);
+                int lastSpace = text.LastIndexOf(' ', pos + length - 1, length);
+                if (lastSpace > pos)
+                {
+                    length = lastSpace - pos + 1;
+                }
+
+                string line = text.Substring(pos, length).TrimEnd();
+                lines.Add(line);
+                pos += length;
+            }
+
+            return lines;
         }
 
-        Console.ResetColor();
-        Console.WriteLine(horizontalLine);
+        void PrintWrappedRow(string number, string category, string bpData, string pnData, bool match)
+        {
+            var bpLines = WrapText(bpData ?? "", dataWidth);
+            var pnLines = WrapText(pnData ?? "", dataWidth);
+            int maxLines = Math.Max(bpLines.Count, pnLines.Count);
+
+            SetConsoleColour(match);
+            for (int i = 0; i < maxLines; i++)
+            {
+                string numPart = (i == 0) ? number.PadRight(numberWidth) : new string(' ', numberWidth);
+                string catPart = (i == 0) ? category.PadRight(categoryWidth) : new string(' ', categoryWidth);
+                string bpPart = i < bpLines.Count ? bpLines[i].PadRight(dataWidth) : new string(' ', dataWidth);
+                string pnPart = i < pnLines.Count ? pnLines[i].PadRight(dataWidth) : new string(' ', dataWidth);
+
+                Console.WriteLine($"|{numPart}|{catPart}|{bpPart}|{pnPart}|");
+            }
+
+            Console.ResetColor();
+
+            Console.WriteLine(horizontalLine);
+        }
+
+        bool BothNullOrEmpty(string s1, string s2) => string.IsNullOrWhiteSpace(s1) && string.IsNullOrWhiteSpace(s2);
+
+        // Print only non-empty rows
+        if (!BothNullOrEmpty(entry.BPNumber, matchingEntry.BPNumber))
+            PrintWrappedRow("01", "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
+                entriesMatches[(int) Comparisons.bpNumMatch]);
+
+        if (!BothNullOrEmpty(entry.Index, matchingEntry.Index))
+            PrintWrappedRow("02", "Index", entry.Index, matchingEntry.Index,
+                entriesMatches[(int) Comparisons.indexMatch]);
+
+        if (!BothNullOrEmpty(entry.IndexBis, matchingEntry.IndexBis))
+            PrintWrappedRow("03", "IndexBis", entry.IndexBis, matchingEntry.IndexBis,
+                entriesMatches[(int) Comparisons.indexBisMatch]);
+
+        if (!BothNullOrEmpty(entry.Internet, matchingEntry.Internet))
+            PrintWrappedRow("04", "Internet", entry.Internet, matchingEntry.Internet,
+                entriesMatches[(int) Comparisons.internetMatch]);
+
+        if (!BothNullOrEmpty(entry.Name, matchingEntry.Name))
+            PrintWrappedRow("05", "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.nameMatch]);
+
+        if (!BothNullOrEmpty(entry.Publication, matchingEntry.Publication))
+            PrintWrappedRow("06", "Publication", entry.Publication, matchingEntry.Publication,
+                entriesMatches[(int) Comparisons.publicationMatch]);
+
+        if (!BothNullOrEmpty(entry.Resume, matchingEntry.Resume))
+            PrintWrappedRow("07", "Resume", entry.Resume, matchingEntry.Resume,
+                entriesMatches[(int) Comparisons.resumeMatch]);
+
+        if (!BothNullOrEmpty(entry.SBandSEG, matchingEntry.SBandSEG))
+            PrintWrappedRow("08", "Segs", entry.SBandSEG, matchingEntry.SBandSEG,
+                entriesMatches[(int) Comparisons.sbandsegMatch]);
+
+        if (!BothNullOrEmpty(entry.Title, matchingEntry.Title))
+            PrintWrappedRow("09", "Title", entry.Title, matchingEntry.Title,
+                entriesMatches[(int) Comparisons.titleMatch]);
+
+        if (!BothNullOrEmpty(entry.No, matchingEntry.No))
+            PrintWrappedRow("10", "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.noMatch]);
     }
 
 
@@ -207,13 +249,28 @@ class DataMatcher
             (entry.HasResume && matchingEntry.HasResume) && (entry.Resume == matchingEntry.Resume);
         matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSBandSEG && matchingEntry.HasSBandSEG) &&
                                                      (entry.SBandSEG == matchingEntry.SBandSEG);
-        matches[((int) Comparisons.titleMatch)] =
-            (entry.HasTitle && matchingEntry.HasTitle) && (entry.Title == matchingEntry.Title);
+        matches[((int) Comparisons.titleMatch)] = (entry.HasTitle && matchingEntry.HasTitle) &&
+                                                  (CheckEquals(entry.Title, matchingEntry.Title));
         matches[((int) Comparisons.anneeMatch)] =
             (entry.HasAnnee && matchingEntry.HasAnnee) && (entry.Annee == matchingEntry.Annee);
-        matches[((int) Comparisons.noMatch)] = (entry.HasNo && matchingEntry.HasNo) && (entry.No == matchingEntry.No);
+        matches[((int) Comparisons.noMatch)] =
+            (entry.HasNo && matchingEntry.HasNo) && (CheckEquals(entry.No, matchingEntry.No));
 
         return matches;
+    }
+
+    private bool CheckEquals(string a, string b)
+    {
+        int index = 0;
+        if (a.Length != b.Length) return false;
+
+        for (index = 0; index < a.Length; index++)
+        {
+            if (a[index] != b[index])
+                return false;
+        }
+
+        return true;
     }
 
 

@@ -313,34 +313,41 @@ public class BPtoPNCore
 
     private static async Task Core()
     {
-        Console.WriteLine($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
+        try
+        {
+            Console.WriteLine($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
 
-        //This will check 
-        var gitHandler = new GitFolderHandler();
-        //If we have the git folder. Normally will error out before this if it cannot be found. 
-        //AS such we'll just let hte exceptions bubble up.
-        var biblioPath = gitHandler.GitBiblioDirectoryCheck();
-
-
-        Console.Write("Creating BPEntryGatherer. ");
-        var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
-        Console.Write("BPEntryGather Created.\nCreating XMLEntryGatherer. ");
-        var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
-        Console.WriteLine("XML Entry Gatherer created.  ");
-
-        var bpEntryTask = BPEntryGatherer.GatherEntries();
-        var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+            //This will check 
+            var gitHandler = new GitFolderHandler();
+            //If we have the git folder. Normally will error out before this if it cannot be found. 
+            //AS such we'll just let hte exceptions bubble up.
+            var biblioPath = gitHandler.GitBiblioDirectoryCheck();
 
 
-        var bpResult = await bpEntryTask;
-        var xmlResult = await xmlEntryTask;
-        Console.WriteLine("Gathered the stuff");
+            Console.Write("Creating BPEntryGatherer. ");
+            var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
+            Console.Write("BPEntryGather Created.\nCreating XMLEntryGatherer. ");
+            var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
+            Console.WriteLine("XML Entry Gatherer created.  ");
 
-        Console.Write("Preparing to start data matcher. ");
-        var dm = new DataMatcher(xmlResult, bpResult);
-        Console.WriteLine("Starting to match entries?");
-        dm.MatchEntries();
-        Console.WriteLine("Done matching entries. press any key to exit.");
-        Console.ReadLine();
+            var bpEntryTask = BPEntryGatherer.GatherEntries();
+            var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+
+
+            var bpResult = await bpEntryTask;
+            var xmlResult = await xmlEntryTask;
+            Console.WriteLine("Gathered the stuff");
+
+            Console.Write("Preparing to start data matcher. ");
+            var dm = new DataMatcher(xmlResult, bpResult);
+            Console.WriteLine("Starting to match entries?");
+            dm.MatchEntries();
+            Console.WriteLine("Done matching entries. press any key to exit.");
+            Console.ReadLine();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }
