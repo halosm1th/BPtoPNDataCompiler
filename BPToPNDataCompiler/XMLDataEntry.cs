@@ -53,7 +53,7 @@ public class XMLDataEntry : BPDataEntry
         //Same for internet
         var sharePub = HasPublication switch
         {
-            true when entry.HasPublication => Publication == entry.Publication,
+            true when entry.HasPublication => CheckEquals(Publication, entry.Publication),
             false when !entry.HasPublication => true,
             _ => false
         };
@@ -165,7 +165,14 @@ public class XMLDataEntry : BPDataEntry
     {
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
-        return truthCount > 6;
+        return truthCount >= 9;
+    }
+
+    public bool MediumMatch(BPDataEntry entry)
+    {
+        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
+        return truthCount >= 7;
     }
 
     public bool WeakMatch(BPDataEntry entry)
@@ -173,7 +180,7 @@ public class XMLDataEntry : BPDataEntry
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         //If they match on more than one thing, find it and mention it.
-        return truthCount > 1;
+        return truthCount > 2;
     }
 
     enum Comparisons
