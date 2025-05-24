@@ -5,30 +5,30 @@ namespace BPtoPNDataCompiler;
 class DataMatcher
 {
     // New dictionary to store edited choices for each row
-    private Dictionary<int, string> _editedChoices = new Dictionary<int, string>();
+    private Dictionary<int, string?> _editedChoices = new Dictionary<int, string?>();
 
     public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
     {
         Console.WriteLine("Creating Data matcher?");
         XmlEntries = xmlEntries;
-        BPEntries = bpEntries;
+        BpEntries = bpEntries;
         Console.WriteLine("Saved the entry lists?");
     }
 
     private List<XMLDataEntry> XmlEntries { get; set; }
     private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
-    private List<BPDataEntry> BPEntries { get; set; }
-    private List<BPDataEntry> NewXMLEntriesToAdd { get; set; } = new List<BPDataEntry>();
-    private List<BPDataEntry> BPEntriesToUpdate { get; set; } = new List<BPDataEntry>(); // New list for BP updates
-    private List<XMLDataEntry> PNEntriesToUpdate { get; set; } = new List<XMLDataEntry>(); // New list for PN updates
+    private List<BPDataEntry> BpEntries { get; set; }
+    private List<BPDataEntry> NewXmlEntriesToAdd { get; set; } = new List<BPDataEntry>();
+    private List<BPDataEntry> BpEntriesToUpdate { get; set; } = new List<BPDataEntry>(); // New list for BP updates
+    private List<XMLDataEntry> PnEntriesToUpdate { get; set; } = new List<XMLDataEntry>(); // New list for PN updates
 
 
     public void MatchEntries()
     {
         Console.WriteLine("Starting Entry Checker");
-        Console.WriteLine($"Parsing: {BPEntries.Count} entries");
+        Console.WriteLine($"Parsing: {BpEntries.Count} entries");
 
-        foreach (var entry in BPEntries)
+        foreach (var entry in BpEntries)
         {
             Console.WriteLine($"Trying entry: {entry.Title}");
             if (XmlEntries.Any(x => x.WeakMatch(entry)))
@@ -39,7 +39,7 @@ class DataMatcher
             else
             {
                 Console.WriteLine("No match found, this is a new entry.");
-                NewXMLEntriesToAdd.Add(entry);
+                NewXmlEntriesToAdd.Add(entry);
             }
         }
     }
@@ -99,7 +99,7 @@ class DataMatcher
 
                 Console.Write("Command: ");
                 Console.Out.Flush(); // Ensure prompt is displayed before reading input
-                string input = Console.ReadLine()?.ToLower().Trim();
+                string? input = Console.ReadLine()?.ToLower().Trim();
 
                 command = ParseCommand(input);
 
@@ -140,14 +140,14 @@ class DataMatcher
             Console.WriteLine(
                 $"Selected row {rowNum} [{GetCategoryName(rowNum)}]. Enter 'B' for BP correct, 'P' for PN correct, 'N' for neither, or 'S' for Shared/Both.");
             Console.Write("Choice (B/P/N/S): ");
-            string choice = Console.ReadLine()?.ToUpper().Trim();
+            string? choice = Console.ReadLine()?.ToUpper().Trim();
 
             if (choice == "B" || choice == "P" || choice == "N" || choice == "S")
             {
                 Console.WriteLine(
                     $"Mark row {rowNum} [{GetCategoryName(rowNum)}] as {(choice == "B" ? "BP" : (choice == "P" ? "PN" : (choice == "S" ? "Shared/Both" : "Neither")))} being the correct choice: y/n?");
                 Console.Write("Confirm (y/n): ");
-                string confirm = Console.ReadLine()?.ToLower().Trim();
+                string? confirm = Console.ReadLine()?.ToLower().Trim();
 
                 if (confirm == "y")
                 {
@@ -184,50 +184,50 @@ class DataMatcher
         return "Unknown";
     }
 
-    private void UpdateEntryBasedOnChoice(BPDataEntry bpEntry, XMLDataEntry xmlEntry, int rowNum, string choice)
+    private void UpdateEntryBasedOnChoice(BPDataEntry bpEntry, XMLDataEntry xmlEntry, int rowNum, string? choice)
     {
         Console.WriteLine($"Updating based on choice for row {rowNum}...");
 
         // Remove from both lists first to ensure clean state before re-adding
-        if (BPEntriesToUpdate.Contains(bpEntry))
+        if (BpEntriesToUpdate.Contains(bpEntry))
         {
-            BPEntriesToUpdate.Remove(bpEntry);
+            BpEntriesToUpdate.Remove(bpEntry);
             Console.WriteLine($"Removed BP entry (Title: {bpEntry.Title}) from BPEntriesToUpdate.");
         }
 
-        if (PNEntriesToUpdate.Contains(xmlEntry))
+        if (PnEntriesToUpdate.Contains(xmlEntry))
         {
-            PNEntriesToUpdate.Remove(xmlEntry);
+            PnEntriesToUpdate.Remove(xmlEntry);
             Console.WriteLine($"Removed PN entry (Title: {xmlEntry.Title}) from PNEntriesToUpdate.");
         }
 
         if (choice == "B") // BP is correct, so PN entry should be updated
         {
-            if (!PNEntriesToUpdate.Contains(xmlEntry))
+            if (!PnEntriesToUpdate.Contains(xmlEntry))
             {
-                PNEntriesToUpdate.Add(xmlEntry);
+                PnEntriesToUpdate.Add(xmlEntry);
                 Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate.");
             }
         }
         else if (choice == "P") // PN is correct, so BP entry should be updated
         {
-            if (!BPEntriesToUpdate.Contains(bpEntry))
+            if (!BpEntriesToUpdate.Contains(bpEntry))
             {
-                BPEntriesToUpdate.Add(bpEntry);
+                BpEntriesToUpdate.Add(bpEntry);
                 Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate.");
             }
         }
         else if (choice == "S") // Both are correct/shared
         {
-            if (!BPEntriesToUpdate.Contains(bpEntry))
+            if (!BpEntriesToUpdate.Contains(bpEntry))
             {
-                BPEntriesToUpdate.Add(bpEntry);
+                BpEntriesToUpdate.Add(bpEntry);
                 Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate (Shared).");
             }
 
-            if (!PNEntriesToUpdate.Contains(xmlEntry))
+            if (!PnEntriesToUpdate.Contains(xmlEntry))
             {
-                PNEntriesToUpdate.Add(xmlEntry);
+                PnEntriesToUpdate.Add(xmlEntry);
                 Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate (Shared).");
             }
         }
@@ -238,7 +238,7 @@ class DataMatcher
     }
 
 
-    private Commands ParseCommand(string input)
+    private Commands ParseCommand(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return Commands.Invalid;
 
@@ -281,7 +281,7 @@ class DataMatcher
     }
 
     private void PrintNonMatchEntryMenu(BPDataEntry entry, XMLDataEntry matchingEntry, bool[] entriesMatches,
-        int? selectedRow, Dictionary<int, string> editedChoices) // Added editedChoices parameter
+        int? selectedRow, Dictionary<int, string?> editedChoices) // Added editedChoices parameter
     {
         Console.Clear(); // Clear console for cleaner display
         Console.Out.Flush(); // Added flush after clear to ensure buffer is truly empty and ready for new output
@@ -343,7 +343,8 @@ class DataMatcher
             return lines;
         }
 
-        void PrintWrappedRow(int rowNumber, string category, string bpData, string pnData, bool match, bool isSelected,
+        void PrintWrappedRow(int rowNumber, string category, string? bpData, string? pnData, bool match,
+            bool isSelected,
             string editedStatus)
         {
             var bpLines = WrapText(bpData ?? "", dataWidth);
@@ -400,51 +401,63 @@ class DataMatcher
 
 
         // Print rows conditionally based on data presence, using renamed functions
-        if (HasStringData(entry.BPNumber, matchingEntry.BPNumber))
+        if (entry.BPNumber != null && matchingEntry.BPNumber != null &&
+            HasStringData(entry.BPNumber, matchingEntry.BPNumber))
             PrintWrappedRow(1, "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
-                entriesMatches[(int) Comparisons.bpNumMatch], selectedRow == 1, _editedChoices.GetValueOrDefault(1));
+                entriesMatches[(int) Comparisons.BpNumMatch], selectedRow == 1,
+                _editedChoices.GetValueOrDefault(1) ?? string.Empty);
 
         if (matchingEntry.CR != null && entry.CR != null && HasStringData(entry.CR, matchingEntry.CR))
             PrintWrappedRow(2, "CR", entry.CR, matchingEntry.CR,
-                entriesMatches[(int) Comparisons.crMatch], selectedRow == 2, _editedChoices.GetValueOrDefault(2));
+                entriesMatches[(int) Comparisons.CrMatch], selectedRow == 2,
+                _editedChoices.GetValueOrDefault(2) ?? string.Empty);
 
-        if (HasStringData(entry.Index, matchingEntry.Index))
+        if (entry.Index != null && matchingEntry.Index != null && HasStringData(entry.Index, matchingEntry.Index))
             PrintWrappedRow(3, "Index", entry.Index, matchingEntry.Index,
-                entriesMatches[(int) Comparisons.indexMatch], selectedRow == 3, _editedChoices.GetValueOrDefault(3));
+                entriesMatches[(int) Comparisons.IndexMatch], selectedRow == 3,
+                _editedChoices.GetValueOrDefault(3) ?? string.Empty);
 
-        if (HasStringData(entry.IndexBis, matchingEntry.IndexBis))
+        if (entry.IndexBis != null && matchingEntry.IndexBis != null &&
+            HasStringData(entry.IndexBis, matchingEntry.IndexBis))
             PrintWrappedRow(4, "IndexBis", entry.IndexBis, matchingEntry.IndexBis,
-                entriesMatches[(int) Comparisons.indexBisMatch], selectedRow == 4, _editedChoices.GetValueOrDefault(4));
+                entriesMatches[(int) Comparisons.IndexBisMatch], selectedRow == 4,
+                _editedChoices.GetValueOrDefault(4) ?? string.Empty);
 
-        if (HasStringData(entry.Internet, matchingEntry.Internet))
+        if (matchingEntry.Internet != null && entry.Internet != null &&
+            HasStringData(entry.Internet, matchingEntry.Internet))
             PrintWrappedRow(5, "Internet", entry.Internet, matchingEntry.Internet,
-                entriesMatches[(int) Comparisons.internetMatch], selectedRow == 5, _editedChoices.GetValueOrDefault(5));
+                entriesMatches[(int) Comparisons.InternetMatch], selectedRow == 5,
+                _editedChoices.GetValueOrDefault(5) ?? string.Empty);
 
-        if (HasStringData(entry.Name, matchingEntry.Name))
-            PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.nameMatch],
-                selectedRow == 6, _editedChoices.GetValueOrDefault(6));
+        if (entry.Name != null && matchingEntry.Name != null && HasStringData(entry.Name, matchingEntry.Name))
+            PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.NameMatch],
+                selectedRow == 6, _editedChoices.GetValueOrDefault(6) ?? string.Empty);
 
-        if (HasStringData(entry.No, matchingEntry.No)) // Moved 'No' to after 'Name'
-            PrintWrappedRow(7, "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.noMatch],
-                selectedRow == 7, _editedChoices.GetValueOrDefault(7));
+        if (entry.No != null && HasStringData(entry.No, matchingEntry.No)) // Moved 'No' to after 'Name'
+            PrintWrappedRow(7, "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.NoMatch],
+                selectedRow == 7, _editedChoices.GetValueOrDefault(7) ?? string.Empty);
 
-        if (HasStringData(entry.Publication, matchingEntry.Publication))
+        if (entry.Publication != null && matchingEntry.Publication != null &&
+            HasStringData(entry.Publication, matchingEntry.Publication))
             PrintWrappedRow(8, "Publication", entry.Publication, matchingEntry.Publication,
-                entriesMatches[(int) Comparisons.publicationMatch], selectedRow == 8,
-                _editedChoices.GetValueOrDefault(8));
+                entriesMatches[(int) Comparisons.PublicationMatch], selectedRow == 8,
+                _editedChoices.GetValueOrDefault(8) ?? string.Empty);
 
-        if (HasStringData(entry.Resume, matchingEntry.Resume))
+        if (entry.Resume != null && matchingEntry.Resume != null && HasStringData(entry.Resume, matchingEntry.Resume))
             PrintWrappedRow(9, "Resume", entry.Resume, matchingEntry.Resume,
-                entriesMatches[(int) Comparisons.resumeMatch], selectedRow == 9, _editedChoices.GetValueOrDefault(9));
+                entriesMatches[(int) Comparisons.ResumeMatch], selectedRow == 9,
+                _editedChoices.GetValueOrDefault(9) ?? string.Empty);
 
-        if (HasStringData(entry.SBandSEG, matchingEntry.SBandSEG))
+        if (matchingEntry.SBandSEG != null && entry.SBandSEG != null &&
+            HasStringData(entry.SBandSEG, matchingEntry.SBandSEG))
             PrintWrappedRow(10, "Segs", entry.SBandSEG, matchingEntry.SBandSEG,
-                entriesMatches[(int) Comparisons.sbandsegMatch], selectedRow == 10,
-                _editedChoices.GetValueOrDefault(10));
+                entriesMatches[(int) Comparisons.SbandsegMatch], selectedRow == 10,
+                _editedChoices.GetValueOrDefault(10) ?? string.Empty);
 
-        if (HasStringData(entry.Title, matchingEntry.Title))
+        if (matchingEntry.Title != null && entry.Title != null && HasStringData(entry.Title, matchingEntry.Title))
             PrintWrappedRow(11, "Title", entry.Title, matchingEntry.Title,
-                entriesMatches[(int) Comparisons.titleMatch], selectedRow == 11, _editedChoices.GetValueOrDefault(11));
+                entriesMatches[(int) Comparisons.TitleMatch], selectedRow == 11,
+                _editedChoices.GetValueOrDefault(11) ?? string.Empty);
 
         // Print the PN file name below the table
         Console.WriteLine($"\nPN File: {matchingEntry.PNFileName}");
@@ -454,34 +467,36 @@ class DataMatcher
     private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
         var matches = new bool[12];
-        matches[((int) Comparisons.bpNumMatch)] =
+        matches[((int) Comparisons.BpNumMatch)] =
             (entry.HasBPNum && matchingEntry.HasBPNum) && (entry.BPNumber == matchingEntry.BPNumber);
-        matches[((int) Comparisons.crMatch)] = (entry.HasCR && matchingEntry.HasCR) && (entry.CR == matchingEntry.CR);
-        matches[((int) Comparisons.indexMatch)] =
+        matches[((int) Comparisons.CrMatch)] = (entry.HasCR && matchingEntry.HasCR) && (entry.CR == matchingEntry.CR);
+        matches[((int) Comparisons.IndexMatch)] =
             (entry.HasBPNum && matchingEntry.HasIndex) && (entry.Index == matchingEntry.Index);
-        matches[((int) Comparisons.indexBisMatch)] = (entry.HasBPNum && matchingEntry.HasIndexBis) &&
+        matches[((int) Comparisons.IndexBisMatch)] = (entry.HasBPNum && matchingEntry.HasIndexBis) &&
                                                      (entry.IndexBis == matchingEntry.IndexBis);
-        matches[((int) Comparisons.internetMatch)] = (entry.HasBPNum && matchingEntry.HasInternet) &&
+        matches[((int) Comparisons.InternetMatch)] = (entry.HasBPNum && matchingEntry.HasInternet) &&
                                                      (entry.Internet == matchingEntry.Internet);
-        matches[((int) Comparisons.nameMatch)] =
+        matches[((int) Comparisons.NameMatch)] =
             (entry.HasBPNum && matchingEntry.HasName) && (entry.Name == matchingEntry.Name);
-        matches[((int) Comparisons.publicationMatch)] = (entry.HasPublication && matchingEntry.HasPublication) &&
+        matches[((int) Comparisons.PublicationMatch)] = (entry.HasPublication && matchingEntry.HasPublication) &&
                                                         (entry.Publication == matchingEntry.Publication);
-        matches[((int) Comparisons.resumeMatch)] =
+        matches[((int) Comparisons.ResumeMatch)] =
             (entry.HasResume && matchingEntry.HasResume) && (entry.Resume == matchingEntry.Resume);
-        matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSBandSEG && matchingEntry.HasSBandSEG) &&
+        matches[((int) Comparisons.SbandsegMatch)] = (entry.HasSBandSEG && matchingEntry.HasSBandSEG) &&
                                                      (entry.SBandSEG == matchingEntry.SBandSEG);
-        matches[((int) Comparisons.titleMatch)] = (entry.HasTitle && matchingEntry.HasTitle) &&
-                                                  (CheckEquals(entry.Title, matchingEntry.Title));
-        matches[((int) Comparisons.anneeMatch)] =
+        if (entry.Title != null)
+            if (matchingEntry.Title != null)
+                matches[((int) Comparisons.TitleMatch)] = (entry.HasTitle && matchingEntry.HasTitle) &&
+                                                          (CheckEquals(entry.Title, matchingEntry.Title));
+        matches[((int) Comparisons.AnneeMatch)] =
             (entry.HasAnnee && matchingEntry.HasAnnee) && (entry.Annee == matchingEntry.Annee);
-        matches[((int) Comparisons.noMatch)] =
+        matches[((int) Comparisons.NoMatch)] =
             (entry.HasNo && matchingEntry.HasNo) && (CheckEquals(entry.No, matchingEntry.No));
 
         return matches;
     }
 
-    private bool CheckEquals(string a, string b)
+    private bool CheckEquals(string? a, string? b)
     {
         if (a == null && b == null) return true;
         if (a == null || b == null) return false;
@@ -499,18 +514,18 @@ class DataMatcher
 
     enum Comparisons
     {
-        bpNumMatch = 0,
-        crMatch = 1,
-        indexMatch = 2,
-        indexBisMatch = 3,
-        internetMatch = 4,
-        nameMatch = 5,
-        noMatch = 6,
-        publicationMatch = 7,
-        resumeMatch = 8,
-        sbandsegMatch = 9,
-        titleMatch = 10,
-        anneeMatch = 11
+        BpNumMatch = 0,
+        CrMatch = 1,
+        IndexMatch = 2,
+        IndexBisMatch = 3,
+        InternetMatch = 4,
+        NameMatch = 5,
+        NoMatch = 6,
+        PublicationMatch = 7,
+        ResumeMatch = 8,
+        SbandsegMatch = 9,
+        TitleMatch = 10,
+        AnneeMatch = 11
     }
 
     enum Commands
