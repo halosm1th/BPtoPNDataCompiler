@@ -35,83 +35,92 @@ public class XMLDataEntry : BPDataEntry
     {
         //If htey both have share name, then shareName is equal if the names are equal.
         //if they both don't have share name, then they share in not having a name
-        var shareName = false;
-        if (HasName && entry.HasName) shareName = Name == entry.Name;
-        else if (!HasName && !entry.HasName) shareName = true;
-        else shareName = false;
+        var shareName = HasName switch
+        {
+            true when entry.HasName => Name == entry.Name,
+            false when !entry.HasName => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareNet = false;
-        if (HasInternet && entry.HasInternet) shareNet = Internet == entry.Internet;
-        else if (!HasInternet && !entry.HasInternet) shareNet = true;
-        else shareNet = false;
+        var shareNet = HasInternet switch
+        {
+            true when entry.HasInternet => Internet == entry.Internet,
+            false when !entry.HasInternet => true,
+            _ => false
+        };
 
         //Same for internet
-        var sharePub = false;
-        if (HasPublication && entry.HasPublication) sharePub = Publication == entry.Publication;
-        else if (!HasPublication && !entry.HasPublication) sharePub = true;
-        else sharePub = false;
+        var sharePub = HasPublication switch
+        {
+            true when entry.HasPublication => Publication == entry.Publication,
+            false when !entry.HasPublication => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareRes = false;
-        if (HasResume && entry.HasResume) shareRes = Resume == entry.Resume;
-        else if (!HasResume && !entry.HasResume) shareRes = true;
-        else shareRes = false;
+        var shareRes = HasResume switch
+        {
+            true when entry.HasResume => Resume == entry.Resume,
+            false when !entry.HasResume => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareTitle = false;
-        if (HasTitle && entry.HasTitle) shareTitle = Title == entry.Title;
-        else if (!HasTitle && !entry.HasTitle) shareTitle = true;
-        else shareTitle = false;
+        var shareTitle = HasTitle switch
+        {
+            true when entry.HasTitle => Title == entry.Title,
+            false when !entry.HasTitle => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareIndex = false;
-        if (HasIndex && entry.HasIndex) shareIndex = Index == entry.Index;
-        else if (!HasIndex && !entry.HasIndex) shareIndex = true;
-        else shareIndex = false;
+        var shareIndex = HasIndex switch
+        {
+            true when entry.HasIndex => Index == entry.Index,
+            false when !entry.HasIndex => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareIndexBis = false;
-        if (HasIndexBis && entry.HasIndexBis) shareIndexBis = IndexBis == entry.IndexBis;
-        else if (!HasIndexBis && !entry.HasIndexBis) shareIndexBis = true;
-        else shareIndexBis = false;
+        var shareIndexBis = HasIndexBis switch
+        {
+            true when entry.HasIndexBis => IndexBis == entry.IndexBis,
+            false when !entry.HasIndexBis => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareNo = false;
-        if (HasNo && entry.HasNo) shareNo = No == entry.No;
-        else if (!HasNo && !entry.HasNo) shareNo = true;
-        else shareNo = false;
+        var shareNo = HasNo switch
+        {
+            true when entry.HasNo => No == entry.No,
+            false when !entry.HasNo => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareCR = false;
-        if (HasCR && entry.HasCR) shareCR = CR == entry.CR;
-        else if (!HasCR && !entry.HasCR) shareCR = true;
-        else shareCR = false;
+        var shareCR = HasCR switch
+        {
+            true when entry.HasCR => CR == entry.CR,
+            false when !entry.HasCR => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareBP = false;
-        if (HasBPNum && entry.HasBPNum) shareBP = BPNumber == entry.BPNumber;
-        else if (!HasBPNum && !entry.HasBPNum) shareBP = true;
-        else shareBP = false;
+        var shareBP = HasBPNum switch
+        {
+            true when entry.HasBPNum => BPNumber == entry.BPNumber,
+            false when !entry.HasBPNum => true,
+            _ => false
+        };
 
         //Same for internet
-        var shareSBSEg = false;
-        if (HasSBandSEG && entry.HasSBandSEG) shareSBSEg = SBandSEG == entry.SBandSEG;
-        else if (!HasSBandSEG && !entry.HasSBandSEG) shareSBSEg = true;
-        else shareSBSEg = false;
-
-        /*
-        bool fullMatch = ((entry.HasName && HasName) && (entry.Name == Name))
-                         && ((entry.HasInternet && HasInternet) && (entry.Internet == Internet))
-                         && ((entry.HasPublication && HasPublication) && (entry.Publication == Publication))
-                         && ((entry.HasResume && HasResume) && (entry.Resume == Resume))
-                         && ((entry.HasTitle && HasTitle) && (entry.Title == Title))
-                         && ((entry.HasIndex && HasIndex) && (entry.Index == Index))
-                         && ((entry.HasIndexBis && HasIndexBis) && (entry.IndexBis == IndexBis))
-                         && ((entry.HasNo && HasNo) && (entry.No == No))
-                         && ((entry.HasCR && HasCR) && (entry.CR == CR))
-                         && ((entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber))
-                         && ((entry.HasSBandSEG && HasSBandSEG) && (entry.SBandSEG == SBandSEG));*/
+        var shareSBSEg = HasSBandSEG switch
+        {
+            true when entry.HasSBandSEG => SBandSEG == entry.SBandSEG,
+            false when !entry.HasSBandSEG => true,
+            _ => false
+        };
 
         return shareName && shareNet && sharePub && shareRes && shareTitle
                && shareIndex && shareIndexBis && shareNo && shareCR && shareBP && shareSBSEg;
