@@ -89,9 +89,6 @@ public class XMLEntryGatherer
             }
         }
 
-        Console.WriteLine("Test");
-
-
         return entries;
     }
 }

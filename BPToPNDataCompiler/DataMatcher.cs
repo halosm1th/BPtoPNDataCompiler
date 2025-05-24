@@ -4,8 +4,6 @@ class DataMatcher
 {
     public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
     {
-        Console.WriteLine("Test");
-
         Console.WriteLine("Creating Data matcher?");
         XmlEntries = xmlEntries;
         BPEntries = bpEntries;

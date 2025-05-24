@@ -16,8 +16,6 @@ public class BPEntryGatherer
 
     private async Task<BPDataEntry?> GetEntry(int currentYear, int currentIndex)
     {
-        Console.WriteLine("Test");
-
         BPDataEntry? entry = null;
         var yearText = Convert.ToString(currentYear);
         var indexText = Convert.ToString(currentIndex);

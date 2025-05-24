@@ -4,9 +4,6 @@ public class XMLDataEntry : BPDataEntry
 {
     public XMLDataEntry(string fileName) : base(null)
     {
-        Console.WriteLine("Test");
-        Console.WriteLine("Test");
-
         PNFileName = fileName;
     }
 
