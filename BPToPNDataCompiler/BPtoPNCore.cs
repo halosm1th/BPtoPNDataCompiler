@@ -330,11 +330,14 @@ public class BPtoPNCore
 
         var bpEntryTask = BPEntryGatherer.GatherEntries();
         var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+
+
+        var bpResult = await bpEntryTask;
+        var xmlResult = await xmlEntryTask;
         Console.WriteLine("Gathered the stuff");
 
-
         Console.Write("Preparing to start data matcher. ");
-        var dm = new DataMatcher(await xmlEntryTask, await bpEntryTask);
+        var dm = new DataMatcher(xmlResult, bpResult);
         Console.WriteLine("Starting to match entries?");
         dm.MatchEntries();
         Console.WriteLine("Done matching entries. press any key to exit.");

@@ -13,23 +13,34 @@ public class XMLDataEntry : BPDataEntry
 
     public bool AnyMatch(BPDataEntry entry)
     {
-        bool anyMatch = (entry.Name == Name) || (entry.Internet == Internet) || (entry.Publication == Publication)
-                        || (entry.Resume == Resume) || (entry.Title == Title) || (entry.Index == Index) ||
-                        (entry.IndexBis == IndexBis)
-                        || (entry.No == No) || (entry.CR == CR) || (entry.BPNumber == BPNumber) ||
-                        (entry.SBandSEG == SBandSEG);
+        bool anyMatch = ((entry.HasName && HasName) && (entry.Name == Name))
+                        || ((entry.HasInternet && HasInternet) && (entry.Internet == Internet))
+                        || ((entry.HasPublication && HasPublication) && (entry.Publication == Publication))
+                        || ((entry.HasResume && HasResume) && (entry.Resume == Resume))
+                        || ((entry.HasTitle && HasTitle) && (entry.Title == Title))
+                        || ((entry.HasIndex && HasIndex) && (entry.Index == Index))
+                        || ((entry.HasIndexBis && HasIndexBis) && (entry.IndexBis == IndexBis))
+                        || ((entry.HasNo && HasNo) && (entry.No == No))
+                        || ((entry.HasCR && HasCR) && (entry.CR == CR))
+                        || ((entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber))
+                        || ((entry.HasSBandSEG && HasSBandSEG) && (entry.SBandSEG == SBandSEG));
 
         return anyMatch;
     }
 
     public bool FullMatch(BPDataEntry entry)
     {
-        bool fullMatch = (entry.Name == Name) && (entry.Internet == Internet)
-                                              && (entry.Publication == Publication)
-                                              && (entry.Resume == Resume) && (entry.Title == Title)
-                                              && (entry.Index == Index) && (entry.IndexBis == IndexBis)
-                                              && (entry.No == No) && (entry.CR == CR) && (entry.BPNumber == BPNumber)
-                                              && (entry.SBandSEG == SBandSEG);
+        bool fullMatch = ((entry.HasName && HasName) && (entry.Name == Name))
+                         && ((entry.HasInternet && HasInternet) && (entry.Internet == Internet))
+                         && ((entry.HasPublication && HasPublication) && (entry.Publication == Publication))
+                         && ((entry.HasResume && HasResume) && (entry.Resume == Resume))
+                         && ((entry.HasTitle && HasTitle) && (entry.Title == Title))
+                         && ((entry.HasIndex && HasIndex) && (entry.Index == Index))
+                         && ((entry.HasIndexBis && HasIndexBis) && (entry.IndexBis == IndexBis))
+                         && ((entry.HasNo && HasNo) && (entry.No == No))
+                         && ((entry.HasCR && HasCR) && (entry.CR == CR))
+                         && ((entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber))
+                         && ((entry.HasSBandSEG && HasSBandSEG) && (entry.SBandSEG == SBandSEG));
 
         return fullMatch;
     }
