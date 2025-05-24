@@ -44,4 +44,46 @@ public class XMLDataEntry : BPDataEntry
 
         return fullMatch;
     }
+
+    private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry)
+    {
+        var matches = new bool[11];
+        matches[((int) Comparisons.bpNumMatch)] = entry.BPNumber == BPNumber;
+        matches[((int) Comparisons.crMatch)] = entry.CR == CR;
+        matches[((int) Comparisons.indexMatch)] = entry.Name == Index;
+        matches[((int) Comparisons.indexBisMatch)] = entry.Name == IndexBis;
+        matches[((int) Comparisons.internetMatch)] = entry.Name == Internet;
+        matches[((int) Comparisons.nameMatch)] = entry.Name == Name;
+        matches[((int) Comparisons.publicationMatch)] = entry.Name == Publication;
+        matches[((int) Comparisons.resumeMatch)] = entry.Name == Resume;
+        matches[((int) Comparisons.sbandsegMatch)] = entry.Name == SBandSEG;
+        matches[((int) Comparisons.titleMatch)] = entry.Name == Title;
+        matches[((int) Comparisons.anneeMatch)] = entry.Name == Annee;
+        matches[((int) Comparisons.noMatch)] = entry.No == No;
+
+        return matches;
+    }
+
+    public bool StrongMatch(BPDataEntry entry)
+    {
+        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
+        return truthCount > 6;
+    }
+
+    enum Comparisons
+    {
+        bpNumMatch = 0,
+        crMatch = 1,
+        indexMatch = 2,
+        indexBisMatch = 3,
+        internetMatch = 4,
+        nameMatch = 5,
+        noMatch = 6,
+        publicationMatch = 7,
+        resumeMatch = 8,
+        sbandsegMatch = 9,
+        titleMatch = 10,
+        anneeMatch = 11
+    }
 }

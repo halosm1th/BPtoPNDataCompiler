@@ -48,6 +48,8 @@ class DataMatcher
 
         if (matchingEntries.Count() > 1)
         {
+            matchingEntries = matchingEntries.Where(x => x.StrongMatch(entry));
+
             Console.WriteLine("Found more than one match");
             foreach (var match in matchingEntries)
             {
