@@ -161,6 +161,12 @@ public class XMLDataEntry : BPDataEntry
         return matches;
     }
 
+    public int GetMatchStrength(BPDataEntry entry)
+    {
+        var match = GetComparisonsOfEntriesByLine(entry);
+        return match.Aggregate(0, (h, t) => t ? h + 1 : h);
+    }
+
     public bool StrongMatch(BPDataEntry entry)
     {
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
@@ -172,7 +178,7 @@ public class XMLDataEntry : BPDataEntry
     {
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
-        return truthCount >= 7;
+        return truthCount >= 6;
     }
 
     public bool WeakMatch(BPDataEntry entry)
@@ -180,7 +186,7 @@ public class XMLDataEntry : BPDataEntry
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         //If they match on more than one thing, find it and mention it.
-        return truthCount > 2;
+        return truthCount > 3;
     }
 
     enum Comparisons

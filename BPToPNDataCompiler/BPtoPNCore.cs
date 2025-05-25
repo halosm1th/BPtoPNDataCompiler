@@ -331,16 +331,13 @@ public class BPtoPNCore
             var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
             Console.WriteLine("XML Entry Gatherer created.  ");
 
-            var bpEntryTask = BPEntryGatherer.GatherEntries();
             var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+            var bpEntries = BPEntryGatherer.GatherEntries();
 
-
-            var bpResult = await bpEntryTask;
-            var xmlResult = await xmlEntryTask;
             Console.WriteLine("Gathered the stuff");
 
             Console.Write("Preparing to start data matcher. ");
-            var dm = new DataMatcher(xmlResult, bpResult);
+            var dm = new DataMatcher(await xmlEntryTask, bpEntries);
             Console.WriteLine("Starting to match entries?");
             dm.MatchEntries();
             Console.WriteLine("Done matching entries. press any key to exit.");

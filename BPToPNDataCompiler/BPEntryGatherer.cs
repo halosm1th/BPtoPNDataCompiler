@@ -14,7 +14,7 @@ public class BPEntryGatherer
         EndYear = endYear;
     }
 
-    private async Task<BPDataEntry?> GetEntry(int currentYear, int currentIndex)
+    private BPDataEntry? GetEntry(int currentYear, int currentIndex)
     {
         try
         {
@@ -103,19 +103,20 @@ public class BPEntryGatherer
         return null;
     }
 
-    private async IAsyncEnumerable<BPDataEntry> GetEntriesForYear(int currentYear)
+    private List<BPDataEntry> GetEntriesForYear(int currentYear)
     {
         bool hasFailed = false;
+        var Entries = new List<BPDataEntry>();
 
         //TODO fix entryIndex <= to 9999
-        for (int entryIndex = 1; entryIndex <= 5; entryIndex++)
+        for (int entryIndex = 1; entryIndex <= 9999; entryIndex++)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
             BPDataEntry? entry = null;
             try
             {
-                entry = await GetEntry(currentYear, entryIndex);
+                entry = GetEntry(currentYear, entryIndex);
             }
             catch (Exception e)
             {
@@ -142,10 +143,12 @@ public class BPEntryGatherer
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write($"Entry {currentYear}-{entryIndex} was found. ");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                await WriteEntry(entry);
-                yield return entry;
+                WriteEntry(entry);
+                Entries.Add(entry);
             }
         }
+
+        return Entries;
     }
 
     private async Task WriteEntry(BPDataEntry entry)
@@ -187,7 +190,7 @@ public class BPEntryGatherer
         return currentDir;
     }
 
-    public async Task<List<BPDataEntry>> GatherEntries()
+    public List<BPDataEntry> GatherEntries()
     {
         try
         {
@@ -202,7 +205,7 @@ public class BPEntryGatherer
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
 
-                await foreach (var entry in GetEntriesForYear(currentYear))
+                foreach (var entry in GetEntriesForYear(currentYear))
                 {
                     entries.Add(entry);
                 }
