@@ -4,6 +4,9 @@ namespace DefaultNamespace;
 
 public class BPEntryGatherer
 {
+    //TODO restore to proper numbers
+    private const int ENTRY_START = 80; // 0
+    private const int ENTRY_END = 80; //9999
     private int EndYear;
     private int StartYear;
 
@@ -109,7 +112,7 @@ public class BPEntryGatherer
         var Entries = new List<BPDataEntry>();
 
         //TODO fix entryIndex <= to 9999
-        for (int entryIndex = 1; entryIndex <= 9999; entryIndex++)
+        for (int entryIndex = ENTRY_START; entryIndex <= ENTRY_END; entryIndex++)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
@@ -192,9 +195,9 @@ public class BPEntryGatherer
 
     public List<BPDataEntry> GatherEntries()
     {
+        var entries = new List<BPDataEntry>();
         try
         {
-            var entries = new List<BPDataEntry>();
             var currentYear = StartYear;
 
             var oldDir = SetDirectory();
@@ -214,13 +217,12 @@ public class BPEntryGatherer
             } while (currentYear <= EndYear);
 
             Directory.SetCurrentDirectory(oldDir);
-            return entries;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
 
-        return null;
+        return entries;
     }
 }

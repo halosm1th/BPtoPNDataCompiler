@@ -4,27 +4,35 @@ namespace BPtoPNDataCompiler;
 
 public class DataMatcherConflictUI
 {
-    // New dictionary to store edited choices for each row
+    // Dictionary to store edited choices for each row, mapping row number to choice (B/P/N/S)
     private Dictionary<int, string?> _editedChoices = new Dictionary<int, string?>();
     private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
-    public List<BPDataEntry> BpEntriesToUpdate { get; } = new List<BPDataEntry>(); // New list for BP updates
-    public List<XMLDataEntry> PnEntriesToUpdate { get; } = new List<XMLDataEntry>(); // New list for PN updates
+
+    // Updated lists to store detailed update information using the new UpdateDetail class
+    public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
+    public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
 
 
+    /// <summary>
+    /// Handles the interactive UI for resolving conflicts between a BPDataEntry and an XMLDataEntry.
+    /// </summary>
+    /// <param name="entry">The BPDataEntry.</param>
+    /// <param name="matchingEntry">The corresponding XMLDataEntry.</param>
     public void HandleNonMatchingEntries(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
         Commands command = Commands.Help;
         int? selectedRow = null; // To keep track of the selected row for editing
-        _editedChoices.Clear(); // Clear any previous edits for a new entry
+        _editedChoices.Clear(); // Clear any previous edits for a new entry when starting a new conflict resolution
 
         while (command != Commands.Finished)
         {
             try
             {
+                // Get comparison results for all fields
                 var entries = GetComparisonsOfEntriesByLine(entry, matchingEntry);
-                // Pass the _editedChoices dictionary to the menu printer
+                // Pass the _editedChoices dictionary to the menu printer to show current edits
                 PrintNonMatchEntryMenu(entry, matchingEntry, entries, selectedRow, _editedChoices);
-                PrintCommandMenu(command); // This will print the command prompt
+                PrintCommandMenu(command); // This will print the command prompt and help message
 
                 Console.Write("Command: ");
                 Console.Out.Flush(); // Ensure prompt is displayed before reading input
@@ -35,7 +43,7 @@ public class DataMatcherConflictUI
                 switch (command)
                 {
                     case Commands.Help:
-                        // Help message is already printed by PrintCommandMenu (if command was Help)
+                        // Help message is already printed by PrintCommandMenu if command was Help
                         // This case just ensures the loop continues
                         break;
                     case Commands.Edit:
@@ -45,24 +53,33 @@ public class DataMatcherConflictUI
                         // Exit loop
                         break;
                     case Commands.Invalid:
+                    default:
                         Console.WriteLine("Invalid command. Type 'h' or 'help' for options.");
                         break;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine($"An error occurred: {e.Message}");
+                Console.WriteLine("Press ENTER to continue.");
+                Console.ReadLine();
                 command = Commands.Invalid; // Reset to invalid to show menu again
             }
         }
     }
 
-
+    /// <summary>
+    /// Handles the 'edit' command, prompting the user for a row number and choice.
+    /// </summary>
+    /// <param name="bpEntry">The BPDataEntry being edited.</param>
+    /// <param name="xmlEntry">The XMLDataEntry being edited.</param>
+    /// <param name="entriesMatches">Array indicating which fields match.</param>
+    /// <param name="selectedRow">Reference to the currently selected row number.</param>
     private void HandleEditCommand(BPDataEntry bpEntry, XMLDataEntry xmlEntry, bool[] entriesMatches,
         ref int? selectedRow)
     {
         Console.Write("Enter the row number to edit: ");
-        // Now there are 12 potential rows based on the Comparisons enum
+        // There are 12 potential rows based on the Comparisons enum
         if (int.TryParse(Console.ReadLine(), out int rowNum) && rowNum >= 1 && rowNum <= 12)
         {
             selectedRow = rowNum;
@@ -84,25 +101,33 @@ public class DataMatcherConflictUI
                     UpdateEntryBasedOnChoice(bpEntry, xmlEntry, rowNum, choice);
                     _editedChoices[rowNum] = choice; // Store the edited choice
                     selectedRow = null; // Deselect row after update
-                    Console.WriteLine("Entry updated. Press ENTER to continue."); // Changed prompt
-                    Console.ReadLine(); // Just use ReadLine to wait for user to press Enter
+                    Console.WriteLine("Entry updated. Press ENTER to continue.");
+                    Console.ReadLine(); // Wait for user to press Enter
                 }
                 else
                 {
-                    Console.WriteLine("Edit cancelled.");
+                    Console.WriteLine("Edit cancelled. Press ENTER to continue.");
+                    Console.ReadLine();
                 }
             }
             else
             {
-                Console.WriteLine("Invalid choice. Please enter 'B', 'P', 'N', or 'S'.");
+                Console.WriteLine("Invalid choice. Please enter 'B', 'P', 'N', or 'S'. Press ENTER to continue.");
+                Console.ReadLine();
             }
         }
         else
         {
-            Console.WriteLine("Invalid row number.");
+            Console.WriteLine("Invalid row number. Press ENTER to continue.");
+            Console.ReadLine();
         }
     }
 
+    /// <summary>
+    /// Gets the category name (field name) based on the row number.
+    /// </summary>
+    /// <param name="rowNum">The 1-based row number.</param>
+    /// <returns>The string representation of the category name.</returns>
     private string GetCategoryName(int rowNum)
     {
         // rowNum directly corresponds to (Comparisons enum value + 1)
@@ -114,60 +139,145 @@ public class DataMatcherConflictUI
         return "Unknown";
     }
 
+    /// <summary>
+    /// Updates the internal lists (BpEntriesToUpdate, PnEntriesToUpdate) with detailed change information
+    /// based on the user's choice for a specific field.
+    /// </summary>
+    /// <param name="bpEntry">The BPDataEntry being considered.</param>
+    /// <param name="xmlEntry">The XMLDataEntry being considered.</param>
+    /// <param name="rowNum">The 1-based row number corresponding to the field being updated.</param>
+    /// <param name="choice">The user's choice ('B', 'P', 'N', 'S').</param>
     private void UpdateEntryBasedOnChoice(BPDataEntry bpEntry, XMLDataEntry xmlEntry, int rowNum, string? choice)
     {
         Console.WriteLine($"Updating based on choice for row {rowNum}...");
 
-        // Remove from both lists first to ensure clean state before re-adding
-        if (BpEntriesToUpdate.Contains(bpEntry))
+        // Determine the field name based on rowNum
+        string fieldName = GetCategoryName(rowNum);
+
+        string? bpValue = null;
+        string? pnValue = null;
+
+        // Use a switch statement to get the current values of the field from both entries
+        // This maps the rowNum (derived from Comparisons enum) to the actual property values.
+        switch ((Comparisons) (rowNum - 1)) // Convert 1-based rowNum back to 0-based enum value
         {
-            BpEntriesToUpdate.Remove(bpEntry);
-            Console.WriteLine($"Removed BP entry (Title: {bpEntry.Title}) from BPEntriesToUpdate.");
+            case Comparisons.BpNumMatch:
+                bpValue = bpEntry.BPNumber;
+                pnValue = xmlEntry.BPNumber;
+                break;
+            case Comparisons.CrMatch:
+                bpValue = bpEntry.CR;
+                pnValue = xmlEntry.CR;
+                break;
+            case Comparisons.IndexMatch:
+                bpValue = bpEntry.Index;
+                pnValue = xmlEntry.Index;
+                break;
+            case Comparisons.IndexBisMatch:
+                bpValue = bpEntry.IndexBis;
+                pnValue = xmlEntry.IndexBis;
+                break;
+            case Comparisons.InternetMatch:
+                bpValue = bpEntry.Internet;
+                pnValue = xmlEntry.Internet;
+                break;
+            case Comparisons.NameMatch:
+                bpValue = bpEntry.Name;
+                pnValue = xmlEntry.Name;
+                break;
+            case Comparisons.NoMatch:
+                bpValue = bpEntry.No;
+                pnValue = xmlEntry.No;
+                break;
+            case Comparisons.PublicationMatch:
+                bpValue = bpEntry.Publication;
+                pnValue = xmlEntry.Publication;
+                break;
+            case Comparisons.ResumeMatch:
+                bpValue = bpEntry.Resume;
+                pnValue = xmlEntry.Resume;
+                break;
+            case Comparisons.SbandsegMatch:
+                bpValue = bpEntry.SBandSEG;
+                pnValue = xmlEntry.SBandSEG;
+                break;
+            case Comparisons.TitleMatch:
+                bpValue = bpEntry.Title;
+                pnValue = xmlEntry.Title;
+                break;
+            case Comparisons.AnneeMatch:
+                bpValue = bpEntry.Annee;
+                pnValue = xmlEntry.Annee;
+                break;
+            default:
+                Console.WriteLine($"Warning: Unknown row number {rowNum} for field value extraction.");
+                return; // Exit if rowNum is invalid
         }
 
-        if (PnEntriesToUpdate.Contains(xmlEntry))
-        {
-            PnEntriesToUpdate.Remove(xmlEntry);
-            Console.WriteLine($"Removed PN entry (Title: {xmlEntry.Title}) from PNEntriesToUpdate.");
-        }
+        // Remove any existing update details for the same entry and field to ensure only the latest choice is kept.
+        BpEntriesToUpdate.RemoveAll(ud => ud.Entry == bpEntry && ud.FieldName == fieldName);
+        PnEntriesToUpdate.RemoveAll(ud => ud.Entry == xmlEntry && ud.FieldName == fieldName);
 
-        if (choice == "B") // BP is correct, so PN entry should be updated
+        // Add new UpdateDetail objects based on the user's choice
+        if (choice == "B") // BP is correct, so PN entry should be updated to match BP's value
         {
-            if (!PnEntriesToUpdate.Contains(xmlEntry))
+            // Only add if there's an actual change needed
+            if (pnValue != bpValue)
             {
-                PnEntriesToUpdate.Add(xmlEntry);
-                Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate.");
+                PnEntriesToUpdate.Add(new UpdateDetail<XMLDataEntry>(xmlEntry, fieldName, pnValue, bpValue));
+                Console.WriteLine(
+                    $"Added PN update for entry (Title: {xmlEntry.Title ?? "N/A"}) for field '{fieldName}'. Old: '{pnValue ?? "NULL"}', New: '{bpValue ?? "NULL"}'.");
+            }
+            else
+            {
+                Console.WriteLine($"PN field '{fieldName}' is already identical to BP. No update recorded.");
             }
         }
-        else if (choice == "P") // PN is correct, so BP entry should be updated
+        else if (choice == "P") // PN is correct, so BP entry should be updated to match PN's value
         {
-            if (!BpEntriesToUpdate.Contains(bpEntry))
+            // Only add if there's an actual change needed
+            if (bpValue != pnValue)
             {
-                BpEntriesToUpdate.Add(bpEntry);
-                Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate.");
+                BpEntriesToUpdate.Add(new UpdateDetail<BPDataEntry>(bpEntry, fieldName, bpValue, pnValue));
+                Console.WriteLine(
+                    $"Added BP update for entry (Title: {bpEntry.Title ?? "N/A"}) for field '{fieldName}'. Old: '{bpValue ?? "NULL"}', New: '{pnValue ?? "NULL"}'.");
+            }
+            else
+            {
+                Console.WriteLine($"BP field '{fieldName}' is already identical to PN. No update recorded.");
             }
         }
-        else if (choice == "S") // Both are correct/shared
+        else if (choice == "S") // Both are correct/shared. If values differ, record updates to make them consistent.
         {
-            if (!BpEntriesToUpdate.Contains(bpEntry))
+            if (bpValue != pnValue)
             {
-                BpEntriesToUpdate.Add(bpEntry);
-                Console.WriteLine($"Added BP entry (Title: {bpEntry.Title}) to BPEntriesToUpdate (Shared).");
-            }
+                // Decide which value to standardize on, e.g., BP's value for both
+                // For demonstration, let's say we standardize to BP's value for both if they differ.
+                // You might need more complex logic here based on your "Shared" definition.
+                PnEntriesToUpdate.Add(new UpdateDetail<XMLDataEntry>(xmlEntry, fieldName, pnValue, bpValue));
+                BpEntriesToUpdate.Add(new UpdateDetail<BPDataEntry>(bpEntry, fieldName, bpValue,
+                    bpValue)); // No actual change if BP is chosen as the standard
 
-            if (!PnEntriesToUpdate.Contains(xmlEntry))
+                Console.WriteLine(
+                    $"Added Shared update for field '{fieldName}'. Standardized to BP's value. PN Old: '{pnValue ?? "NULL"}', PN New: '{bpValue ?? "NULL"}'.");
+            }
+            else
             {
-                PnEntriesToUpdate.Add(xmlEntry);
-                Console.WriteLine($"Added PN entry (Title: {xmlEntry.Title}) to PNEntriesToUpdate (Shared).");
+                Console.WriteLine($"Field '{fieldName}' is already shared and identical. No update needed.");
             }
         }
-        else if (choice == "N") // Neither is correct
+        else if (choice == "N") // Neither is correct. No update recorded, but ensures previous updates are removed.
         {
-            Console.WriteLine("Neither BP nor PN was chosen as correct for this field, removed from update lists.");
+            Console.WriteLine(
+                $"Neither BP nor PN was chosen as correct for field '{fieldName}'. Any previous updates for this field have been removed.");
         }
     }
 
-
+    /// <summary>
+    /// Parses the user's command input.
+    /// </summary>
+    /// <param name="input">The raw string input from the console.</param>
+    /// <returns>The corresponding Commands enum value.</returns>
     private Commands ParseCommand(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return Commands.Invalid;
@@ -188,12 +298,12 @@ public class DataMatcherConflictUI
         }
     }
 
-
+    /// <summary>
+    /// Prints the command menu to the console.
+    /// </summary>
+    /// <param name="command">The current command, used to conditionally print help.</param>
     private void PrintCommandMenu(Commands command)
     {
-        // This method will now primarily print the prompt for the user
-        // and a help message if the 'help' command was entered.
-
         if (command == Commands.Help)
         {
             Console.WriteLine("\n--- Commands ---");
@@ -204,17 +314,29 @@ public class DataMatcherConflictUI
         }
     }
 
+    /// <summary>
+    /// Sets the console foreground color based on whether an entry matches.
+    /// </summary>
+    /// <param name="entryMatches">True if the entries match, false otherwise.</param>
     private void SetConsoleColour(bool entryMatches)
     {
         if (entryMatches) Console.ForegroundColor = ConsoleColor.Green;
         else Console.ForegroundColor = ConsoleColor.Red;
     }
 
+    /// <summary>
+    /// Prints the menu displaying non-matching entries and their comparison status.
+    /// </summary>
+    /// <param name="entry">The BPDataEntry.</param>
+    /// <param name="matchingEntry">The XMLDataEntry.</param>
+    /// <param name="entriesMatches">Array indicating which fields match.</param>
+    /// <param name="selectedRow">The currently selected row for editing (if any).</param>
+    /// <param name="editedChoices">Dictionary of user's edited choices for rows.</param>
     private void PrintNonMatchEntryMenu(BPDataEntry entry, XMLDataEntry matchingEntry, bool[] entriesMatches,
-        int? selectedRow, Dictionary<int, string?> editedChoices) // Added editedChoices parameter
+        int? selectedRow, Dictionary<int, string?> editedChoices)
     {
         Console.Clear(); // Clear console for cleaner display
-        Console.Out.Flush(); // Added flush after clear to ensure buffer is truly empty and ready for new output
+        Console.Out.Flush(); // Ensure buffer is truly empty and ready for new output
 
         int numberWidth = 6;
         int categoryWidth = 12;
@@ -245,7 +367,7 @@ public class DataMatcherConflictUI
         Console.WriteLine(horizontalLine);
         Console.Out.Flush(); // Explicitly flush the console output buffer
 
-        // Wrapping and printing helpers unchanged
+        // Helper function to wrap text for display
         static List<string> WrapText(string text, int maxWidth)
         {
             var lines = new List<string>();
@@ -260,7 +382,8 @@ public class DataMatcherConflictUI
             {
                 int length = Math.Min(maxWidth, text.Length - pos);
                 int lastSpace = text.LastIndexOf(' ', pos + length - 1, length);
-                if (lastSpace > pos)
+                if (lastSpace > pos &&
+                    lastSpace > pos) // Ensure lastSpace is within the current segment and not at the beginning
                 {
                     length = lastSpace - pos + 1;
                 }
@@ -273,6 +396,7 @@ public class DataMatcherConflictUI
             return lines;
         }
 
+        // Helper function to print a wrapped row
         void PrintWrappedRow(int rowNumber, string category, string? bpData, string? pnData, bool match,
             bool isSelected,
             string editedStatus)
@@ -324,13 +448,7 @@ public class DataMatcherConflictUI
             Console.WriteLine(horizontalLine);
         }
 
-        // Renamed local functions to avoid ambiguity
-        bool HasStringData(string s1, string s2) => !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2);
-        bool HasBoolData(bool b1, bool b2) => b1 || b2; // For boolean Has properties
-        bool HasNullableIntData(int? i1, int? i2) => i1.HasValue || i2.HasValue; // For nullable int
-
-
-        // Print rows conditionally based on data presence, using renamed functions`
+        // Print rows conditionally based on data presence, using renamed functions
         if (entry.HasBPNum || matchingEntry.HasBPNum)
             PrintWrappedRow(1, "BPNumber", entry.BPNumber, matchingEntry.BPNumber,
                 entriesMatches[(int) Comparisons.BpNumMatch], selectedRow == 1,
@@ -388,54 +506,63 @@ public class DataMatcherConflictUI
         Console.WriteLine($"\nPN File: {matchingEntry.PNFileName}");
     }
 
-
+    /// <summary>
+    /// Compares relevant fields between a BPDataEntry and an XMLDataEntry and returns
+    /// an array indicating which fields match.
+    /// </summary>
+    /// <param name="entry">The BPDataEntry.</param>
+    /// <param name="matchingEntry">The XMLDataEntry to compare against.</param>
+    /// <returns>A boolean array where true indicates a match for the corresponding field.</returns>
     private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
-        var matches = new bool[12];
+        var matches = new bool[12]; // Array size matches the number of Comparisons enum members
+
+        // Compare each field, considering nulls and using CheckEquals for strings
         matches[((int) Comparisons.BpNumMatch)] =
-            (entry.HasBPNum && matchingEntry.HasBPNum) && (entry.BPNumber == matchingEntry.BPNumber);
-        matches[((int) Comparisons.CrMatch)] = (entry.HasCR && matchingEntry.HasCR) && (entry.CR == matchingEntry.CR);
+            (entry.HasBPNum && matchingEntry.HasBPNum) && (CheckEquals(entry.BPNumber, matchingEntry.BPNumber));
+        matches[((int) Comparisons.CrMatch)] =
+            (entry.HasCR && matchingEntry.HasCR) && (CheckEquals(entry.CR, matchingEntry.CR));
         matches[((int) Comparisons.IndexMatch)] =
-            (entry.HasBPNum && matchingEntry.HasIndex) && (entry.Index == matchingEntry.Index);
-        matches[((int) Comparisons.IndexBisMatch)] = (entry.HasBPNum && matchingEntry.HasIndexBis) &&
-                                                     (entry.IndexBis == matchingEntry.IndexBis);
-        matches[((int) Comparisons.InternetMatch)] = (entry.HasBPNum && matchingEntry.HasInternet) &&
-                                                     (entry.Internet == matchingEntry.Internet);
+            (entry.HasIndex && matchingEntry.HasIndex) && (CheckEquals(entry.Index, matchingEntry.Index));
+        matches[((int) Comparisons.IndexBisMatch)] =
+            (entry.HasIndexBis && matchingEntry.HasIndexBis) && (CheckEquals(entry.IndexBis, matchingEntry.IndexBis));
+        matches[((int) Comparisons.InternetMatch)] =
+            (entry.HasInternet && matchingEntry.HasInternet) && (CheckEquals(entry.Internet, matchingEntry.Internet));
         matches[((int) Comparisons.NameMatch)] =
-            (entry.HasBPNum && matchingEntry.HasName) && (entry.Name == matchingEntry.Name);
-        matches[((int) Comparisons.PublicationMatch)] = (entry.HasPublication && matchingEntry.HasPublication) &&
-                                                        (entry.Publication == matchingEntry.Publication);
-        matches[((int) Comparisons.ResumeMatch)] =
-            (entry.HasResume && matchingEntry.HasResume) && (entry.Resume == matchingEntry.Resume);
-        matches[((int) Comparisons.SbandsegMatch)] = (entry.HasSBandSEG && matchingEntry.HasSBandSEG) &&
-                                                     (entry.SBandSEG == matchingEntry.SBandSEG);
-        if (entry.Title != null)
-            if (matchingEntry.Title != null)
-                matches[((int) Comparisons.TitleMatch)] = (entry.HasTitle && matchingEntry.HasTitle) &&
-                                                          (CheckEquals(entry.Title, matchingEntry.Title));
-        matches[((int) Comparisons.AnneeMatch)] =
-            (entry.HasAnnee && matchingEntry.HasAnnee) && (entry.Annee == matchingEntry.Annee);
+            (entry.HasName && matchingEntry.HasName) && (CheckEquals(entry.Name, matchingEntry.Name));
         matches[((int) Comparisons.NoMatch)] =
             (entry.HasNo && matchingEntry.HasNo) && (CheckEquals(entry.No, matchingEntry.No));
+        matches[((int) Comparisons.PublicationMatch)] =
+            (entry.HasPublication && matchingEntry.HasPublication) &&
+            (CheckEquals(entry.Publication, matchingEntry.Publication));
+        matches[((int) Comparisons.ResumeMatch)] =
+            (entry.HasResume && matchingEntry.HasResume) && (CheckEquals(entry.Resume, matchingEntry.Resume));
+        matches[((int) Comparisons.SbandsegMatch)] =
+            (entry.HasSBandSEG && matchingEntry.HasSBandSEG) && (CheckEquals(entry.SBandSEG, matchingEntry.SBandSEG));
+        matches[((int) Comparisons.TitleMatch)] =
+            (entry.HasTitle && matchingEntry.HasTitle) && (CheckEquals(entry.Title, matchingEntry.Title));
+        matches[((int) Comparisons.AnneeMatch)] =
+            (entry.HasAnnee && matchingEntry.HasAnnee) && (CheckEquals(entry.Annee, matchingEntry.Annee));
 
         return matches;
     }
 
+    /// <summary>
+    /// Compares two nullable strings for equality, handling nulls gracefully.
+    /// </summary>
+    /// <param name="a">The first string.</param>
+    /// <param name="b">The second string.</param>
+    /// <returns>True if the strings are equal or both null, false otherwise.</returns>
     private bool CheckEquals(string? a, string? b)
     {
         if (a == null && b == null) return true;
         if (a == null || b == null) return false;
-        if (a.Length != b.Length) return false;
-
-        for (int index = 0; index < a.Length; index++)
-        {
-            if (a[index] != b[index])
-                return false;
-        }
-
-        return true;
+        return a.Equals(b, StringComparison.Ordinal); // Use Ordinal for case-sensitive, culture-insensitive comparison
     }
 
+    /// <summary>
+    /// Enum representing the different comparison categories (fields).
+    /// </summary>
     enum Comparisons
     {
         BpNumMatch = 0,
@@ -452,6 +579,9 @@ public class DataMatcherConflictUI
         AnneeMatch = 11
     }
 
+    /// <summary>
+    /// Enum representing the available commands in the UI.
+    /// </summary>
     enum Commands
     {
         Finished,

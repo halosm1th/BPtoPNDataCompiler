@@ -184,7 +184,6 @@ public class BPtoPNCore
             else
             {
                 throw new ArgumentException($"Error, invalid argument {firstArg}, could not be parsed.");
-                return false;
             }
         }
 
@@ -213,7 +212,6 @@ public class BPtoPNCore
             else
             {
                 throw new ArgumentException($"Error, one of your arguments is invalid. See -h for more info.");
-                return false;
             }
         }
 
@@ -277,8 +275,6 @@ public class BPtoPNCore
         {
             throw new ArgumentException("Error, too many arguments. Use -h to see all valid argument combintations.");
         }
-
-        return true;
     }
 
     private static void ShowHelp()
@@ -340,8 +336,215 @@ public class BPtoPNCore
             var dm = new DataMatcher(await xmlEntryTask, bpEntries);
             Console.WriteLine("Starting to match entries?");
             dm.MatchEntries();
-            Console.WriteLine("Done matching entries. press any key to exit.");
+            Console.WriteLine("Done matching entries. Now saving lists.");
+            var BpEntries = UpdateBpEntries(dm.BpEntriesToUpdate).ToList();
+            var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
+
+            SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
+            Console.WriteLine("Finished saving lists");
+
             Console.ReadLine();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    private static IEnumerable<XMLDataEntry> UpdatePnEntries(List<UpdateDetail<XMLDataEntry>> pnEntriesNeedingUpdates)
+    {
+        var fixedEntries = new List<XMLDataEntry>();
+        foreach (var entry in pnEntriesNeedingUpdates)
+        {
+            var fixedEntry = entry.Entry;
+            if (entry.FieldName == "BPNumber")
+            {
+                fixedEntry.BPNumber = entry.NewValue;
+            }
+            else if (entry.FieldName == "CR")
+            {
+                fixedEntry.CR = entry.NewValue;
+            }
+            else if (entry.FieldName == "Index")
+            {
+                fixedEntry.Index = entry.NewValue;
+            }
+            else if (entry.FieldName == "IndexBis")
+            {
+                fixedEntry.IndexBis = entry.NewValue;
+            }
+            else if (entry.FieldName == "Internet")
+            {
+                fixedEntry.Internet = entry.NewValue;
+            }
+            else if (entry.FieldName == "Name")
+            {
+                fixedEntry.Name = entry.NewValue;
+            }
+            else if (entry.FieldName == "No")
+            {
+                //If you check the defintion of XMlEntry, the number is alawys set to equal to the BPNumber
+                fixedEntry.BPNumber = entry.NewValue;
+            }
+            else if (entry.FieldName == "Publication")
+            {
+                fixedEntry.Publication = entry.NewValue;
+            }
+            else if (entry.FieldName == "Resume")
+            {
+                fixedEntry.Resume = entry.NewValue;
+            }
+            else if (entry.FieldName == "SBandSEG")
+            {
+                fixedEntry.SBandSEG = entry.NewValue;
+            }
+            else if (entry.FieldName == "Title")
+            {
+                fixedEntry.Title = entry.NewValue;
+            }
+            else if (entry.FieldName == "Annee")
+            {
+                fixedEntry.Annee = entry.NewValue;
+            }
+
+            fixedEntries.Add(fixedEntry);
+        }
+
+        return fixedEntries;
+    }
+
+    private static IEnumerable<BPDataEntry> UpdateBpEntries(List<UpdateDetail<BPDataEntry>> bpEntriesNeedingUpdates)
+    {
+        var fixedEntries = new List<BPDataEntry>();
+        foreach (var entry in bpEntriesNeedingUpdates)
+        {
+            var fixedEntry = entry.Entry;
+            if (entry.FieldName == "BPNumber")
+            {
+                fixedEntry.BPNumber = entry.NewValue;
+            }
+            else if (entry.FieldName == "CR")
+            {
+                fixedEntry.CR = entry.NewValue;
+            }
+            else if (entry.FieldName == "Index")
+            {
+                fixedEntry.Index = entry.NewValue;
+            }
+            else if (entry.FieldName == "IndexBis")
+            {
+                fixedEntry.IndexBis = entry.NewValue;
+            }
+            else if (entry.FieldName == "Internet")
+            {
+                fixedEntry.Internet = entry.NewValue;
+            }
+            else if (entry.FieldName == "Name")
+            {
+                fixedEntry.Name = entry.NewValue;
+            }
+            else if (entry.FieldName == "No")
+            {
+                fixedEntry.No = entry.NewValue;
+            }
+            else if (entry.FieldName == "Publication")
+            {
+                fixedEntry.Publication = entry.NewValue;
+            }
+            else if (entry.FieldName == "Resume")
+            {
+                fixedEntry.Resume = entry.NewValue;
+            }
+            else if (entry.FieldName == "SBandSEG")
+            {
+                fixedEntry.SBandSEG = entry.NewValue;
+            }
+            else if (entry.FieldName == "Title")
+            {
+                fixedEntry.Title = entry.NewValue;
+            }
+            else if (entry.FieldName == "Annee")
+            {
+                fixedEntry.Annee = entry.NewValue;
+            }
+
+            fixedEntries.Add(fixedEntry);
+        }
+
+        return fixedEntries;
+    }
+
+    private static void SaveLists(List<BPDataEntry> BpEntriesToUpdate,
+        List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
+    {
+        var EndDataFolder = $"BpToPnChecker-{DateTime.Now}".Replace(":", ".");
+        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
+        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
+        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries-{DateTime.Now}".Replace(":", ".");
+        SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
+
+        SaveBPEntries(BpEntriesToUpdate, BPEntryPath);
+        SavePNEntries(PnEntriesToUpdate, PnEntryPath);
+        SaveNewXMlEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
+    }
+
+    private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,
+        string NewXmlEntryPath)
+    {
+        Console.WriteLine($"Setting up saving directories [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
+        if (Directory.GetCurrentDirectory().Contains("Biblio")) Directory.SetCurrentDirectory("..");
+
+        Directory.CreateDirectory(EndDataFolder);
+        Directory.CreateDirectory(BPEntryPath);
+        Directory.CreateDirectory(PnEntryPath);
+        Directory.CreateDirectory(NewXmlEntryPath);
+    }
+
+    private static void SaveNewXMlEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
+    {
+        Console.WriteLine("Saving Xml Entries");
+        foreach (var newXml in NewXmlEntriesToAdd)
+        {
+            var filePath = (path + $"/{newXml.Title}+{newXml.Publication}.xml").Replace("\"", "").Replace(":", ".");
+            Console.WriteLine($"Saving {newXml.Title}+{newXml.Publication} to {filePath}");
+            WriteEntry(newXml, filePath);
+        }
+    }
+
+    private static void SavePNEntries(List<XMLDataEntry> pnEntriesToUpdate, string path)
+    {
+        Console.WriteLine("Saving Pn Entries");
+        foreach (var pnEntries in pnEntriesToUpdate)
+        {
+            var filePath = (path + $"/{pnEntries.Title}+{pnEntries.Publication}.xml").Replace("\"", "")
+                .Replace(":", ".");
+            Console.WriteLine($"Saving {pnEntries.Title}+{pnEntries.Publication} to {filePath}");
+            WriteEntry(pnEntries, filePath);
+        }
+    }
+
+    private static void SaveBPEntries(List<BPDataEntry> bpEntriesToUpdate, string path)
+    {
+        Console.WriteLine("Saving Bp Entries");
+        foreach (var bpEntries in bpEntriesToUpdate)
+        {
+            var filePath = path + (($"/{bpEntries.Title}.xml").Replace("\"", "").Replace(":", "."));
+            Console.WriteLine($"Saving {bpEntries.Title}+{bpEntries.Publication} to {filePath}");
+            WriteEntry(bpEntries, filePath);
+        }
+    }
+
+    private static void WriteEntry(BPDataEntry entry, string path)
+    {
+        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{entry.Title}+{entry.Publication}\" type=\"book\">\n" +
+                  $"{entry.ToXML()}" +
+                  $"\n</bibl>";
+
+        try
+        {
+            File.WriteAllText(path, xml);
         }
         catch (Exception e)
         {

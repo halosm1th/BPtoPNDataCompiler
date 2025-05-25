@@ -53,7 +53,7 @@ public class XMLDataEntry : BPDataEntry
         //Same for internet
         var sharePub = HasPublication switch
         {
-            true when entry.HasPublication => CheckEquals(Publication, entry.Publication),
+            true when entry.HasPublication => CheckEquals(Publication ?? "", entry.Publication ?? ""),
             false when !entry.HasPublication => true,
             _ => false
         };

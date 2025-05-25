@@ -39,12 +39,12 @@ public class XMLEntryGatherer
         doc.Load(filePath);
 
         //Console.WriteLine($"getting: {filePath}");
-        
+
         foreach (var rawNode in doc?.DocumentElement?.ChildNodes)
         {
             if (rawNode.GetType() == typeof(XmlElement))
             {
-                var node = ((XmlElement)rawNode);
+                var node = ((XmlElement) rawNode);
                 await SetEntryAttributes(node, entry);
             }
             else
@@ -88,10 +88,9 @@ public class XMLEntryGatherer
 
     public async Task<List<XMLDataEntry>> GatherEntries()
     {
+        var entries = new List<XMLDataEntry>();
         try
         {
-            var entries = new List<XMLDataEntry>();
-
             foreach (var folder in Directory.GetDirectories(BiblioPath))
             {
                 Console.WriteLine($"adding files in : {folder}");
@@ -100,14 +99,12 @@ public class XMLEntryGatherer
                     entries.Add(entry);
                 }
             }
-
-            return entries;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
 
-        return null;
+        return entries;
     }
 }
