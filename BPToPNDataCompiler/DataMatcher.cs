@@ -17,13 +17,17 @@ namespace BPtoPNDataCompiler
         /// </summary>
         /// <param name="xmlEntries">A list of XMLDataEntry objects to match against.</param>
         /// <param name="bpEntries">A list of BPDataEntry objects to be matched.</param>
-        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries)
+        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger logger)
         {
+            logger.LogProcessingInfo(
+                $"Created Data Matcher with {xmlEntries.Count} xml entries and {bpEntries.Count} bp entries.");
             Console.WriteLine("Creating Data matcher...");
+            this.logger = logger;
             XmlEntries = xmlEntries;
             BpEntries = bpEntries;
-            Console.WriteLine("Saved the entry lists.");
         }
+
+        private Logger logger { get; }
 
         // Lists to store different categories of entries after matching process
         public List<BPDataEntry> NewXmlEntriesToAdd { get; } = new List<BPDataEntry>();

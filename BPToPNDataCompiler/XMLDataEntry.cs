@@ -2,7 +2,7 @@
 
 public class XMLDataEntry : BPDataEntry
 {
-    public XMLDataEntry(string fileName) : base(null)
+    public XMLDataEntry(string fileName, Logger logger) : base(null, logger)
     {
         PNFileName = fileName;
     }
@@ -31,8 +31,17 @@ public class XMLDataEntry : BPDataEntry
         return anyMatch;
     }
 
+
+    public override string ToString()
+    {
+        return $"{Name ?? ""} {Internet ?? ""} {Publication ?? ""} " +
+               $"{Resume ?? ""} {Title ?? ""} {Index ?? ""} {IndexBis ?? ""} " +
+               $"{No ?? ""} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
+    }
+
     public bool FullMatch(BPDataEntry entry)
     {
+        logger.LogProcessingInfo($"Checking if {entry.Title} is a full match for {this.Title}");
         //If htey both have share name, then shareName is equal if the names are equal.
         //if they both don't have share name, then they share in not having a name
         var shareName = HasName switch
@@ -122,8 +131,10 @@ public class XMLDataEntry : BPDataEntry
             _ => false
         };
 
-        return shareName && shareNet && sharePub && shareRes && shareTitle
-               && shareIndex && shareIndexBis && shareNo && shareCR && shareBP && shareSBSEg;
+        var result = shareName && shareNet && sharePub && shareRes && shareTitle
+                     && shareIndex && shareIndexBis && shareNo && shareCR && shareBP && shareSBSEg;
+        logger.LogProcessingInfo($"Copmarison done, result is: {result}");
+        return result;
     }
 
     private bool CheckEquals(string a, string b)
@@ -164,21 +175,27 @@ public class XMLDataEntry : BPDataEntry
     public int GetMatchStrength(BPDataEntry entry)
     {
         var match = GetComparisonsOfEntriesByLine(entry);
-        return match.Aggregate(0, (h, t) => t ? h + 1 : h);
+        var str = match.Aggregate(0, (h, t) => t ? h + 1 : h);
+        logger.LogProcessingInfo($"Checking strength of match between {this.Title} and {entry.Title}. Result: {str}");
+        return str;
     }
 
     public bool StrongMatch(BPDataEntry entry)
     {
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
-        return truthCount >= 9;
+        var strong = truthCount >= 9;
+        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {strong}");
+        return strong;
     }
 
     public bool MediumMatch(BPDataEntry entry)
     {
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
-        return truthCount >= 6;
+        var medium = truthCount >= 6;
+        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {medium}");
+        return medium;
     }
 
     public bool WeakMatch(BPDataEntry entry)
@@ -186,8 +203,11 @@ public class XMLDataEntry : BPDataEntry
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         //If they match on more than one thing, find it and mention it.
-        return truthCount > 3;
+        var weak = truthCount > 3;
+        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {weak}");
+        return weak;
     }
+
 
     enum Comparisons
     {

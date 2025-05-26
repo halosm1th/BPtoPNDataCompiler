@@ -15,13 +15,17 @@ public class BPDataEntry
     private string? _resume = null;
     private string? _sbandseg = null;
     private string? _title = null;
+
     private string? annee = null;
 
     //At a minimum all entries must have one number
-    public BPDataEntry(string? number)
+    public BPDataEntry(string? number, Logger logger)
     {
         BPNumber = number;
+        this.logger = logger;
     }
+
+    protected Logger logger { get; }
 
     public string? Index
     {
@@ -121,10 +125,19 @@ public class BPDataEntry
 
     private string? ReplaceInvalidText(string? value)
     {
+        logger.LogProcessingInfo($"Replacing invalid text in {value}");
         value = value?.Replace("&", "&amp;");
         value = value?.Replace("<", "&lt;");
         value = value?.Replace(">", "&gt;");
+        logger.LogProcessingInfo($"Replaced text resulted in: {value}");
         return value;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name ?? ""} {Internet ?? ""} {Publication ?? ""} " +
+               $"{Resume ?? ""} {Title ?? ""} {Index ?? ""} {IndexBis ?? ""} " +
+               $"{No ?? ""} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
     }
 
     public string ToXML()

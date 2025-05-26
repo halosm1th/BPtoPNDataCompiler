@@ -14,12 +14,16 @@ public class BPtoPNCore
 
     #region main and arg parsing
 
+    public static Logger logger { get; private set; }
+
     public static async Task Main(string[] args)
     {
+        logger = new Logger();
         try
         {
             //Check the args we got.
             //Check that we have the Biblio data from PN.
+            logger.Log("Parsing args");
             var shouldRun = ParseArgs(args);
             if (startYear > endYear)
             {
@@ -37,6 +41,7 @@ public class BPtoPNCore
                     $"Error, the end year cannot be greater than the current system year -1 (Currently: {DateTime.Now.Year - 1})");
             }
 
+            logger.Log($"Should start core? {shouldRun}");
             if (shouldRun) Core();
         }
         catch (ArgumentException e)
@@ -58,6 +63,7 @@ public class BPtoPNCore
         //Just a nice little way for us to bubble any errors we run into up and to the user, to be handled with ease.
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(e.Message);
+        logger.LogError("Error: ", e);
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
@@ -65,10 +71,13 @@ public class BPtoPNCore
 
     private static bool ParseArgs(string[] args)
     {
+        logger.LogProcessingInfo("Starting to parse args");
         //First case is no args, or the help menu arg
         if (args.Length == 0) return true;
         if ((args.Length == 1 && (args[0].ToLower() == "-h" || args[0].ToLower() == "help")))
         {
+            logger.Log("Showing help menu");
+            logger.LogProcessingInfo("processed help menu arg");
             ShowHelp();
             return false;
         }
@@ -81,15 +90,20 @@ public class BPtoPNCore
             {
                 if (int.TryParse(args[0], out startYear))
                 {
+                    logger.Log($"Processed as start year, {startYear}");
                     return true;
                 }
 
+                logger.Log(
+                    $"Error, {args[0]} is not a valid year. Please enter a number between 1932-{DateTime.Now.Year - 1}");
                 throw new ArgumentException($"Error, {args[0]} is not an accepted value. " +
                                             $"Please enter a number between 1932-{DateTime.Now.Year - 1}\nuse -h or help " +
                                             $"for more information.");
             }
             else
             {
+                logger.Log(
+                    $"Error, {args[0]} is not a valid year. Please enter a number between 1932-{DateTime.Now.Year - 1}");
                 throw new ArgumentException(
                     $"Error, {args[0]} is not an accepted value. Please enter a number between 1932-{DateTime.Now.Year - 1}\nuse -h or help " +
                     $"for more information.");
@@ -120,10 +134,13 @@ public class BPtoPNCore
                             endYear = startYear + 1;
                         }
 
+                        logger.Log($"Set Start year: {startYear}");
+
                         return true;
                     }
                     else
                     {
+                        logger.Log($"{secondArg} is invalid");
                         throw new ArgumentException(
                             $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                     }
@@ -148,10 +165,13 @@ public class BPtoPNCore
                                 $"The end year has to be higher than the start year. The default start year is 1932. You entered {secondArg}");
                         }
 
+                        logger.Log($"Set end year: {endYear}");
                         return true;
                     }
                     else
                     {
+                        logger.Log(
+                            $"Error, value {{secondArg}} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                         throw new ArgumentException(
                             $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                     }
@@ -159,6 +179,8 @@ public class BPtoPNCore
 
                 else
                 {
+                    logger.Log(
+                        $"Error, value {{secondArg}} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                     throw new ArgumentException(
                         $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                 }
@@ -169,6 +191,7 @@ public class BPtoPNCore
                 {
                     if (startYear > endYear)
                     {
+                        logger.Log($"Error start year ({startYear}) cannot be larger than end year ({endYear})");
                         throw new ArgumentException(
                             $"Error start year ({startYear}) cannot be larger than end year ({endYear})");
                     }
@@ -177,12 +200,15 @@ public class BPtoPNCore
                 }
                 else
                 {
+                    logger.Log(
+                        $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                     throw new ArgumentException(
                         $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
                 }
             }
             else
             {
+                logger.Log($"Error, invalid argument {firstArg}, could not be parsed.");
                 throw new ArgumentException($"Error, invalid argument {firstArg}, could not be parsed.");
             }
         }
@@ -202,15 +228,18 @@ public class BPtoPNCore
             {
                 if (int.TryParse(firstArg, out startYear) && int.TryParse(thirdArg, out endYear))
                 {
+                    logger.Log($"Set start year: {startYear} and end year: {endYear}.");
                     return true;
                 }
                 else
                 {
+                    logger.Log($"Error, one of the entered numbers could not be parsed.");
                     throw new ArgumentException("Error, one of the entered numbers could not be parsed.");
                 }
             }
             else
             {
+                logger.Log($"Error, one of your arguments is invalid. See -h for more info.");
                 throw new ArgumentException($"Error, one of your arguments is invalid. See -h for more info.");
             }
         }
@@ -237,11 +266,14 @@ public class BPtoPNCore
                 {
                     if (int.TryParse(secondArg, out startYear) && int.TryParse(forthArg, out endYear))
                     {
+                        logger.Log($"Start year {startYear} and end year {endYear}");
                         return true;
                     }
                     else
                     {
-                        throw new ArgumentException("Error could not parse supplied numbers");
+                        var error = new ArgumentException("Error could not parse supplied numbers");
+                        logger.LogError("Error could not parse supplied numbers", error);
+                        throw error;
                     }
                 }
 
@@ -249,36 +281,47 @@ public class BPtoPNCore
                 {
                     if (int.TryParse(secondArg, out endYear) && int.TryParse(forthArg, out startYear))
                     {
+                        logger.Log($"Set end year {endYear} and start year {startYear}");
                         return true;
                     }
                     else
                     {
-                        throw new ArgumentException("Error could not parse supplied numbers");
+                        var error = new ArgumentException("Error could not parse supplied numbers");
+                        logger.LogError("Error could not parse supplied numbers", error);
+                        throw error;
                     }
                 }
 
 
                 else
                 {
-                    throw new ArgumentException(
+                    var error = new ArgumentException(
                         "Error, the arguments were not valid. Try -h for a list of valid arguments");
+                    logger.LogError("Error could not parse supplied numbers", error);
+                    throw error;
                 }
             }
             else
             {
-                throw new ArgumentException(
+                var error = new ArgumentException(
                     "Error, the arguments were not valid. Try -h for a list of valid arguments");
+                logger.LogError("Error could not parse supplied numbers", error);
+                throw error;
             }
         }
 
         else
         {
-            throw new ArgumentException("Error, too many arguments. Use -h to see all valid argument combintations.");
+            var error = new ArgumentException(
+                "Error, the arguments were not valid. Try -h for a list of valid arguments");
+            logger.LogError("Error could not parse supplied numbers", error);
+            throw error;
         }
     }
 
     private static void ShowHelp()
     {
+        logger.Log("Showing help menu");
         Console.WriteLine(
             "This data compiler must be run in the ipd.data folder, or its parent folder, and the idp.data folder must contain the biblio folder for this to work." +
             "\nIf you do not have these files, download them from: https://github.com/papyri/idp.data");
@@ -310,39 +353,58 @@ public class BPtoPNCore
 
     private static async Task Core()
     {
+        logger.Log("Started core");
         try
         {
             Console.WriteLine($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
+            logger.Log($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
 
             //This will check 
-            var gitHandler = new GitFolderHandler();
+            var gitHandler = new GitFolderHandler(logger);
             //If we have the git folder. Normally will error out before this if it cannot be found. 
             //AS such we'll just let hte exceptions bubble up.
             var biblioPath = gitHandler.GitBiblioDirectoryCheck();
 
+            logger.Log("Creating BpEntry Gatherer");
+            Console.WriteLine("Creating BPEntry Gatherer");
+            var BPEntryGatherer = new BPEntryGatherer(startYear, endYear, logger);
 
-            Console.Write("Creating BPEntryGatherer. ");
-            var BPEntryGatherer = new BPEntryGatherer(startYear, endYear);
-            Console.Write("BPEntryGather Created.\nCreating XMLEntryGatherer. ");
-            var XMLEntryGatherer = new XMLEntryGatherer(biblioPath);
-            Console.WriteLine("XML Entry Gatherer created.  ");
+            logger.Log("BPEntryGather Created.\nCreating XMLEntryGatherer.");
+            Console.WriteLine("BPEntryGather created. Creating XMLEntry gatherer");
+            var XMLEntryGatherer = new XMLEntryGatherer(biblioPath, logger);
+            logger.Log("XML Entry Gatherer created.");
 
+            logger.Log("Gathering XML entries");
+            Console.WriteLine("XmlEntry Gatherer created, gathering XML entries.");
             var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+            logger.Log("Gathering BP entries.");
+            Console.WriteLine("Gathered XMl Entries, gathering BP entries.");
             var bpEntries = BPEntryGatherer.GatherEntries();
 
-            Console.WriteLine("Gathered the stuff");
+            logger.Log("Entries are gathered");
+            Console.WriteLine("Entries have been gathered.");
 
             Console.Write("Preparing to start data matcher. ");
-            var dm = new DataMatcher(await xmlEntryTask, bpEntries);
+            logger.Log("Creating Datamatcher");
+            var dm = new DataMatcher(await xmlEntryTask, bpEntries, logger);
+
             Console.WriteLine("Starting to match entries?");
+            logger.Log("Starting to match entries");
             dm.MatchEntries();
+
             Console.WriteLine("Done matching entries. Now saving lists.");
+            logger.Log("Finished matching entries.");
+            logger.Log("Updating BPEntries before saving.");
             var BpEntries = UpdateBpEntries(dm.BpEntriesToUpdate).ToList();
+            logger.Log("Updating PnEntries before saving.");
             var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
 
+            logger.Log("Saving lists.");
             SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
-            Console.WriteLine("Finished saving lists");
 
+            logger.Log("Finshied saving lists. Logger will now kill itself.");
+            logger.Dispose();
+            Console.WriteLine("Finished saving lists.\nPress enter to exit...");
             Console.ReadLine();
         }
         catch (Exception e)
@@ -354,9 +416,13 @@ public class BPtoPNCore
 
     private static IEnumerable<XMLDataEntry> UpdatePnEntries(List<UpdateDetail<XMLDataEntry>> pnEntriesNeedingUpdates)
     {
+        logger.Log($"Fixing {pnEntriesNeedingUpdates.Count} PN Entries.");
         var fixedEntries = new List<XMLDataEntry>();
         foreach (var entry in pnEntriesNeedingUpdates)
         {
+            logger.LogProcessingInfo(
+                $"Fixed {entry.FieldName} on {entry.Entry.Title} from {entry.OldValue} to {entry.NewValue}");
+
             var fixedEntry = entry.Entry;
             if (entry.FieldName == "BPNumber")
             {
@@ -416,9 +482,13 @@ public class BPtoPNCore
 
     private static IEnumerable<BPDataEntry> UpdateBpEntries(List<UpdateDetail<BPDataEntry>> bpEntriesNeedingUpdates)
     {
+        logger.LogProcessingInfo($"Correcting {bpEntriesNeedingUpdates.Count} Bp Entries.");
         var fixedEntries = new List<BPDataEntry>();
         foreach (var entry in bpEntriesNeedingUpdates)
         {
+            logger.LogProcessingInfo(
+                $"Fixed {entry.FieldName} on {entry.Entry.Title} from {entry.OldValue} to {entry.NewValue}");
+
             var fixedEntry = entry.Entry;
             if (entry.FieldName == "BPNumber")
             {
@@ -478,59 +548,78 @@ public class BPtoPNCore
     private static void SaveLists(List<BPDataEntry> BpEntriesToUpdate,
         List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
     {
+        logger.LogProcessingInfo("Creating paths for saving lists.");
         var EndDataFolder = $"BpToPnChecker-{DateTime.Now}".Replace(":", ".");
         var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
         var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
         var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries-{DateTime.Now}".Replace(":", ".");
+        logger.Log("Setting up directories for saving.");
         SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
 
+        logger.Log("Saving Bp Entries.");
         SaveBPEntries(BpEntriesToUpdate, BPEntryPath);
+
+        logger.Log("Saving Pn Entries.");
         SavePNEntries(PnEntriesToUpdate, PnEntryPath);
+
+        logger.Log("Saving XML of new entries.");
         SaveNewXMlEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
     }
 
     private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,
         string NewXmlEntryPath)
     {
+        logger.LogProcessingInfo(
+            $"Setting up directories  for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
         Console.WriteLine($"Setting up saving directories [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
         if (Directory.GetCurrentDirectory().Contains("Biblio")) Directory.SetCurrentDirectory("..");
 
+        logger.LogProcessingInfo("Creating directory for saving.");
         Directory.CreateDirectory(EndDataFolder);
+        logger.LogProcessingInfo("Creating BPEntry To Update Folder.");
         Directory.CreateDirectory(BPEntryPath);
+        logger.LogProcessingInfo("Creating PnEnties To Update Folder.");
         Directory.CreateDirectory(PnEntryPath);
+        logger.LogProcessingInfo("Creating New Xml Enties for PN Folder.");
         Directory.CreateDirectory(NewXmlEntryPath);
     }
 
     private static void SaveNewXMlEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
     {
+        logger.LogProcessingInfo("Saving XMl Entries..");
         Console.WriteLine("Saving Xml Entries");
         foreach (var newXml in NewXmlEntriesToAdd)
         {
             var filePath = (path + $"/{newXml.Title}+{newXml.Publication}.xml").Replace("\"", "").Replace(":", ".");
             Console.WriteLine($"Saving {newXml.Title}+{newXml.Publication} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {newXml.Title}+{newXml.Publication} to {filePath}");
             WriteEntry(newXml, filePath);
         }
     }
 
     private static void SavePNEntries(List<XMLDataEntry> pnEntriesToUpdate, string path)
     {
+        logger.LogProcessingInfo("Saving PN Entries");
         Console.WriteLine("Saving Pn Entries");
         foreach (var pnEntries in pnEntriesToUpdate)
         {
             var filePath = (path + $"/{pnEntries.Title}+{pnEntries.Publication}.xml").Replace("\"", "")
                 .Replace(":", ".");
             Console.WriteLine($"Saving {pnEntries.Title}+{pnEntries.Publication} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {pnEntries.Title}+{pnEntries.Publication} to {filePath}");
             WriteEntry(pnEntries, filePath);
         }
     }
 
     private static void SaveBPEntries(List<BPDataEntry> bpEntriesToUpdate, string path)
     {
+        logger.Log("Saving BP Entries");
         Console.WriteLine("Saving Bp Entries");
         foreach (var bpEntries in bpEntriesToUpdate)
         {
             var filePath = path + (($"/{bpEntries.Title}.xml").Replace("\"", "").Replace(":", "."));
             Console.WriteLine($"Saving {bpEntries.Title}+{bpEntries.Publication} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {bpEntries.Title}+{bpEntries.Publication} to {filePath}");
             WriteEntry(bpEntries, filePath);
         }
     }

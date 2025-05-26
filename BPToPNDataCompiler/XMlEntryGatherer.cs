@@ -25,18 +25,23 @@ public class XMLEntryGatherer
         {"seg:sbSeg", (node, entry) => entry.SBandSEG = node.InnerText}
     };
 
-    public XMLEntryGatherer(string path)
+    public XMLEntryGatherer(string path, Logger logger)
     {
+        logger.LogProcessingInfo($"Created new XMLEntryGatherer with path: {path}");
         BiblioPath = path;
+        this.logger = logger;
     }
 
     public string BiblioPath { get; set; }
+    private Logger logger { get; }
 
     private async Task<XMLDataEntry> GetEntry(string filePath)
     {
+        logger.LogProcessingInfo($"Getting entry at {filePath}");
         var entry = new XMLDataEntry(filePath);
         var doc = new XmlDocument();
         doc.Load(filePath);
+        logger.LogProcessingInfo("Entry loaded.");
 
         //Console.WriteLine($"getting: {filePath}");
 
@@ -44,15 +49,18 @@ public class XMLEntryGatherer
         {
             if (rawNode.GetType() == typeof(XmlElement))
             {
+                logger.LogProcessingInfo("Found an element in the xmlfile, processing node.");
                 var node = ((XmlElement) rawNode);
                 await SetEntryAttributes(node, entry);
             }
             else
             {
+                logger.LogProcessingInfo($"Found a node that is not an element, moving onto {filePath}");
                 Console.WriteLine($"getting: {filePath}");
             }
         }
 
+        logger.LogProcessingInfo($"Done processing, returning: {entry}");
         return entry;
     }
 

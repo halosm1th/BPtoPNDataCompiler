@@ -10,12 +10,15 @@ public class BPEntryGatherer
     private int EndYear;
     private int StartYear;
 
-
-    public BPEntryGatherer(int startYear, int endYear)
+    public BPEntryGatherer(int startYear, int endYear, Logger logger)
     {
+        logger.LogProcessingInfo($"Created BPEntryGatherer with start {startYear} and end {endYear}.");
         StartYear = startYear;
         EndYear = endYear;
+        this.logger = logger;
     }
+
+    Logger logger { get; }
 
     private BPDataEntry? GetEntry(int currentYear, int currentIndex)
     {
