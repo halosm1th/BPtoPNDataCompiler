@@ -18,7 +18,6 @@ public class XMLEntryGatherer
         {
             "seg:internet", (node, entry) =>
             {
-                Console.WriteLine("Internet hit");
                 entry.Internet = node.InnerText;
             }
         },
@@ -38,7 +37,7 @@ public class XMLEntryGatherer
     private async Task<XMLDataEntry> GetEntry(string filePath)
     {
         logger.LogProcessingInfo($"Getting entry at {filePath}");
-        var entry = new XMLDataEntry(filePath);
+        var entry = new XMLDataEntry(filePath, logger);
         var doc = new XmlDocument();
         doc.Load(filePath);
         logger.LogProcessingInfo("Entry loaded.");
@@ -80,15 +79,18 @@ public class XMLEntryGatherer
                 break;
             }
         }
-
+        logger.LogProcessingInfo($"Set attributes for entry {entry.Title}");
         return Task.CompletedTask;
     }
 
     private async IAsyncEnumerable<XMLDataEntry> GetEntriesFromFolder(string folder)
     {
+        logger.Log($"Getting entries from folder {folder}");
+        logger.LogProcessingInfo($"Getting entries from folder {folder}");
         foreach (var file in Directory.GetFiles(folder))
         {
             var entry = await GetEntry(file);
+            logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");
             if (entry != null)
                 yield return entry;
         }
@@ -96,23 +98,30 @@ public class XMLEntryGatherer
 
     public async Task<List<XMLDataEntry>> GatherEntries()
     {
+        logger.LogProcessingInfo("Gathering XMl Entries");
         var entries = new List<XMLDataEntry>();
         try
         {
             foreach (var folder in Directory.GetDirectories(BiblioPath))
             {
+                logger.LogProcessingInfo($"Adding XML files in {folder}");
+                logger.Log("Adding XMl Files in {folder}");
                 Console.WriteLine($"adding files in : {folder}");
                 await foreach (var entry in GetEntriesFromFolder(folder))
-                {
+                { 
+                    logger.Log($"Adding {entry.Title} from {folder} to entries");
+                    logger.LogProcessingInfo($"Adding {entry.Title} from {folder} to entries");
                     entries.Add(entry);
                 }
             }
         }
         catch (Exception e)
         {
+            logger.LogError("Error in gather xml entries: ", e);
             Console.WriteLine(e);
         }
-
+        
+        logger.LogProcessingInfo($"Gathered {entries.Count} XML entries for processing.");
         return entries;
     }
 }
