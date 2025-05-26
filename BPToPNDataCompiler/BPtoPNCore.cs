@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO.Compression;
+using System.Text.RegularExpressions;
 using BPtoPNDataCompiler;
 
 namespace DefaultNamespace;
@@ -400,16 +401,37 @@ public class BPtoPNCore
             var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
 
             logger.Log("Saving lists.");
-            SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
+            var saveLocation = SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
+            logger.Log("Finished saving lists. Now moving BPXMLData to folder final folder");
+            MoveBPXML(saveLocation);
 
-            logger.Log("Finshied saving lists. Logger will now kill itself.");
+            logger.Log("Finshied saving lists. Will zip files, delete working areas and then Logger will kill itself.");
             logger.Dispose();
+            ZipDataDeleteWorkingDirs(saveLocation);
             Console.WriteLine("Finished saving lists.\nPress enter to exit...");
             Console.ReadLine();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+    }
+
+    private static void ZipDataDeleteWorkingDirs(string saveLocation)
+    {
+        var directory = Directory.GetCurrentDirectory();
+        ZipFile.CreateFromDirectory(directory + $"/{saveLocation}/", directory + $"/{saveLocation}.zip");
+        //Directory.Delete(directory+$"/{saveLocation}", true);
+    }
+
+    private static void MoveBPXML(string saveLocation)
+    {
+        Console.WriteLine(Directory.GetCurrentDirectory());
+        var directory = Directory.GetCurrentDirectory();
+        if (Directory.GetDirectories(directory).Contains("BPXMLData"))
+        {
+            Directory.Move(directory + "/BPXMLData", directory + $"/{saveLocation}/BPXMLData");
+            ;
         }
     }
 
@@ -545,7 +567,7 @@ public class BPtoPNCore
         return fixedEntries;
     }
 
-    private static void SaveLists(List<BPDataEntry> BpEntriesToUpdate,
+    private static string SaveLists(List<BPDataEntry> BpEntriesToUpdate,
         List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
@@ -564,6 +586,8 @@ public class BPtoPNCore
 
         logger.Log("Saving XML of new entries.");
         SaveNewXMlEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
+
+        return EndDataFolder;
     }
 
     private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,

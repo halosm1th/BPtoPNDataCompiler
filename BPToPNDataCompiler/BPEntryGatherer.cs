@@ -24,6 +24,7 @@ public class BPEntryGatherer
     {
         try
         {
+            logger.LogProcessingInfo("Getting BP entry from BP website.");
             BPDataEntry? entry = null;
             var yearText = Convert.ToString(currentYear);
             var indexText = Convert.ToString(currentIndex);
@@ -36,15 +37,17 @@ public class BPEntryGatherer
             }
 
             var URL = $"https://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
+            logger.LogProcessingInfo($"URl for BP Request: {URL}");
             var web = new HtmlWeb();
             var htmlDoc = web.Load(URL);
-
+            logger.LogProcessingInfo("Loaded URL from web, parsing HTML.");
 
             var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
             if (table != null)
             {
-                entry = new BPDataEntry($"{yearText}-{indexText}");
+                logger.LogProcessingInfo("Found table, creating BPDataEntry.");
+                entry = new BPDataEntry($"{yearText}-{indexText}", logger);
 
                 var rowNodes = table.SelectNodes(".//tr");
                 rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
@@ -52,7 +55,8 @@ public class BPEntryGatherer
                 {
                     if (node.InnerText.Contains("Indexbis"))
                     {
-                        Console.WriteLine($"Found an Indexbis @ {URL}");
+                        var textNode = node.SelectNodes(".//span")[0];
+                        entry.IndexBis = textNode.InnerText.Trim();
                     }
                     else if (node.InnerText.Contains("Index"))
                     {
@@ -81,7 +85,8 @@ public class BPEntryGatherer
                     }
                     else if (node.InnerText.Contains("internet"))
                     {
-                        Console.WriteLine($"Found an internet @ {URL}");
+                        var textNode = node.SelectNodes(".//span")[0];
+                        entry.Internet = textNode.InnerText.Trim();
                     }
                     else if (node.InnerText.Contains("C.R."))
                     {
@@ -90,19 +95,23 @@ public class BPEntryGatherer
                     }
                     else if (node.InnerText.Contains("SBandSEG"))
                     {
-                        Console.WriteLine($"Found an SBandSEG @ {URL}");
+                        var textNode = node.SelectNodes(".//span")[0];
+                        entry.SBandSEG = textNode.InnerText.Trim();
                     }
                 }
             }
             else
             {
+                logger.LogProcessingInfo("Could not find table");
                 entry = null;
             }
 
+            logger.LogProcessingInfo($"Found entry: {entry.Title} {entry.Publication}");
             return entry;
         }
         catch (Exception e)
         {
+            logger.LogError($"Error in gathering BP entry {currentYear}-{currentIndex}", e);
             Console.WriteLine(e);
         }
 
@@ -111,6 +120,8 @@ public class BPEntryGatherer
 
     private List<BPDataEntry> GetEntriesForYear(int currentYear)
     {
+        logger.LogProcessingInfo(
+            $"Getting entries for the year {currentYear}, starting at {ENTRY_START} to {ENTRY_END}");
         bool hasFailed = false;
         var Entries = new List<BPDataEntry>();
 
@@ -119,6 +130,7 @@ public class BPEntryGatherer
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
+            logger.LogProcessingInfo($"Gathering Entry: {currentYear}-{entryIndex}");
             BPDataEntry? entry = null;
             try
             {
@@ -126,7 +138,7 @@ public class BPEntryGatherer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.LogError($"Could not gather entry {currentYear}-{entryIndex}", e);
             }
 
             if (entry == null)
@@ -135,6 +147,8 @@ public class BPEntryGatherer
                 Console.WriteLine(
                     $"Entry {currentYear}-{entryIndex} could not be found. Will try next entry: {!hasFailed}");
                 Console.ForegroundColor = ConsoleColor.Gray;
+                logger.LogProcessingInfo(
+                    $"Could not find entry {currentYear}-{entryIndex}, will try next entry? {!hasFailed}");
                 if (hasFailed)
                 {
                     entryIndex = int.MaxValue - 1;
@@ -149,17 +163,22 @@ public class BPEntryGatherer
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write($"Entry {currentYear}-{entryIndex} was found. ");
                 Console.ForegroundColor = ConsoleColor.Gray;
+                logger.LogProcessingInfo(
+                    $"Found entry {currentYear}-{entryIndex}. Writing entry to disk and adding to entry list.");
                 WriteEntry(entry);
                 Entries.Add(entry);
             }
         }
 
+        logger.LogProcessingInfo($"Found a total of {Entries.Count} BP entries for year {currentYear}.");
         return Entries;
     }
 
     private async Task WriteEntry(BPDataEntry entry)
     {
         var fileName = Directory.GetCurrentDirectory() + $"/{entry.BPNumber}.xml";
+        logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
+
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                   $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{fileName}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
@@ -170,27 +189,31 @@ public class BPEntryGatherer
 
     private string SetDirectory()
     {
+        logger.LogProcessingInfo("Setting directory for saving Bp Entries");
+
         var currentDir = Directory.GetCurrentDirectory();
         if (currentDir.ToLower().Contains("biblio"))
         {
+            logger.LogProcessingInfo("Was in biblio directory, moving to parent directory");
             Directory.SetCurrentDirectory("..");
         }
 
         if (currentDir.ToLower().Contains("BPXMLFiles"))
         {
+            logger.LogProcessingInfo("Was in BPXMLFiles directory, moving to parent directory");
             Directory.SetCurrentDirectory("..");
         }
 
         if (Directory.Exists(currentDir + "/BPXMLFiles"))
         {
+            logger.LogProcessingInfo("Found BPXMLFiles, changing to that directory");
             Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
-            //currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
         }
         else
         {
+            logger.LogProcessingInfo("Could not find BPXMLFiles, creating and changing to that directory");
             Directory.CreateDirectory("BPXMLFiles");
             Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
-            //currentDir = Directory.GetCurrentDirectory() + "/BPXMLFiles";
         }
 
         return currentDir;
@@ -198,11 +221,15 @@ public class BPEntryGatherer
 
     public List<BPDataEntry> GatherEntries()
     {
+        logger.Log("Beginning to gather BP Entries.");
+        logger.LogProcessingInfo("Beginning to gather BP Entries.");
+
         var entries = new List<BPDataEntry>();
         try
         {
             var currentYear = StartYear;
 
+            logger.LogProcessingInfo("Setting directory for saving BP Entries.");
             var oldDir = SetDirectory();
 
 
@@ -210,9 +237,11 @@ public class BPEntryGatherer
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
+                logger.LogProcessingInfo($"Beginning to gather BP Entries for year: {currentYear}.");
 
                 foreach (var entry in GetEntriesForYear(currentYear))
                 {
+                    logger.LogProcessingInfo($"Adding {entry.Title} to BPentry list");
                     entries.Add(entry);
                 }
 
@@ -223,9 +252,12 @@ public class BPEntryGatherer
         }
         catch (Exception e)
         {
+            logger.LogError("There was an error collecting BP entries", e);
             Console.WriteLine(e);
         }
 
+        logger.LogProcessingInfo($"Gathered {entries.Count} BP entries for processing.");
+        logger.Log($"Gathered {entries.Count} BP entries.");
         return entries;
     }
 }

@@ -6,11 +6,20 @@ public class DataMatcherConflictUI
 {
     // Dictionary to store edited choices for each row, mapping row number to choice (B/P/N/S)
     private Dictionary<int, string?> _editedChoices = new Dictionary<int, string?>();
+
+    public DataMatcherConflictUI(Logger logger)
+    {
+        logger.LogProcessingInfo("Creating DataMatcherConflictUI.");
+        this.logger = logger;
+    }
+
     private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
 
     // Updated lists to store detailed update information using the new UpdateDetail class
     public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
     public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
+
+    private Logger logger { get; }
 
 
     /// <summary>
@@ -20,6 +29,8 @@ public class DataMatcherConflictUI
     /// <param name="matchingEntry">The corresponding XMLDataEntry.</param>
     public void HandleNonMatchingEntries(BPDataEntry entry, XMLDataEntry matchingEntry)
     {
+        logger.Log(
+            $"Generating the data-matcher UI for handling the conflict between BP {entry.BPNumber} & PN {matchingEntry.PNNumber}");
         Commands command = Commands.Help;
         int? selectedRow = null; // To keep track of the selected row for editing
         _editedChoices.Clear(); // Clear any previous edits for a new entry when starting a new conflict resolution
@@ -38,6 +49,7 @@ public class DataMatcherConflictUI
                 Console.Out.Flush(); // Ensure prompt is displayed before reading input
                 string? input = Console.ReadLine()?.ToLower().Trim();
 
+                logger.LogProcessingInfo($"User entered {input}, parsing command");
                 command = ParseCommand(input);
 
                 switch (command)
@@ -45,21 +57,31 @@ public class DataMatcherConflictUI
                     case Commands.Help:
                         // Help message is already printed by PrintCommandMenu if command was Help
                         // This case just ensures the loop continues
+                        logger.LogProcessingInfo("Help command entered.");
                         break;
                     case Commands.Edit:
+                        logger.LogProcessingInfo("Edit command entered. Starting edit menu.");
                         HandleEditCommand(entry, matchingEntry, entries, ref selectedRow);
                         break;
                     case Commands.Finished:
+                        logger.LogProcessingInfo("Finished command entered.");
+                        logger.LogProcessingInfo("Updated:");
+                        logger.LogProcessingInfo($"\t{entry}\n\t{matchingEntry}");
+                        logger.LogProcessingInfo("Into:");
+                        logger.LogProcessingInfo(
+                            $"\t{BpEntriesToUpdate.First().Entry}\n\t{PnEntriesToUpdate.First().Entry}");
                         // Exit loop
                         break;
                     case Commands.Invalid:
                     default:
+                        logger.LogProcessingInfo("Invalid command entered.");
                         Console.WriteLine("Invalid command. Type 'h' or 'help' for options.");
                         break;
                 }
             }
             catch (Exception e)
             {
+                logger.LogError("Error in match handling menu, exiting.", e);
                 Console.WriteLine($"An error occurred: {e.Message}");
                 Console.WriteLine("Press ENTER to continue.");
                 Console.ReadLine();
@@ -83,11 +105,13 @@ public class DataMatcherConflictUI
         if (int.TryParse(Console.ReadLine(), out int rowNum) && rowNum >= 1 && rowNum <= 12)
         {
             selectedRow = rowNum;
+            logger.LogProcessingInfo($"Selected to edit row {rowNum} ({GetCategoryName(rowNum)}) on {bpEntry.Title}");
             // Print the name of the selected row
             Console.WriteLine(
                 $"Selected row {rowNum} [{GetCategoryName(rowNum)}]. Enter 'B' for BP correct, 'P' for PN correct, 'N' for neither, or 'S' for Shared/Both.");
             Console.Write("Choice (B/P/N/S): ");
             string? choice = Console.ReadLine()?.ToUpper().Trim();
+            logger.LogProcessingInfo($"User selected {choice} as choice for which is correct.");
 
             if (choice == "B" || choice == "P" || choice == "N" || choice == "S")
             {
@@ -106,18 +130,21 @@ public class DataMatcherConflictUI
                 }
                 else
                 {
+                    logger.LogProcessingInfo("Edit cancelled.");
                     Console.WriteLine("Edit cancelled. Press ENTER to continue.");
                     Console.ReadLine();
                 }
             }
             else
             {
+                logger.LogProcessingInfo("Invalid choice. Please enter 'B', 'P', 'N', or 'S'.");
                 Console.WriteLine("Invalid choice. Please enter 'B', 'P', 'N', or 'S'. Press ENTER to continue.");
                 Console.ReadLine();
             }
         }
         else
         {
+            logger.LogProcessingInfo("Invalid row number.");
             Console.WriteLine("Invalid row number. Press ENTER to continue.");
             Console.ReadLine();
         }
@@ -149,6 +176,7 @@ public class DataMatcherConflictUI
     /// <param name="choice">The user's choice ('B', 'P', 'N', 'S').</param>
     private void UpdateEntryBasedOnChoice(BPDataEntry bpEntry, XMLDataEntry xmlEntry, int rowNum, string? choice)
     {
+        logger.LogProcessingInfo($"Updating entry based on choice for row {rowNum}...");
         Console.WriteLine($"Updating based on choice for row {rowNum}...");
 
         // Determine the field name based on rowNum
@@ -210,6 +238,7 @@ public class DataMatcherConflictUI
                 pnValue = xmlEntry.Annee;
                 break;
             default:
+                logger.LogProcessingInfo($"Warning: Unknown row number {rowNum} for field value extraction.");
                 Console.WriteLine($"Warning: Unknown row number {rowNum} for field value extraction.");
                 return; // Exit if rowNum is invalid
         }
@@ -225,11 +254,16 @@ public class DataMatcherConflictUI
             if (pnValue != bpValue)
             {
                 PnEntriesToUpdate.Add(new UpdateDetail<XMLDataEntry>(xmlEntry, fieldName, pnValue, bpValue));
+                logger.LogProcessingInfo(
+                    $"Added PN update for entry (Title: {xmlEntry.Title ?? "N/A"}) for field '{fieldName}'." +
+                    $" Old: '{pnValue ?? "NULL"}', New: '{bpValue ?? "NULL"}'.");
                 Console.WriteLine(
-                    $"Added PN update for entry (Title: {xmlEntry.Title ?? "N/A"}) for field '{fieldName}'. Old: '{pnValue ?? "NULL"}', New: '{bpValue ?? "NULL"}'.");
+                    $"Added PN update for entry (Title: {xmlEntry.Title ?? "N/A"}) for field '{fieldName}'." +
+                    $" Old: '{pnValue ?? "NULL"}', New: '{bpValue ?? "NULL"}'.");
             }
             else
             {
+                logger.LogProcessingInfo($"PN field '{fieldName}' is already identical to BP. No update recorded.");
                 Console.WriteLine($"PN field '{fieldName}' is already identical to BP. No update recorded.");
             }
         }
@@ -241,9 +275,12 @@ public class DataMatcherConflictUI
                 BpEntriesToUpdate.Add(new UpdateDetail<BPDataEntry>(bpEntry, fieldName, bpValue, pnValue));
                 Console.WriteLine(
                     $"Added BP update for entry (Title: {bpEntry.Title ?? "N/A"}) for field '{fieldName}'. Old: '{bpValue ?? "NULL"}', New: '{pnValue ?? "NULL"}'.");
+                logger.LogProcessingInfo(
+                    $"Added BP update for entry (Title: {bpEntry.Title ?? "N/A"}) for field '{fieldName}'. Old: '{bpValue ?? "NULL"}', New: '{pnValue ?? "NULL"}'.");
             }
             else
             {
+                logger.LogProcessingInfo($"BP field '{fieldName}' is already identical to PN. No update recorded.");
                 Console.WriteLine($"BP field '{fieldName}' is already identical to PN. No update recorded.");
             }
         }
@@ -258,16 +295,21 @@ public class DataMatcherConflictUI
                 BpEntriesToUpdate.Add(new UpdateDetail<BPDataEntry>(bpEntry, fieldName, bpValue,
                     bpValue)); // No actual change if BP is chosen as the standard
 
+                logger.LogProcessingInfo(
+                    $"Added Shared update for field '{fieldName}'. Standardized to BP's value. PN Old: '{pnValue ?? "NULL"}', PN New: '{bpValue ?? "NULL"}'.");
                 Console.WriteLine(
                     $"Added Shared update for field '{fieldName}'. Standardized to BP's value. PN Old: '{pnValue ?? "NULL"}', PN New: '{bpValue ?? "NULL"}'.");
             }
             else
             {
+                logger.LogProcessingInfo($"Field '{fieldName}' is already shared and identical. No update needed.");
                 Console.WriteLine($"Field '{fieldName}' is already shared and identical. No update needed.");
             }
         }
         else if (choice == "N") // Neither is correct. No update recorded, but ensures previous updates are removed.
         {
+            logger.LogProcessingInfo(
+                $"Neither BP nor PN was chosen as correct for field '{fieldName}'. Any previous updates for this field have been removed.");
             Console.WriteLine(
                 $"Neither BP nor PN was chosen as correct for field '{fieldName}'. Any previous updates for this field have been removed.");
         }
