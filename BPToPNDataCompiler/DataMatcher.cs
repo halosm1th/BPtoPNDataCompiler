@@ -13,7 +13,11 @@ namespace BPtoPNDataCompiler
     class DataMatcher
     {
         private int bpEntriesUpdated = 0;
+        private int matchMenu = 0;
+        private int multipleMatches = 0;
         private int newXmlEntriesAdded = 0;
+        private int noMatch = 0;
+        private int perfectMatch = 0;
         private int pnEntriesUpdated = 0;
 
         /// <summary>
@@ -79,15 +83,16 @@ namespace BPtoPNDataCompiler
                     logger.LogProcessingInfo($"no match found for {entry.Title}, creating new xml entry.");
                     NewXmlEntriesToAdd.Add(entry); // Add to list of new entries if no match
                     newXmlEntriesAdded++;
+                    noMatch++;
                 }
             }
 
             logger.LogProcessingInfo(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries.");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             logger.Log(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries.");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             Console.WriteLine(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries.");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
         }
 
 
@@ -138,6 +143,8 @@ namespace BPtoPNDataCompiler
             // Case 1: Exactly one match and it's a full match. No action needed.
             if (xmlDataEntries.Length == 1 && xmlDataEntries.First().FullMatch(entry))
             {
+                perfectMatch++;
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(
                     $"{entry.Title} has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for this entry.");
@@ -157,7 +164,7 @@ namespace BPtoPNDataCompiler
                 Console.ForegroundColor = ConsoleColor.Gray;
                 logger.LogProcessingInfo("Found editable match. Launching conflict resolution UI.");
                 logger.Log("Found editable match. Launching conflict resolution UI.");
-
+                matchMenu++;
                 HandleNonMatchingEntries(entry, xmlDataEntries.First());
             }
 
@@ -170,6 +177,7 @@ namespace BPtoPNDataCompiler
                 logger.LogProcessingInfo($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
                 logger.Log($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
                 HandleMultipleMatches(entry, xmlDataEntries);
+                multipleMatches++;
             }
         }
 
@@ -210,6 +218,7 @@ namespace BPtoPNDataCompiler
                     PnEntriesToUpdate.RemoveAll(ud =>
                         ud.Entry == match && ud.FieldName == "BPNumber"); // Prevent duplicates
                     PnEntriesToUpdate.Add(update);
+                    pnEntriesUpdated++;
 
                     logger.Log(
                         $"Added {update.Entry.Title} to the PN entry update list, changing {update.FieldName} from {update.OldValue} to {update.NewValue}.");
@@ -259,8 +268,12 @@ namespace BPtoPNDataCompiler
 
             // Add the detailed update records from the UI to the DataMatcher's lists.
             logger.Log("finished with Data matcher, adding its lists to the BP and PN entry lists.");
-            BpEntriesToUpdate.AddRange(matcherUI.BpEntriesToUpdate);
-            PnEntriesToUpdate.AddRange(matcherUI.PnEntriesToUpdate);
+            var mUiBP = matcherUI.BpEntriesToUpdate;
+            var mUiPN = matcherUI.PnEntriesToUpdate;
+            bpEntriesUpdated += mUiBP.Count;
+            pnEntriesUpdated += mUiPN.Count;
+            BpEntriesToUpdate.AddRange(mUiBP);
+            PnEntriesToUpdate.AddRange(mUiPN);
         }
     }
 }
