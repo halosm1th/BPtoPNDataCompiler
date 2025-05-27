@@ -68,8 +68,17 @@ public class DataMatcherConflictUI
                         logger.LogProcessingInfo("Updated:");
                         logger.LogProcessingInfo($"\t{entry}\n\t{matchingEntry}");
                         logger.LogProcessingInfo("Into:");
-                        logger.LogProcessingInfo(
-                            $"\t{BpEntriesToUpdate.First().Entry}\n\t{PnEntriesToUpdate.First().Entry}");
+                        if (BpEntriesToUpdate.Count > 0)
+                        {
+                            logger.LogProcessingInfo(
+                                $"\t{BpEntriesToUpdate.First().Entry}\n");
+                        }
+
+                        if (PnEntriesToUpdate.Count > 0)
+                        {
+                            logger.LogProcessingInfo($"\t{PnEntriesToUpdate.First().Entry}");
+                        }
+
                         // Exit loop
                         break;
                     case Commands.Invalid:

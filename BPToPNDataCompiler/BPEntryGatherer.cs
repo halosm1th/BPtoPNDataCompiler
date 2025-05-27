@@ -5,8 +5,8 @@ namespace DefaultNamespace;
 public class BPEntryGatherer
 {
     //TODO restore to proper numbers
-    private const int ENTRY_START = 80; // 0
-    private const int ENTRY_END = 80; //9999
+    private const int ENTRY_START = 0; //80 // 0
+    private const int ENTRY_END = 9999; //80 //9999
     private int EndYear;
     private int StartYear;
 
@@ -106,7 +106,15 @@ public class BPEntryGatherer
                 entry = null;
             }
 
-            logger.LogProcessingInfo($"Found entry: {entry.Title} {entry.Publication}");
+            if (entry != null)
+            {
+                logger.LogProcessingInfo($"Found entry: {entry.Title} {entry.Publication}");
+            }
+            else
+            {
+                logger.LogProcessingInfo("No entry found");
+            }
+
             return entry;
         }
         catch (Exception e)

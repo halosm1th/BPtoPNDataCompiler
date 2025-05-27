@@ -16,10 +16,7 @@ public class XMLEntryGatherer
         {"seg:nom", (node, entry) => entry.Name = node.InnerText},
         {"seg:resume", (node, entry) => entry.Resume = node.InnerText},
         {
-            "seg:internet", (node, entry) =>
-            {
-                entry.Internet = node.InnerText;
-            }
+            "seg:internet", (node, entry) => { entry.Internet = node.InnerText; }
         },
         {"seg:sbSeg", (node, entry) => entry.SBandSEG = node.InnerText}
     };
@@ -34,7 +31,7 @@ public class XMLEntryGatherer
     public string BiblioPath { get; set; }
     private Logger logger { get; }
 
-    private async Task<XMLDataEntry> GetEntry(string filePath)
+    private XMLDataEntry GetEntry(string filePath)
     {
         logger.LogProcessingInfo($"Getting entry at {filePath}");
         var entry = new XMLDataEntry(filePath, logger);
@@ -48,9 +45,8 @@ public class XMLEntryGatherer
         {
             if (rawNode.GetType() == typeof(XmlElement))
             {
-                logger.LogProcessingInfo("Found an element in the xmlfile, processing node.");
                 var node = ((XmlElement) rawNode);
-                await SetEntryAttributes(node, entry);
+                SetEntryAttributes(node, entry);
             }
             else
             {
@@ -59,11 +55,11 @@ public class XMLEntryGatherer
             }
         }
 
-        logger.LogProcessingInfo($"Done processing, returning: {entry}");
+        logger.LogProcessingInfo($"Finished processing entry {entry}");
         return entry;
     }
 
-    private Task SetEntryAttributes(XmlElement node, XMLDataEntry entry)
+    private void SetEntryAttributes(XmlElement node, XMLDataEntry entry)
     {
         foreach (var key in AttributeSetters.Keys)
         {
@@ -79,24 +75,25 @@ public class XMLEntryGatherer
                 break;
             }
         }
-        logger.LogProcessingInfo($"Set attributes for entry {entry.Title}");
-        return Task.CompletedTask;
     }
 
-    private async IAsyncEnumerable<XMLDataEntry> GetEntriesFromFolder(string folder)
+    private List<XMLDataEntry> GetEntriesFromFolder(string folder)
     {
         logger.Log($"Getting entries from folder {folder}");
         logger.LogProcessingInfo($"Getting entries from folder {folder}");
+        var dataEntries = new List<XMLDataEntry>();
         foreach (var file in Directory.GetFiles(folder))
         {
-            var entry = await GetEntry(file);
+            var entry = GetEntry(file);
             logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");
             if (entry != null)
-                yield return entry;
+                dataEntries.Add(entry);
         }
+
+        return dataEntries;
     }
 
-    public async Task<List<XMLDataEntry>> GatherEntries()
+    public List<XMLDataEntry> GatherEntries()
     {
         logger.LogProcessingInfo("Gathering XMl Entries");
         var entries = new List<XMLDataEntry>();
@@ -107,8 +104,8 @@ public class XMLEntryGatherer
                 logger.LogProcessingInfo($"Adding XML files in {folder}");
                 logger.Log("Adding XMl Files in {folder}");
                 Console.WriteLine($"adding files in : {folder}");
-                await foreach (var entry in GetEntriesFromFolder(folder))
-                { 
+                foreach (var entry in GetEntriesFromFolder(folder))
+                {
                     logger.Log($"Adding {entry.Title} from {folder} to entries");
                     logger.LogProcessingInfo($"Adding {entry.Title} from {folder} to entries");
                     entries.Add(entry);
@@ -120,7 +117,7 @@ public class XMLEntryGatherer
             logger.LogError("Error in gather xml entries: ", e);
             Console.WriteLine(e);
         }
-        
+
         logger.LogProcessingInfo($"Gathered {entries.Count} XML entries for processing.");
         return entries;
     }

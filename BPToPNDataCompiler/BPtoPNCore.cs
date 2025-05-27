@@ -377,7 +377,7 @@ public class BPtoPNCore
 
             logger.Log("Gathering XML entries");
             Console.WriteLine("XmlEntry Gatherer created, gathering XML entries.");
-            var xmlEntryTask = XMLEntryGatherer.GatherEntries();
+            var xmlEntries = XMLEntryGatherer.GatherEntries();
             logger.Log("Gathering BP entries.");
             Console.WriteLine("Gathered XMl Entries, gathering BP entries.");
             var bpEntries = BPEntryGatherer.GatherEntries();
@@ -387,7 +387,7 @@ public class BPtoPNCore
 
             Console.Write("Preparing to start data matcher. ");
             logger.Log("Creating Datamatcher");
-            var dm = new DataMatcher(await xmlEntryTask, bpEntries, logger);
+            var dm = new DataMatcher(xmlEntries, bpEntries, logger);
 
             Console.WriteLine("Starting to match entries?");
             logger.Log("Starting to match entries");
@@ -402,11 +402,14 @@ public class BPtoPNCore
 
             logger.Log("Saving lists.");
             var saveLocation = SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
-            logger.Log("Finished saving lists. Now moving BPXMLData to folder final folder");
-            MoveBPXML(saveLocation);
+            logger.Log("Finished saving lists. ");
 
-            logger.Log("Finshied saving lists. Will zip files, delete working areas and then Logger will kill itself.");
+            logger.Log(
+                "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
+            Console.WriteLine(
+                "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
             logger.Dispose();
+            MoveBPXMLAndLogs(saveLocation);
             ZipDataDeleteWorkingDirs(saveLocation);
             Console.WriteLine("Finished saving lists.\nPress enter to exit...");
             Console.ReadLine();
@@ -420,18 +423,74 @@ public class BPtoPNCore
     private static void ZipDataDeleteWorkingDirs(string saveLocation)
     {
         var directory = Directory.GetCurrentDirectory();
-        ZipFile.CreateFromDirectory(directory + $"/{saveLocation}/", directory + $"/{saveLocation}.zip");
-        //Directory.Delete(directory+$"/{saveLocation}", true);
+        var sourcePath = Path.Combine(directory, saveLocation);
+        var zipPath = Path.Combine(directory, $"{saveLocation}.zip");
+
+        Console.WriteLine($"Zipping files from {sourcePath} to {zipPath}");
+
+        // Make sure the target zip file doesn't already exist
+        if (File.Exists(zipPath))
+        {
+            File.Delete(zipPath);
+        }
+
+        // Wait a moment to ensure all file operations are complete
+        Thread.Sleep(1000);
+
+        try
+        {
+            // Use proper path combination and ensure the source directory exists
+            if (Directory.Exists(sourcePath))
+            {
+                // Ensure all file streams are closed by forcing a GC collect
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                // Create the zip file
+                ZipFile.CreateFromDirectory(
+                    sourcePath,
+                    zipPath,
+                    CompressionLevel.Optimal,
+                    false); // Don't include the base directory in the archive
+
+                Console.WriteLine($"Successfully created ZIP file at: {zipPath}");
+
+                // Optionally delete the source directory after successful zip creation
+                // Directory.Delete(sourcePath, true);
+            }
+            else
+            {
+                Console.WriteLine($"Error: Source directory {sourcePath} does not exist");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating ZIP file: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
     }
 
-    private static void MoveBPXML(string saveLocation)
+    private static void MoveBPXMLAndLogs(string saveLocation)
     {
         Console.WriteLine(Directory.GetCurrentDirectory());
         var directory = Directory.GetCurrentDirectory();
-        if (Directory.GetDirectories(directory).Contains("BPXMLData"))
+        var dirs = Directory.GetDirectories(directory);
+        if (dirs.Contains(directory + "\\BPXMLFiles"))
         {
-            Directory.Move(directory + "/BPXMLData", directory + $"/{saveLocation}/BPXMLData");
-            ;
+            Directory.Move(directory + "/BPXMLFiles/", directory + $"/{saveLocation}/BPXMLFiles");
+        }
+
+        if (!Directory.GetDirectories(directory).Any(x => x == "BPtoPNLogs"))
+        {
+            dirs = Directory.GetDirectories(directory + "/../");
+            if (dirs.Contains(directory + "/../BPtoPNLogs"))
+            {
+                Directory.Move(directory + "/../BPtoPNLogs", directory + $"/{saveLocation}/BPtoPNLogs");
+            }
+        }
+        else
+        {
+            Directory.Move(directory + "/BPtoPNLogs", directory + $"/{saveLocation}/BPtoPNLogs");
         }
     }
 
@@ -614,9 +673,9 @@ public class BPtoPNCore
         Console.WriteLine("Saving Xml Entries");
         foreach (var newXml in NewXmlEntriesToAdd)
         {
-            var filePath = (path + $"/{newXml.Title}+{newXml.Publication}.xml").Replace("\"", "").Replace(":", ".");
-            Console.WriteLine($"Saving {newXml.Title}+{newXml.Publication} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {newXml.Title}+{newXml.Publication} to {filePath}");
+            var filePath = (path + $"/{newXml.Title}.xml").Replace("\"", "").Replace(":", ".");
+            Console.WriteLine($"Saving {newXml.Title} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteEntry(newXml, filePath);
         }
     }
@@ -627,10 +686,10 @@ public class BPtoPNCore
         Console.WriteLine("Saving Pn Entries");
         foreach (var pnEntries in pnEntriesToUpdate)
         {
-            var filePath = (path + $"/{pnEntries.Title}+{pnEntries.Publication}.xml").Replace("\"", "")
+            var filePath = (path + $"/{pnEntries.PNNumber}.xml").Replace("\"", "")
                 .Replace(":", ".");
-            Console.WriteLine($"Saving {pnEntries.Title}+{pnEntries.Publication} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {pnEntries.Title}+{pnEntries.Publication} to {filePath}");
+            Console.WriteLine($"Saving {pnEntries.PNNumber} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {pnEntries.PNNumber} to {filePath}");
             WriteEntry(pnEntries, filePath);
         }
     }
@@ -642,8 +701,8 @@ public class BPtoPNCore
         foreach (var bpEntries in bpEntriesToUpdate)
         {
             var filePath = path + (($"/{bpEntries.Title}.xml").Replace("\"", "").Replace(":", "."));
-            Console.WriteLine($"Saving {bpEntries.Title}+{bpEntries.Publication} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {bpEntries.Title}+{bpEntries.Publication} to {filePath}");
+            Console.WriteLine($"Saving {bpEntries.Title} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {bpEntries.Title} to {filePath}");
             WriteEntry(bpEntries, filePath);
         }
     }
@@ -657,6 +716,7 @@ public class BPtoPNCore
 
         try
         {
+            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
             File.WriteAllText(path, xml);
         }
         catch (Exception e)

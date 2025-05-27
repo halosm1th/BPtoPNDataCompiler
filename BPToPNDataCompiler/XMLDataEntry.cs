@@ -176,7 +176,6 @@ public class XMLDataEntry : BPDataEntry
     {
         var match = GetComparisonsOfEntriesByLine(entry);
         var str = match.Aggregate(0, (h, t) => t ? h + 1 : h);
-        logger.LogProcessingInfo($"Checking strength of match between {this.Title} and {entry.Title}. Result: {str}");
         return str;
     }
 
@@ -185,7 +184,6 @@ public class XMLDataEntry : BPDataEntry
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         var strong = truthCount >= 9;
-        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {strong}");
         return strong;
     }
 
@@ -194,7 +192,6 @@ public class XMLDataEntry : BPDataEntry
         var matchStrength = GetComparisonsOfEntriesByLine(entry);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         var medium = truthCount >= 6;
-        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {medium}");
         return medium;
     }
 
@@ -204,7 +201,6 @@ public class XMLDataEntry : BPDataEntry
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         //If they match on more than one thing, find it and mention it.
         var weak = truthCount > 3;
-        logger.LogProcessingInfo($"Is match between {this.Title} and {entry.Title} strong? {weak}");
         return weak;
     }
 
