@@ -5,17 +5,19 @@ namespace DefaultNamespace;
 public class BPEntryGatherer
 {
     //TODO restore to proper numbers
-    private const int ENTRY_START = 0; //80 // 0
-    private const int ENTRY_END = 9999; //80 //9999
+    private int ENTRY_START = 1; //80 // 0
+    private int ENTRY_END = 9999; //80 //9999
     private int EndYear;
     private int StartYear;
 
-    public BPEntryGatherer(int startYear, int endYear, Logger logger)
+    public BPEntryGatherer(int startYear, int endYear, Logger logger, int entryStart, int entryEnd)
     {
         logger.LogProcessingInfo($"Created BPEntryGatherer with start {startYear} and end {endYear}.");
         StartYear = startYear;
         EndYear = endYear;
         this.logger = logger;
+ENTRY_START = entryStart;
+ENTRY_END = entryEnd;
     }
 
     Logger logger { get; }
