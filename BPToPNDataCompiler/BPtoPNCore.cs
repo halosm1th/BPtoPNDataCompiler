@@ -1,7 +1,9 @@
 ﻿using System.CommandLine;
 using System.IO.Compression;
+using System.Text;
 using System.Xml;
 using BPtoPNDataCompiler;
+
 // Required for command-line argument parsing
 
 // Required for parsing results
@@ -14,12 +16,14 @@ public class BPtoPNCore
     private static int startYear = 1932;
 #if DEBUG
     private static int endYear = 1932;
+    private static int bpStartNumber = 1; // New: Default beginning number for BP data
+    private static int bpEndNumber = 3; // New: Default finishing number for BP data
 
 #else
     private static int endYear = DateTime.Now.Year - 1;
-#endif
     private static int bpStartNumber = 1; // New: Default beginning number for BP data
     private static int bpEndNumber = 9999; // New: Default finishing number for BP data
+#endif
 
     #region main and arg parsing
 
@@ -33,7 +37,7 @@ public class BPtoPNCore
             // Define command-line options for the application
             var startYearOption = new Option<int>(
                 name: "--start-year",
-                getDefaultValue: () => 1932,
+                getDefaultValue: () => startYear,
                 description:
                 "Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932."
             );
@@ -41,7 +45,7 @@ public class BPtoPNCore
 
             var endYearOption = new Option<int>(
                 name: "--end-year",
-                getDefaultValue: () => DateTime.Now.Year - 1,
+                getDefaultValue: () => endYear,
                 description:
                 $"Sets the end year for data compilation. Use -e or --end-year. Default is the current system year -1 (Currently: {DateTime.Now.Year - 1}). Cannot be lower than the start year."
             );
@@ -49,7 +53,7 @@ public class BPtoPNCore
 
             var bpStartNumberOption = new Option<int>(
                 name: "--bp-start-number",
-                getDefaultValue: () => 0,
+                getDefaultValue: () => bpStartNumber,
                 description:
                 "Sets the beginning number for BP data processing. Use -bps or --bp-start-number. Default is 0. Cannot be negative."
             );
@@ -58,7 +62,7 @@ public class BPtoPNCore
 
             var bpEndNumberOption = new Option<int>(
                 name: "--bp-end-number",
-                getDefaultValue: () => int.MaxValue,
+                getDefaultValue: () => bpEndNumber,
                 description:
                 "Sets the finishing number for BP data processing. Use -bpe or --bp-end-number. Default is maximum integer value. Cannot be less than the BP start number."
             );
@@ -475,7 +479,7 @@ public class BPtoPNCore
         List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
-        var EndDataFolder = $"BpToPnChecker-{DateTime.Now}".Replace(":", ".");
+        var EndDataFolder = $"BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
         var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
         var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
         var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
@@ -533,7 +537,8 @@ public class BPtoPNCore
             // Sanitize file path by replacing invalid characters
             var filePath = Path.Combine(path, $"{newXml.Title}.xml")
                 .Replace("\"", "")
-                .Replace(":", ".");
+                .Replace(":", "_")
+                .Replace(".", "_");
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteBPXmlEntry(newXml, filePath);
@@ -579,7 +584,6 @@ public class BPtoPNCore
             // Assuming WriteEntry can handle XMLDataEntry or there's an overload
             // For now, casting to BPDataEntry if ToXML() is common, or create a new WriteEntry for XMLDataEntry
             // For this example, assuming XMLDataEntry has a ToXML() method similar to BPDataEntry
-            WriteEntry(pnEntries, filePath); // This might need an overload or conversion
         }
     }
 
@@ -625,44 +629,315 @@ public class BPtoPNCore
         xmlDocument.Load(entry.PNFileName);
         var root = xmlDocument.DocumentElement;
 
-        //TODO remove this, so that the xml is copied over, we're updating specific nodes and segs in it.
-        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.PNNumber}\" type=\"book\">\n" +
-                  $"{entry.ToXML()}" +
-                  $"\n</bibl>";
+        // Create namespace manager
+        var nsManager = new XmlNamespaceManager(xmlDocument.NameTable);
+        nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
+
+        //TODO figure out why the xml is ending in a wierd way
+
+        // Get BP number using XPath
+        var bpElement = root.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
+        var name = root.SelectSingleNode("//tei:nom", nsManager);
+        var index = root.SelectSingleNode("//tei:index", nsManager);
+        var indexBis = root.SelectSingleNode("//tei:indexbis", nsManager);
+        var title = root.SelectSingleNode("//tei:titre", nsManager);
+        var publisher = root.SelectSingleNode("//tei:publication", nsManager);
+        var resume = root.SelectSingleNode("//tei:resume", nsManager);
+        var sbandSeg = root.SelectSingleNode("//tei:seg", nsManager);
+        var cr = root.SelectSingleNode("//tei:cr", nsManager);
+        var no = root.SelectSingleNode("//tei:no", nsManager);
+        var internet = root.SelectSingleNode("//tei:internet", nsManager);
+
+        if (bpElement != null && entry.HasBPNum)
+        {
+            bpElement.InnerText = entry.BPNumber;
+        }
+        else if (bpElement == null && entry.HasBPNum)
+        {
+            // Create new idno element with TEI namespace
+            var newBpElement = xmlDocument.CreateElement("idno", "http://www.tei-c.org/ns/1.0");
+
+            // Set type attribute
+            var typeAttr = xmlDocument.CreateAttribute("type");
+            typeAttr.Value = "bp";
+            newBpElement.Attributes.Append(typeAttr);
+
+            // Set BP number text
+            newBpElement.InnerText = entry.BPNumber;
+
+            // Insert as first child of root element
+            root.AppendChild(newBpElement);
+        }
+
+        if (name != null && entry.HasName)
+        {
+            bpElement.InnerText = entry.Name;
+        }
+        else if (name == null && entry.HasName)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "nom";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Name;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (index != null && entry.HasIndex)
+        {
+            bpElement.InnerText = entry.Index;
+        }
+        else if (index == null && entry.HasIndex)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "index";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Index;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (indexBis != null && entry.HasIndexBis)
+        {
+            bpElement.InnerText = entry.IndexBis;
+        }
+        else if (indexBis == null && entry.HasIndexBis)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "indexBis";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.IndexBis;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (title != null && entry.HasTitle)
+        {
+            bpElement.InnerText = entry.Title;
+        }
+        else if (title == null && entry.HasTitle)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "titre";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Title;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (publisher != null && entry.HasPublication)
+        {
+            bpElement.InnerText = entry.Publication;
+        }
+        else if (publisher == null && entry.HasPublication)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "publication";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Publication;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (resume != null && entry.HasResume)
+        {
+            bpElement.InnerText = entry.Resume;
+        }
+        else if (resume == null && entry.HasResume)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "resume";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Resume;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (sbandSeg != null && entry.HasSBandSEG)
+        {
+            bpElement.InnerText = entry.SBandSEG;
+        }
+        else if (sbandSeg == null && entry.HasSBandSEG)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "resume";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.SBandSEG;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (cr != null && entry.HasCR)
+        {
+            bpElement.InnerText = entry.CR;
+        }
+        else if (cr == null && entry.HasCR)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "cr";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.CR;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (no != null && entry.HasNo)
+        {
+            bpElement.InnerText = entry.No;
+        }
+        else if (no == null && entry.HasNo)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "no";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.No;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
+
+        if (internet != null && entry.HasInternet)
+        {
+            bpElement.InnerText = entry.Internet;
+        }
+        else if (internet == null && entry.HasInternet)
+        {
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
+
+            // Set subtype attribute
+            var subtypeAttr = xmlDocument.CreateAttribute("subtype");
+            subtypeAttr.Value = "internet";
+            newNameElement.Attributes.Append(subtypeAttr);
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Internet;
+
+            // Insert as first child of root element
+            root.AppendChild(newNameElement);
+        }
 
         try
+
         {
             // If the file already exists, append a (2) to the filename to avoid overwriting
             if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
-            File.WriteAllText(path, xml);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-
-    /// <summary>
-    /// Overload for WriteEntry to handle XMLDataEntry, assuming it also has a ToXML() method.
-    /// If XMLDataEntry does not have ToXML(), this method will need to be adjusted
-    /// to generate XML based on XMLDataEntry's properties.
-    /// </summary>
-    /// <param name="entry">The XMLDataEntry object to write.</param>
-    /// <param name="path">The file path where the XML will be saved.</param>
-    private static void WriteEntry(XMLDataEntry entry, string path)
-    {
-        // This assumes XMLDataEntry also has a ToXML() method that produces the desired XML fragment.
-        // If not, you'll need to manually construct the XML string from XMLDataEntry's properties.
-        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{entry.Title}+{entry.Publication}\" type=\"book\">\n" +
-                  $"{entry.ToXML()}" + // Assuming ToXML() exists for XMLDataEntry
-                  $"\n</bibl>";
-
-        try
-        {
-            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
-            File.WriteAllText(path, xml);
+            var writer = new XmlTextWriter(path, Encoding.UTF8);
+            xmlDocument.WriteTo(writer);
+            writer.Flush();
+            writer.Dispose();
         }
         catch (Exception e)
         {
