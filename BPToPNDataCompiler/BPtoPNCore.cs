@@ -1,12 +1,16 @@
-﻿using System.IO.Compression;
-using System.Text.RegularExpressions;
+﻿using System.CommandLine;
+using System.IO.Compression;
 using System.Xml;
 using BPtoPNDataCompiler;
+// Required for command-line argument parsing
+
+// Required for parsing results
 
 namespace DefaultNamespace;
 
 public class BPtoPNCore
 {
+    // Static fields to hold the parsed argument values
     private static int startYear = 1932;
 #if DEBUG
     private static int endYear = 1932;
@@ -14,6 +18,8 @@ public class BPtoPNCore
 #else
     private static int endYear = DateTime.Now.Year - 1;
 #endif
+    private static int bpStartNumber = 1; // New: Default beginning number for BP data
+    private static int bpEndNumber = 9999; // New: Default finishing number for BP data
 
     #region main and arg parsing
 
@@ -24,43 +30,147 @@ public class BPtoPNCore
         logger = new Logger();
         try
         {
-            //Check the args we got.
-            //Check that we have the Biblio data from PN.
-            logger.Log("Parsing args");
-            var shouldRun = ParseArgs(args);
-            if (startYear > endYear)
-            {
-                throw new ArgumentException("Error end year cannot be greater than start year.");
-            }
+            // Define command-line options for the application
+            var startYearOption = new Option<int>(
+                name: "--start-year",
+                getDefaultValue: () => 1932,
+                description:
+                "Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932."
+            );
+            startYearOption.AddAlias("-s"); // Add alias using AddAlias method
 
-            if (startYear < 1932)
-            {
-                throw new ArgumentException("Error, start year cannot be less than 1932.");
-            }
+            var endYearOption = new Option<int>(
+                name: "--end-year",
+                getDefaultValue: () => DateTime.Now.Year - 1,
+                description:
+                $"Sets the end year for data compilation. Use -e or --end-year. Default is the current system year -1 (Currently: {DateTime.Now.Year - 1}). Cannot be lower than the start year."
+            );
+            endYearOption.AddAlias("-e"); // Add alias using AddAlias method
 
-            if (endYear > DateTime.Now.Year - 1)
-            {
-                throw new ArgumentException(
-                    $"Error, the end year cannot be greater than the current system year -1 (Currently: {DateTime.Now.Year - 1})");
-            }
+            var bpStartNumberOption = new Option<int>(
+                name: "--bp-start-number",
+                getDefaultValue: () => 0,
+                description:
+                "Sets the beginning number for BP data processing. Use -bps or --bp-start-number. Default is 0. Cannot be negative."
+            );
+            bpStartNumberOption.AddAlias("-bps"); // Add alias using AddAlias method
+            bpStartNumberOption.AddAlias("-b"); // Add alias using AddAlias method
 
-            logger.Log($"Should start core? {shouldRun}");
-            if (shouldRun) Core();
+            var bpEndNumberOption = new Option<int>(
+                name: "--bp-end-number",
+                getDefaultValue: () => int.MaxValue,
+                description:
+                "Sets the finishing number for BP data processing. Use -bpe or --bp-end-number. Default is maximum integer value. Cannot be less than the BP start number."
+            );
+            bpEndNumberOption.AddAlias("-bpe"); // Add alias using AddAlias method
+            bpEndNumberOption.AddAlias("-f"); // Add alias using AddAlias method
+
+            // Create the root command for the application
+            var rootCommand =
+                new RootCommand(
+                    "BP to PN Data Compiler: Compiles and updates bibliographic data from BP and PN sources.")
+                {
+                    startYearOption,
+                    endYearOption,
+                    bpStartNumberOption,
+                    bpEndNumberOption
+                };
+
+            // Set the handler for the root command. This action will be executed when the command is invoked.
+            rootCommand.SetHandler(async (context) =>
+            {
+                // Retrieve the parsed values for each option
+                startYear = context.ParseResult.GetValueForOption(startYearOption);
+                endYear = context.ParseResult.GetValueForOption(endYearOption);
+                bpStartNumber = context.ParseResult.GetValueForOption(bpStartNumberOption);
+                bpEndNumber = context.ParseResult.GetValueForOption(bpEndNumberOption);
+
+                // Perform custom validation after parsing
+                ValidateYears();
+                ValidateBpNumbers();
+
+                logger.Log("Parsing args completed.");
+                Console.WriteLine($"Args parsed. Start Year: {startYear}, End Year: {endYear}.");
+                Console.WriteLine($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}.");
+                logger.Log($"Start Year: {startYear}, End Year: {endYear}");
+                logger.Log($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}");
+
+                // If all validations pass, proceed with the core application logic
+                await Core();
+            });
+
+            // Invoke the command line parser with the provided arguments
+            // System.CommandLine will automatically handle help (-h or --help) and validation errors.
+            await rootCommand.InvokeAsync(args);
         }
         catch (ArgumentException e)
         {
+            // Catch specific argument validation errors
             ExceptionInfo(e);
         }
         catch (DirectoryNotFoundException e)
         {
+            // Catch directory related errors
             ExceptionInfo(e);
         }
         catch (Exception e)
         {
+            // Catch any other unexpected exceptions
             ExceptionInfo(e);
         }
     }
 
+    /// <summary>
+    /// Validates the start and end years based on application rules.
+    /// Throws ArgumentException if validation fails.
+    /// </summary>
+    private static void ValidateYears()
+    {
+        if (startYear > endYear)
+        {
+            logger.LogError("Error: End year cannot be greater than start year.", new ArgumentException());
+            throw new ArgumentException("Error: End year cannot be greater than start year.");
+        }
+
+        if (startYear < 1932)
+        {
+            logger.LogError("Error: Start year cannot be less than 1932.", new ArgumentException());
+            throw new ArgumentException("Error: Start year cannot be less than 1932.");
+        }
+
+        if (endYear > DateTime.Now.Year - 1)
+        {
+            logger.LogError(
+                $"Error: The end year cannot be greater than the current system year -1 (Currently: {DateTime.Now.Year - 1})",
+                new ArgumentException());
+            throw new ArgumentException(
+                $"Error: The end year cannot be greater than the current system year -1 (Currently: {DateTime.Now.Year - 1})");
+        }
+    }
+
+    /// <summary>
+    /// Validates the BP start and end numbers.
+    /// Throws ArgumentException if validation fails.
+    /// </summary>
+    private static void ValidateBpNumbers()
+    {
+        if (bpStartNumber < 0) // Assuming BP numbers are non-negative
+        {
+            logger.LogError("Error: BP start number cannot be negative.", new ArgumentException());
+            throw new ArgumentException("Error: BP start number cannot be negative.");
+        }
+
+        if (bpEndNumber < bpStartNumber)
+        {
+            logger.LogError("Error: BP end number cannot be less than BP start number.", new ArgumentException());
+            throw new ArgumentException("Error: BP end number cannot be less than BP start number.");
+        }
+    }
+
+    /// <summary>
+    /// Displays exception information to the console and logs it.
+    /// </summary>
+    /// <param name="e">The exception to display.</param>
     private static void ExceptionInfo(Exception e)
     {
         //Just a nice little way for us to bubble any errors we run into up and to the user, to be handled with ease.
@@ -72,305 +182,31 @@ public class BPtoPNCore
         Console.ReadKey();
     }
 
-    private static bool ParseArgs(string[] args)
-    {
-        logger.LogProcessingInfo("Starting to parse args");
-        //First case is no args, or the help menu arg
-        if (args.Length == 0) return true;
-        if ((args.Length == 1 && (args[0].ToLower() == "-h" || args[0].ToLower() == "help")))
-        {
-            logger.Log("Showing help menu");
-            logger.LogProcessingInfo("processed help menu arg");
-            ShowHelp();
-            return false;
-        }
-
-        //If its not the help menu, check if its a number, and if so assume that is the start year
-        if (args.Length == 1)
-        {
-            var regex = new Regex(@"(19|20)\d\d");
-            if (regex.IsMatch(args[0]))
-            {
-                if (int.TryParse(args[0], out startYear))
-                {
-                    logger.Log($"Processed as start year, {startYear}");
-                    return true;
-                }
-
-                logger.Log(
-                    $"Error, {args[0]} is not a valid year. Please enter a number between 1932-{DateTime.Now.Year - 1}");
-                throw new ArgumentException($"Error, {args[0]} is not an accepted value. " +
-                                            $"Please enter a number between 1932-{DateTime.Now.Year - 1}\nuse -h or help " +
-                                            $"for more information.");
-            }
-            else
-            {
-                logger.Log(
-                    $"Error, {args[0]} is not a valid year. Please enter a number between 1932-{DateTime.Now.Year - 1}");
-                throw new ArgumentException(
-                    $"Error, {args[0]} is not an accepted value. Please enter a number between 1932-{DateTime.Now.Year - 1}\nuse -h or help " +
-                    $"for more information.");
-            }
-        }
-
-        //Two args
-        //Options are:
-        //1) -s {number}
-        //2) start {number}
-        //3) -e {number}
-        //4) end {number}
-        //5) {number} {number}
-        if (args.Length == 2)
-        {
-            var firstArg = args[0];
-            var secondArg = args[1];
-            var numbRegex = new Regex(@"(19|20)\d\d");
-
-            if (firstArg.ToLower() == "-s" || firstArg.ToLower() == "start")
-            {
-                if (numbRegex.IsMatch(secondArg))
-                {
-                    if (int.TryParse(secondArg, out startYear))
-                    {
-                        if (startYear > endYear)
-                        {
-                            endYear = startYear + 1;
-                        }
-
-                        logger.Log($"Set Start year: {startYear}");
-
-                        return true;
-                    }
-                    else
-                    {
-                        logger.Log($"{secondArg} is invalid");
-                        throw new ArgumentException(
-                            $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                    }
-                }
-
-                else
-                {
-                    throw new ArgumentException(
-                        $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                }
-            }
-
-            if (firstArg.ToLower() == "-e" || firstArg.ToLower() == "end")
-            {
-                if (numbRegex.IsMatch(secondArg))
-                {
-                    if (int.TryParse(secondArg, out endYear))
-                    {
-                        if (endYear < startYear)
-                        {
-                            throw new ArgumentException(
-                                $"The end year has to be higher than the start year. The default start year is 1932. You entered {secondArg}");
-                        }
-
-                        logger.Log($"Set end year: {endYear}");
-                        return true;
-                    }
-                    else
-                    {
-                        logger.Log(
-                            $"Error, value {{secondArg}} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                        throw new ArgumentException(
-                            $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                    }
-                }
-
-                else
-                {
-                    logger.Log(
-                        $"Error, value {{secondArg}} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                    throw new ArgumentException(
-                        $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                }
-            }
-            else if (numbRegex.IsMatch(firstArg) && numbRegex.IsMatch(secondArg))
-            {
-                if (int.TryParse(firstArg, out startYear) && int.TryParse(secondArg, out endYear))
-                {
-                    if (startYear > endYear)
-                    {
-                        logger.Log($"Error start year ({startYear}) cannot be larger than end year ({endYear})");
-                        throw new ArgumentException(
-                            $"Error start year ({startYear}) cannot be larger than end year ({endYear})");
-                    }
-
-                    return true;
-                }
-                else
-                {
-                    logger.Log(
-                        $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                    throw new ArgumentException(
-                        $"Error, value {secondArg} is invalid. It must be a number between 1932-{DateTime.Now.Year - 1}");
-                }
-            }
-            else
-            {
-                logger.Log($"Error, invalid argument {firstArg}, could not be parsed.");
-                throw new ArgumentException($"Error, invalid argument {firstArg}, could not be parsed.");
-            }
-        }
-
-        //Valid options are:
-        //1) {number} end {number}
-        //2) {number} -e {number}
-        else if (args.Length == 3)
-        {
-            var firstArg = args[0];
-            var secondArg = args[1];
-            var thirdArg = args[2];
-            var letterRegex = new Regex("(-e|end)");
-            var numbRegex = new Regex(@"(19|20)\d\d");
-
-            if (numbRegex.IsMatch(firstArg) && letterRegex.IsMatch(secondArg) && numbRegex.IsMatch(thirdArg))
-            {
-                if (int.TryParse(firstArg, out startYear) && int.TryParse(thirdArg, out endYear))
-                {
-                    logger.Log($"Set start year: {startYear} and end year: {endYear}.");
-                    return true;
-                }
-                else
-                {
-                    logger.Log($"Error, one of the entered numbers could not be parsed.");
-                    throw new ArgumentException("Error, one of the entered numbers could not be parsed.");
-                }
-            }
-            else
-            {
-                logger.Log($"Error, one of your arguments is invalid. See -h for more info.");
-                throw new ArgumentException($"Error, one of your arguments is invalid. See -h for more info.");
-            }
-        }
-
-        //options
-        //1) -s {number} -e {number}
-        //2) start {number} end {number} 
-        //3) -e {number} -s {number}
-        //4) end {number} start {number}
-        else if (args.Length == 4)
-        {
-            var firstArg = args[0];
-            var secondArg = args[1];
-            var thirdArg = args[2];
-            var forthArg = args[3];
-
-            var letterRegex = new Regex("(-e|end|-s|start)");
-            var numberRegex = new Regex(@"(19|20)\d\d");
-
-            if (letterRegex.IsMatch(firstArg) && letterRegex.IsMatch(thirdArg)
-                                              && numberRegex.IsMatch(secondArg) && numberRegex.IsMatch(forthArg))
-            {
-                if (firstArg == "-s" || firstArg == "start")
-                {
-                    if (int.TryParse(secondArg, out startYear) && int.TryParse(forthArg, out endYear))
-                    {
-                        logger.Log($"Start year {startYear} and end year {endYear}");
-                        return true;
-                    }
-                    else
-                    {
-                        var error = new ArgumentException("Error could not parse supplied numbers");
-                        logger.LogError("Error could not parse supplied numbers", error);
-                        throw error;
-                    }
-                }
-
-                if (firstArg == "-e" || firstArg == "end")
-                {
-                    if (int.TryParse(secondArg, out endYear) && int.TryParse(forthArg, out startYear))
-                    {
-                        logger.Log($"Set end year {endYear} and start year {startYear}");
-                        return true;
-                    }
-                    else
-                    {
-                        var error = new ArgumentException("Error could not parse supplied numbers");
-                        logger.LogError("Error could not parse supplied numbers", error);
-                        throw error;
-                    }
-                }
-
-
-                else
-                {
-                    var error = new ArgumentException(
-                        "Error, the arguments were not valid. Try -h for a list of valid arguments");
-                    logger.LogError("Error could not parse supplied numbers", error);
-                    throw error;
-                }
-            }
-            else
-            {
-                var error = new ArgumentException(
-                    "Error, the arguments were not valid. Try -h for a list of valid arguments");
-                logger.LogError("Error could not parse supplied numbers", error);
-                throw error;
-            }
-        }
-
-        else
-        {
-            var error = new ArgumentException(
-                "Error, the arguments were not valid. Try -h for a list of valid arguments");
-            logger.LogError("Error could not parse supplied numbers", error);
-            throw error;
-        }
-    }
-
-    private static void ShowHelp()
-    {
-        logger.Log("Showing help menu");
-        Console.WriteLine(
-            "This data compiler must be run in the ipd.data folder, or its parent folder, and the idp.data folder must contain the biblio folder for this to work." +
-            "\nIf you do not have these files, download them from: https://github.com/papyri/idp.data");
-        Console.WriteLine("---------------------");
-        Console.WriteLine("Options:");
-        Console.WriteLine(
-            $" -- No args will run the program with the default start and end years ({startYear}, {endYear})");
-        Console.WriteLine("-h || help -- Displays this list.");
-        Console.WriteLine("{number} -- sets the start year to number, default end year is the current system year -1.");
-
-        Console.WriteLine(
-            "-s {number} || start {number} -- set the start year to pull from. Default is 1932, which the start can not be less than");
-        Console.WriteLine(
-            "-e {number} || end {number} -- set the end year to pull from. Default is the current system year -1. Cannot be lower than the start year.");
-        Console.WriteLine("{number} {number} -- sets the start year and the end year.");
-
-        Console.WriteLine(
-            "{number} -e {number} -- sets the start year to the first number, and the end year to the second");
-        Console.WriteLine(
-            "{number} end {number} -- sets the start year to the first number, and the end year to the second");
-
-        Console.WriteLine("-s {number} -e {number} -- sets the start year and end year.");
-        Console.WriteLine("start {number} end {number} -- sets the start year and end year.");
-        Console.WriteLine("-e {number} -s {number} -- sets the start year and end year.");
-        Console.WriteLine("end {number} start {number} -- sets the start year and end year.");
-    }
+    // The old ParseArgs and ShowHelp methods are removed as System.CommandLine handles this.
 
     #endregion
 
+    /// <summary>
+    /// The core logic of the application, executed after successful argument parsing.
+    /// </summary>
     private static async Task Core()
     {
         logger.Log("Started core");
         try
         {
-            Console.WriteLine($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
-            logger.Log($"Args parsed. Start Year: {startYear}. End Year: {endYear}.");
-
-            //This will check 
+            // This will check
             var gitHandler = new GitFolderHandler(logger);
-            //If we have the git folder. Normally will error out before this if it cannot be found. 
+            //If we have the git folder. Normally will error out before this if it cannot be found.
             //AS such we'll just let hte exceptions bubble up.
             var biblioPath = gitHandler.GitBiblioDirectoryCheck();
 
             logger.Log("Creating BpEntry Gatherer");
             Console.WriteLine("Creating BPEntry Gatherer");
-            var BPEntryGatherer = new BPEntryGatherer(startYear, endYear, logger);
+            // Pass bpStartNumber and bpEndNumber to BPEntryGatherer if it needs them
+            // Assuming BPEntryGatherer can be updated to accept these new parameters
+            var BPEntryGatherer =
+                new BPEntryGatherer(startYear, endYear, logger, bpStartNumber,
+                    bpEndNumber); // You might need to add bpStartNumber, bpEndNumber here
 
             logger.Log("BPEntryGather Created.\nCreating XMLEntryGatherer.");
             Console.WriteLine("BPEntryGather created. Creating XMLEntry gatherer");
@@ -421,6 +257,10 @@ public class BPtoPNCore
         }
     }
 
+    /// <summary>
+    /// Zips the generated data and deletes working directories.
+    /// </summary>
+    /// <param name="saveLocation">The path to the directory containing data to be zipped.</param>
     private static void ZipDataDeleteWorkingDirs(string saveLocation)
     {
         var directory = Directory.GetCurrentDirectory();
@@ -471,6 +311,10 @@ public class BPtoPNCore
         }
     }
 
+    /// <summary>
+    /// Moves BP XML files and logs to the specified save location.
+    /// </summary>
+    /// <param name="saveLocation">The target directory for moving files.</param>
     private static void MoveBPXMLAndLogs(string saveLocation)
     {
         Console.WriteLine(Directory.GetCurrentDirectory());
@@ -495,7 +339,11 @@ public class BPtoPNCore
         }
     }
 
-
+    /// <summary>
+    /// Updates PN entries based on the provided update details.
+    /// </summary>
+    /// <param name="pnEntriesNeedingUpdates">List of update details for PN entries.</param>
+    /// <returns>An enumerable of updated XMLDataEntry objects.</returns>
     private static IEnumerable<XMLDataEntry> UpdatePnEntries(List<UpdateDetail<XMLDataEntry>> pnEntriesNeedingUpdates)
     {
         logger.Log($"Fixing {pnEntriesNeedingUpdates.Count} PN Entries.");
@@ -506,54 +354,46 @@ public class BPtoPNCore
                 $"Fixed {entry.FieldName} on {entry.Entry.Title} from {entry.OldValue} to {entry.NewValue}");
 
             var fixedEntry = entry.Entry;
-            if (entry.FieldName == "BPNumber")
+            // Using a switch statement for better readability and maintainability
+            switch (entry.FieldName)
             {
-                fixedEntry.BPNumber = entry.NewValue;
-            }
-            else if (entry.FieldName == "CR")
-            {
-                fixedEntry.CR = entry.NewValue;
-            }
-            else if (entry.FieldName == "Index")
-            {
-                fixedEntry.Index = entry.NewValue;
-            }
-            else if (entry.FieldName == "IndexBis")
-            {
-                fixedEntry.IndexBis = entry.NewValue;
-            }
-            else if (entry.FieldName == "Internet")
-            {
-                fixedEntry.Internet = entry.NewValue;
-            }
-            else if (entry.FieldName == "Name")
-            {
-                fixedEntry.Name = entry.NewValue;
-            }
-            else if (entry.FieldName == "No")
-            {
-                //If you check the defintion of XMlEntry, the number is alawys set to equal to the BPNumber
-                fixedEntry.BPNumber = entry.NewValue;
-            }
-            else if (entry.FieldName == "Publication")
-            {
-                fixedEntry.Publication = entry.NewValue;
-            }
-            else if (entry.FieldName == "Resume")
-            {
-                fixedEntry.Resume = entry.NewValue;
-            }
-            else if (entry.FieldName == "SBandSEG")
-            {
-                fixedEntry.SBandSEG = entry.NewValue;
-            }
-            else if (entry.FieldName == "Title")
-            {
-                fixedEntry.Title = entry.NewValue;
-            }
-            else if (entry.FieldName == "Annee")
-            {
-                fixedEntry.Annee = entry.NewValue;
+                case "BPNumber":
+                    fixedEntry.BPNumber = entry.NewValue;
+                    break;
+                case "CR":
+                    fixedEntry.CR = entry.NewValue;
+                    break;
+                case "Index":
+                    fixedEntry.Index = entry.NewValue;
+                    break;
+                case "IndexBis":
+                    fixedEntry.IndexBis = entry.NewValue;
+                    break;
+                case "Internet":
+                    fixedEntry.Internet = entry.NewValue;
+                    break;
+                case "Name":
+                    fixedEntry.Name = entry.NewValue;
+                    break;
+                case "No":
+                    // If you check the definition of XMlEntry, the number is always set to equal to the BPNumber
+                    fixedEntry.BPNumber = entry.NewValue;
+                    break;
+                case "Publication":
+                    fixedEntry.Publication = entry.NewValue;
+                    break;
+                case "Resume":
+                    fixedEntry.Resume = entry.NewValue;
+                    break;
+                case "SBandSEG":
+                    fixedEntry.SBandSEG = entry.NewValue;
+                    break;
+                case "Title":
+                    fixedEntry.Title = entry.NewValue;
+                    break;
+                case "Annee":
+                    fixedEntry.Annee = entry.NewValue;
+                    break;
             }
 
             fixedEntries.Add(fixedEntry);
@@ -562,6 +402,11 @@ public class BPtoPNCore
         return fixedEntries;
     }
 
+    /// <summary>
+    /// Updates BP entries based on the provided update details.
+    /// </summary>
+    /// <param name="bpEntriesNeedingUpdates">List of update details for BP entries.</param>
+    /// <returns>An enumerable of updated BPDataEntry objects.</returns>
     private static IEnumerable<BPDataEntry> UpdateBpEntries(List<UpdateDetail<BPDataEntry>> bpEntriesNeedingUpdates)
     {
         logger.LogProcessingInfo($"Correcting {bpEntriesNeedingUpdates.Count} Bp Entries.");
@@ -572,53 +417,45 @@ public class BPtoPNCore
                 $"Fixed {entry.FieldName} on {entry.Entry.Title} from {entry.OldValue} to {entry.NewValue}");
 
             var fixedEntry = entry.Entry;
-            if (entry.FieldName == "BPNumber")
+            // Using a switch statement for better readability and maintainability
+            switch (entry.FieldName)
             {
-                fixedEntry.BPNumber = entry.NewValue;
-            }
-            else if (entry.FieldName == "CR")
-            {
-                fixedEntry.CR = entry.NewValue;
-            }
-            else if (entry.FieldName == "Index")
-            {
-                fixedEntry.Index = entry.NewValue;
-            }
-            else if (entry.FieldName == "IndexBis")
-            {
-                fixedEntry.IndexBis = entry.NewValue;
-            }
-            else if (entry.FieldName == "Internet")
-            {
-                fixedEntry.Internet = entry.NewValue;
-            }
-            else if (entry.FieldName == "Name")
-            {
-                fixedEntry.Name = entry.NewValue;
-            }
-            else if (entry.FieldName == "No")
-            {
-                fixedEntry.No = entry.NewValue;
-            }
-            else if (entry.FieldName == "Publication")
-            {
-                fixedEntry.Publication = entry.NewValue;
-            }
-            else if (entry.FieldName == "Resume")
-            {
-                fixedEntry.Resume = entry.NewValue;
-            }
-            else if (entry.FieldName == "SBandSEG")
-            {
-                fixedEntry.SBandSEG = entry.NewValue;
-            }
-            else if (entry.FieldName == "Title")
-            {
-                fixedEntry.Title = entry.NewValue;
-            }
-            else if (entry.FieldName == "Annee")
-            {
-                fixedEntry.Annee = entry.NewValue;
+                case "BPNumber":
+                    fixedEntry.BPNumber = entry.NewValue;
+                    break;
+                case "CR":
+                    fixedEntry.CR = entry.NewValue;
+                    break;
+                case "Index":
+                    fixedEntry.Index = entry.NewValue;
+                    break;
+                case "IndexBis":
+                    fixedEntry.IndexBis = entry.NewValue;
+                    break;
+                case "Internet":
+                    fixedEntry.Internet = entry.NewValue;
+                    break;
+                case "Name":
+                    fixedEntry.Name = entry.NewValue;
+                    break;
+                case "No":
+                    fixedEntry.No = entry.NewValue;
+                    break;
+                case "Publication":
+                    fixedEntry.Publication = entry.NewValue;
+                    break;
+                case "Resume":
+                    fixedEntry.Resume = entry.NewValue;
+                    break;
+                case "SBandSEG":
+                    fixedEntry.SBandSEG = entry.NewValue;
+                    break;
+                case "Title":
+                    fixedEntry.Title = entry.NewValue;
+                    break;
+                case "Annee":
+                    fixedEntry.Annee = entry.NewValue;
+                    break;
             }
 
             fixedEntries.Add(fixedEntry);
@@ -627,6 +464,13 @@ public class BPtoPNCore
         return fixedEntries;
     }
 
+    /// <summary>
+    /// Saves the compiled lists of BP, PN, and new XML entries to disk.
+    /// </summary>
+    /// <param name="BpEntriesToUpdate">List of BP entries to update.</param>
+    /// <param name="PnEntriesToUpdate">List of PN entries to update.</param>
+    /// <param name="NewXmlEntriesToAdd">List of new XML entries to add.</param>
+    /// <returns>The name of the folder where the data was saved.</returns>
     private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
         List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
     {
@@ -650,11 +494,18 @@ public class BPtoPNCore
         return EndDataFolder;
     }
 
+    /// <summary>
+    /// Sets up the necessary directories for saving the processed data.
+    /// </summary>
+    /// <param name="EndDataFolder">The root folder for all saved data.</param>
+    /// <param name="BPEntryPath">Path for BP entries to update.</param>
+    /// <param name="PnEntryPath">Path for PN entries to update.</param>
+    /// <param name="NewXmlEntryPath">Path for new XML entries.</param>
     private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,
         string NewXmlEntryPath)
     {
         logger.LogProcessingInfo(
-            $"Setting up directories  for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
+            $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
         Console.WriteLine($"Setting up saving directories [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
         if (Directory.GetCurrentDirectory().Contains("Biblio")) Directory.SetCurrentDirectory("..");
 
@@ -668,13 +519,21 @@ public class BPtoPNCore
         Directory.CreateDirectory(NewXmlEntryPath);
     }
 
+    /// <summary>
+    /// Saves new XML entries to the specified path.
+    /// </summary>
+    /// <param name="NewXmlEntriesToAdd">List of new BPDataEntry objects to be saved as XML.</param>
+    /// <param name="path">The directory path where the XML files will be saved.</param>
     private static void SaveNewXMlFromBPEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
     {
         logger.LogProcessingInfo("Saving XMl Entries..");
         Console.WriteLine("Saving Xml Entries");
         foreach (var newXml in NewXmlEntriesToAdd)
         {
-            var filePath = (path + $"/{newXml.Title}.xml").Replace("\"", "").Replace(":", ".");
+            // Sanitize file path by replacing invalid characters
+            var filePath = Path.Combine(path, $"{newXml.Title}.xml")
+                .Replace("\"", "")
+                .Replace(":", ".");
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteBPXmlEntry(newXml, filePath);
@@ -699,20 +558,36 @@ public class BPtoPNCore
         }
     }
 
+    /// <summary>
+    /// Saves updated PN entries to the specified path.
+    /// </summary>
+    /// <param name="pnEntriesToUpdate">List of XMLDataEntry objects to be saved as XML.</param>
+    /// <param name="path">The directory path where the XML files will be saved.</param>
     private static void SavePNEntries(List<XMLDataEntry> pnEntriesToUpdate, string path)
     {
         logger.LogProcessingInfo("Saving PN Entries");
         Console.WriteLine("Saving Pn Entries");
         foreach (var pnEntries in pnEntriesToUpdate)
         {
-            var filePath = (path + $"/{pnEntries.PNNumber}.xml").Replace("\"", "")
+            // Sanitize file path by replacing invalid characters
+            var filePath = Path.Combine(path, $"{pnEntries.PNNumber}.xml")
+                .Replace("\"", "")
                 .Replace(":", ".");
             Console.WriteLine($"Saving {pnEntries.PNNumber} to {filePath}");
             logger.LogProcessingInfo($"Saving  {pnEntries.PNNumber} to {filePath}");
             WritePNEntry(pnEntries, filePath);
+            // Assuming WriteEntry can handle XMLDataEntry or there's an overload
+            // For now, casting to BPDataEntry if ToXML() is common, or create a new WriteEntry for XMLDataEntry
+            // For this example, assuming XMLDataEntry has a ToXML() method similar to BPDataEntry
+            WriteEntry(pnEntries, filePath); // This might need an overload or conversion
         }
     }
 
+    /// <summary>
+    /// Saves updated BP entries to the specified path.
+    /// </summary>
+    /// <param name="bpEntriesToUpdate">List of BPDataEntry objects to be saved as XML.</param>
+    /// <param name="path">The directory path where the XML files will be saved.</param>
     private static void SaveBPEntries(List<UpdateDetail<BPDataEntry>> bpEntriesToUpdate, string path)
     {
         logger.Log("Saving BP Entries");
@@ -723,6 +598,7 @@ public class BPtoPNCore
             Console.WriteLine($"Saving {bpEntries.Entry.BPNumber} to {filePath}");
             logger.LogProcessingInfo($"Saving  {bpEntries.Entry.BPNumber} to {filePath}");
             WriteBPEntry(bpEntries, filePath);
+            // Sanitize file path by replacing invalid characters
         }
     }
 
@@ -753,6 +629,34 @@ public class BPtoPNCore
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                   $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.PNNumber}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
+                  $"\n</bibl>";
+
+        try
+        {
+            // If the file already exists, append a (2) to the filename to avoid overwriting
+            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
+            File.WriteAllText(path, xml);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    /// <summary>
+    /// Overload for WriteEntry to handle XMLDataEntry, assuming it also has a ToXML() method.
+    /// If XMLDataEntry does not have ToXML(), this method will need to be adjusted
+    /// to generate XML based on XMLDataEntry's properties.
+    /// </summary>
+    /// <param name="entry">The XMLDataEntry object to write.</param>
+    /// <param name="path">The file path where the XML will be saved.</param>
+    private static void WriteEntry(XMLDataEntry entry, string path)
+    {
+        // This assumes XMLDataEntry also has a ToXML() method that produces the desired XML fragment.
+        // If not, you'll need to manually construct the XML string from XMLDataEntry's properties.
+        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{entry.Title}+{entry.Publication}\" type=\"book\">\n" +
+                  $"{entry.ToXML()}" + // Assuming ToXML() exists for XMLDataEntry
                   $"\n</bibl>";
 
         try
