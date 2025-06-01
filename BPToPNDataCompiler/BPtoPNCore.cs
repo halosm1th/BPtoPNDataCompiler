@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
+using System.Xml;
 using BPtoPNDataCompiler;
 
 namespace DefaultNamespace;
@@ -9,6 +10,7 @@ public class BPtoPNCore
     private static int startYear = 1932;
 #if DEBUG
     private static int endYear = 1932;
+
 #else
     private static int endYear = DateTime.Now.Year - 1;
 #endif
@@ -396,12 +398,11 @@ public class BPtoPNCore
             Console.WriteLine("Done matching entries. Now saving lists.");
             logger.Log("Finished matching entries.");
             logger.Log("Updating BPEntries before saving.");
-            var BpEntries = UpdateBpEntries(dm.BpEntriesToUpdate).ToList();
             logger.Log("Updating PnEntries before saving.");
             var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
 
             logger.Log("Saving lists.");
-            var saveLocation = SaveLists(BpEntries, PnEntries, dm.NewXmlEntriesToAdd);
+            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd);
             logger.Log("Finished saving lists. ");
 
             logger.Log(
@@ -626,14 +627,14 @@ public class BPtoPNCore
         return fixedEntries;
     }
 
-    private static string SaveLists(List<BPDataEntry> BpEntriesToUpdate,
+    private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
         List<XMLDataEntry> PnEntriesToUpdate, List<BPDataEntry> NewXmlEntriesToAdd)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
         var EndDataFolder = $"BpToPnChecker-{DateTime.Now}".Replace(":", ".");
-        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
-        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate-{DateTime.Now}".Replace(":", ".");
-        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries-{DateTime.Now}".Replace(":", ".");
+        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
+        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
+        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries-{DateTime.Now}".Replace(":", "_").Replace("-", "_");
         logger.Log("Setting up directories for saving.");
         SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
 
@@ -644,7 +645,7 @@ public class BPtoPNCore
         SavePNEntries(PnEntriesToUpdate, PnEntryPath);
 
         logger.Log("Saving XML of new entries.");
-        SaveNewXMlEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
+        SaveNewXMlFromBPEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
 
         return EndDataFolder;
     }
@@ -667,7 +668,7 @@ public class BPtoPNCore
         Directory.CreateDirectory(NewXmlEntryPath);
     }
 
-    private static void SaveNewXMlEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
+    private static void SaveNewXMlFromBPEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
     {
         logger.LogProcessingInfo("Saving XMl Entries..");
         Console.WriteLine("Saving Xml Entries");
@@ -676,7 +677,25 @@ public class BPtoPNCore
             var filePath = (path + $"/{newXml.Title}.xml").Replace("\"", "").Replace(":", ".");
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
-            WriteEntry(newXml, filePath);
+            WriteBPXmlEntry(newXml, filePath);
+        }
+    }
+
+    private static void WriteBPXmlEntry(BPDataEntry entry, string path)
+    {
+        var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.BPNumber}\" type=\"book\">\n" +
+                  $"{entry.ToXML()}" +
+                  $"\n</bibl>";
+
+        try
+        {
+            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
+            File.WriteAllText(path, xml);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
 
@@ -690,27 +709,49 @@ public class BPtoPNCore
                 .Replace(":", ".");
             Console.WriteLine($"Saving {pnEntries.PNNumber} to {filePath}");
             logger.LogProcessingInfo($"Saving  {pnEntries.PNNumber} to {filePath}");
-            WriteEntry(pnEntries, filePath);
+            WritePNEntry(pnEntries, filePath);
         }
     }
 
-    private static void SaveBPEntries(List<BPDataEntry> bpEntriesToUpdate, string path)
+    private static void SaveBPEntries(List<UpdateDetail<BPDataEntry>> bpEntriesToUpdate, string path)
     {
         logger.Log("Saving BP Entries");
         Console.WriteLine("Saving Bp Entries");
         foreach (var bpEntries in bpEntriesToUpdate)
         {
-            var filePath = path + (($"/{bpEntries.Title}.xml").Replace("\"", "").Replace(":", "."));
-            Console.WriteLine($"Saving {bpEntries.Title} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {bpEntries.Title} to {filePath}");
-            WriteEntry(bpEntries, filePath);
+            var filePath = path + (($"/{bpEntries.Entry.BPNumber}.xml").Replace("\"", "").Replace(":", "."));
+            Console.WriteLine($"Saving {bpEntries.Entry.BPNumber} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {bpEntries.Entry.BPNumber} to {filePath}");
+            WriteBPEntry(bpEntries, filePath);
         }
     }
 
-    private static void WriteEntry(BPDataEntry entry, string path)
+    private static void WriteBPEntry(UpdateDetail<BPDataEntry> entry, string path)
     {
+        var bpText =
+            $"BP #: {entry.Entry.BPNumber}. Changed {entry.FieldName} from {entry.OldValue} to {entry.NewValue}. ";
+
+        try
+        {
+            if (File.Exists(path)) path = path.Replace(".txt", " (2).txt");
+            File.WriteAllText(path, bpText);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private static void WritePNEntry(XMLDataEntry entry, string path)
+    {
+        //TODO copy over the whole xml from the file
+        var xmlDocument = new XmlDocument();
+        xmlDocument.Load(entry.PNFileName);
+        var root = xmlDocument.DocumentElement;
+
+        //TODO remove this, so that the xml is copied over, we're updating specific nodes and segs in it.
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{entry.Title}+{entry.Publication}\" type=\"book\">\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.PNNumber}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
                   $"\n</bibl>";
 

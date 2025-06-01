@@ -37,16 +37,16 @@ public class BPEntryGatherer
             }
 
             var URL = $"https://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
-            logger.LogProcessingInfo($"URl for BP Request: {URL}");
+            //logger.LogProcessingInfo($"URl for BP Request: {URL}");
             var web = new HtmlWeb();
             var htmlDoc = web.Load(URL);
-            logger.LogProcessingInfo("Loaded URL from web, parsing HTML.");
+            //logger.LogProcessingInfo("Loaded URL from web, parsing HTML.");
 
             var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
             if (table != null)
             {
-                logger.LogProcessingInfo("Found table, creating BPDataEntry.");
+                //logger.LogProcessingInfo("Found table, creating BPDataEntry.");
                 entry = new BPDataEntry($"{yearText}-{indexText}", logger);
 
                 var rowNodes = table.SelectNodes(".//tr");
@@ -138,7 +138,7 @@ public class BPEntryGatherer
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
-            logger.LogProcessingInfo($"Gathering Entry: {currentYear}-{entryIndex}");
+            //logger.LogProcessingInfo($"Gathering Entry: {currentYear}-{entryIndex}");
             BPDataEntry? entry = null;
             try
             {
@@ -155,8 +155,8 @@ public class BPEntryGatherer
                 Console.WriteLine(
                     $"Entry {currentYear}-{entryIndex} could not be found. Will try next entry: {!hasFailed}");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                logger.LogProcessingInfo(
-                    $"Could not find entry {currentYear}-{entryIndex}, will try next entry? {!hasFailed}");
+                //logger.LogProcessingInfo(
+                //    $"Could not find entry {currentYear}-{entryIndex}, will try next entry? {!hasFailed}");
                 if (hasFailed)
                 {
                     entryIndex = int.MaxValue - 1;
@@ -171,8 +171,8 @@ public class BPEntryGatherer
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write($"Entry {currentYear}-{entryIndex} was found. ");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                logger.LogProcessingInfo(
-                    $"Found entry {currentYear}-{entryIndex}. Writing entry to disk and adding to entry list.");
+                // logger.LogProcessingInfo(
+                //     $"Found entry {currentYear}-{entryIndex}. Writing entry to disk and adding to entry list.");
                 WriteEntry(entry);
                 Entries.Add(entry);
             }
@@ -185,7 +185,7 @@ public class BPEntryGatherer
     private async Task WriteEntry(BPDataEntry entry)
     {
         var fileName = Directory.GetCurrentDirectory() + $"/{entry.BPNumber}.xml";
-        logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
+        //logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
 
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                   $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{fileName}\" type=\"book\">\n" +

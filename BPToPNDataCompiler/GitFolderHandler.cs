@@ -14,6 +14,10 @@ public class GitFolderHandler
 
     public string GitBiblioDirectoryCheck()
     {
+        //TODO make sure that this file path change works
+        logger.Log($"Moving up from program directory before starting search. ({Directory.GetCurrentDirectory()})");
+        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../");
+        Console.WriteLine($"{Directory.GetCurrentDirectory()}");
         logger.Log("Checking if PN folders exist");
         Console.WriteLine("Checking if PN folders exist.");
         var currentDirectory = ScanForGitDirectory();
@@ -53,7 +57,7 @@ public class GitFolderHandler
                 throw new DirectoryNotFoundException("Error cannot find the directory idp.data.\n " +
                                                      "Please run the program either in the idp.data directory, " +
                                                      "or in the parent directory of idp.data.\n" +
-                                                     "If you do not have the idp.data, get it from: https://github.com/papyri/idp.data" +
+                                                     "If you do not have the idp.data, get it from: https://github.com/papyri/idp.data " +
                                                      $"The current directory is: {currentDirectory}.");
             }
         }

@@ -33,11 +33,11 @@ public class XMLEntryGatherer
 
     private XMLDataEntry GetEntry(string filePath)
     {
-        logger.LogProcessingInfo($"Getting entry at {filePath}");
+        //logger.LogProcessingInfo($"Getting entry at {filePath}");
         var entry = new XMLDataEntry(filePath, logger);
         var doc = new XmlDocument();
         doc.Load(filePath);
-        logger.LogProcessingInfo("Entry loaded.");
+        //logger.LogProcessingInfo("Entry loaded.");
 
         //Console.WriteLine($"getting: {filePath}");
 
@@ -50,12 +50,12 @@ public class XMLEntryGatherer
             }
             else
             {
-                logger.LogProcessingInfo($"Found a node that is not an element, moving onto {filePath}");
+                //logger.LogProcessingInfo($"Found a node that is not an element, moving onto {filePath}");
                 Console.WriteLine($"getting: {filePath}");
             }
         }
 
-        logger.LogProcessingInfo($"Finished processing entry {entry}");
+        //logger.LogProcessingInfo($"Finished processing entry {entry}");
         return entry;
     }
 
@@ -95,7 +95,7 @@ public class XMLEntryGatherer
 
     public List<XMLDataEntry> GatherEntries()
     {
-        logger.LogProcessingInfo("Gathering XMl Entries");
+        //logger.LogProcessingInfo("Gathering XMl Entries");
         var entries = new List<XMLDataEntry>();
         try
         {
@@ -106,8 +106,8 @@ public class XMLEntryGatherer
                 Console.WriteLine($"adding files in : {folder}");
                 foreach (var entry in GetEntriesFromFolder(folder))
                 {
-                    logger.Log($"Adding {entry.Title} from {folder} to entries");
-                    logger.LogProcessingInfo($"Adding {entry.Title} from {folder} to entries");
+                    //logger.Log($"Adding {entry.Title} from {folder} to entries");
+                    //logger.LogProcessingInfo($"Adding {entry.Title} from {folder} to entries");
                     entries.Add(entry);
                 }
             }
