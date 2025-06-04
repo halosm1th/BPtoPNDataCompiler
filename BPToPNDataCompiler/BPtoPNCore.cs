@@ -16,8 +16,8 @@ public class BPtoPNCore
     private static int startYear = 1932;
 #if DEBUG
     private static int endYear = 1932;
-    private static int bpStartNumber = 1; // New: Default beginning number for BP data
-    private static int bpEndNumber = 3; // New: Default finishing number for BP data
+    private static int bpStartNumber = 8; // New: Default beginning number for BP data
+    private static int bpEndNumber = 10; // New: Default finishing number for BP data
 
 #else
     private static int endYear = DateTime.Now.Year - 1;
@@ -69,6 +69,14 @@ public class BPtoPNCore
             bpEndNumberOption.AddAlias("-bpe"); // Add alias using AddAlias method
             bpEndNumberOption.AddAlias("-f"); // Add alias using AddAlias method
 
+            
+            var bpMenuCommand = new Option<int>(
+                name: "--menu",
+                description:
+                "show the help menu."
+            );
+            bpMenuCommand.AddAlias("-m"); // Add alias using AddAlias method
+     
             // Create the root command for the application
             var rootCommand =
                 new RootCommand(
@@ -77,7 +85,8 @@ public class BPtoPNCore
                     startYearOption,
                     endYearOption,
                     bpStartNumberOption,
-                    bpEndNumberOption
+                    bpEndNumberOption,
+                    bpMenuCommand
                 };
 
             // Set the handler for the root command. This action will be executed when the command is invoked.
@@ -102,7 +111,9 @@ public class BPtoPNCore
                 // If all validations pass, proceed with the core application logic
                 await Core();
             });
-
+            //TODO change -h for help to -m for menu
+            
+            
             // Invoke the command line parser with the provided arguments
             // System.CommandLine will automatically handle help (-h or --help) and validation errors.
             await rootCommand.InvokeAsync(args);

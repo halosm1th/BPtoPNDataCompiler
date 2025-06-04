@@ -5,6 +5,7 @@ namespace DefaultNamespace;
 
 public class XMLEntryGatherer
 {
+    //TODO FIx file path going up
     private static readonly Dictionary<string, Action<XmlElement, XMLDataEntry>> AttributeSetters = new()
     {
         {"idno:pi", (node, entry) => entry.PNNumber = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
