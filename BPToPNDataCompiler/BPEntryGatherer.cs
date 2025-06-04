@@ -194,7 +194,7 @@ public class BPEntryGatherer
 
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                   //Change to idno tupe
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"bp{fileName}\" type=\"book\">\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{fileName}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
                   $"\n</bibl>";
 
