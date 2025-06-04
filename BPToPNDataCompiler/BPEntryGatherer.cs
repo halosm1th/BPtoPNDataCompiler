@@ -66,42 +66,42 @@ public class BPEntryGatherer
                     else if (node.InnerText.Contains("Index"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Index =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.Index =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Titre"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Title =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.Title =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Publication"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.Publication =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Résumé"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.Resume =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("N°"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.No =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.No =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("internet"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Internet =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.Internet =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("C.R."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.CR =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("SBandSEG"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.SBandSEG =  Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        entry.SBandSEG =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                 }
             }

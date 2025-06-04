@@ -7,17 +7,17 @@ public class XMLEntryGatherer
 {
     private static readonly Dictionary<string, Action<XmlElement, XMLDataEntry>> AttributeSetters = new()
     {
-        {"idno:pi", (node, entry) => entry.PNNumber = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"idno:bp", (node, entry) => entry.BPNumber = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:indexBis", (node, entry) => entry.IndexBis = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:index", (node, entry) => entry.Index = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:titre", (node, entry) => entry.Title = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:publication", (node, entry) => entry.Publication = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:cr", (node, entry) => entry.CR = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:nom", (node, entry) => entry.Name = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:resume", (node, entry) => entry.Resume = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:internet", (node, entry) =>  entry.Internet = Regex.Replace(node.InnerText, " {2, }", " ")},
-        {"seg:sbSeg", (node, entry) => entry.SBandSEG = Regex.Replace(node.InnerText, " {2, }", " ")}
+        {"idno:pi", (node, entry) => entry.PNNumber = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"idno:bp", (node, entry) => entry.BPNumber = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:indexBis", (node, entry) => entry.IndexBis = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:index", (node, entry) => entry.Index = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:titre", (node, entry) => entry.Title = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:publication", (node, entry) => entry.Publication = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:cr", (node, entry) => entry.CR = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:nom", (node, entry) => entry.Name = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:resume", (node, entry) => entry.Resume = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:internet", (node, entry) =>  entry.Internet = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
+        {"seg:sbSeg", (node, entry) => entry.SBandSEG =  Regex.Replace(node.InnerText.Trim(), " {2, }", " ")}
     };
 
     public XMLEntryGatherer(string path, Logger logger)
