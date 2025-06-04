@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 
 namespace DefaultNamespace;
 
@@ -60,47 +61,47 @@ public class BPEntryGatherer
                     if (node.InnerText.Contains("Indexbis"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.IndexBis = textNode.InnerText.Trim();
+                        entry.IndexBis = Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Index"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Index = textNode.InnerText.Trim();
+                        entry.Index =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Titre"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Title = textNode.InnerText.Trim();
+                        entry.Title =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Publication"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication = textNode.InnerText.Trim();
+                        entry.Publication =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Résumé"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume = textNode.InnerText.Trim();
+                        entry.Resume =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("N°"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.No = textNode.InnerText.Trim();
+                        entry.No =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("internet"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Internet = textNode.InnerText.Trim();
+                        entry.Internet =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("C.R."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR = textNode.InnerText.Trim();
+                        entry.CR =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("SBandSEG"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.SBandSEG = textNode.InnerText.Trim();
+                        entry.SBandSEG =  Regex.Replace(textNode.InnerText, " {2, }", " ");
                     }
                 }
             }
@@ -192,7 +193,8 @@ public class BPEntryGatherer
         //logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
 
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"{fileName}\" type=\"book\">\n" +
+                  //Change to idno tupe
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"bp{fileName}\" type=\"book\">\n" +
                   $"{entry.ToXML()}" +
                   $"\n</bibl>";
 

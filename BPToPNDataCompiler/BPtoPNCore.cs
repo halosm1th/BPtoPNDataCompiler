@@ -594,6 +594,8 @@ public class BPtoPNCore
     /// <param name="path">The directory path where the XML files will be saved.</param>
     private static void SaveBPEntries(List<UpdateDetail<BPDataEntry>> bpEntriesToUpdate, string path)
     {
+        //Whedn saving save as: BP NUmber + field name + what the change will be
+        
         logger.Log("Saving BP Entries");
         Console.WriteLine("Saving Bp Entries");
         foreach (var bpEntries in bpEntriesToUpdate)
