@@ -127,7 +127,7 @@ public class BPDataEntry
     {
         if (logger != null)
         {
-            logger.LogProcessingInfo($"Replacing invalid text in {value ?? ""}");
+            // logger.LogProcessingInfo($"Replacing invalid text in {value ?? ""}");
         }
 
         value = value?.Replace("&#039;", "'");
@@ -136,7 +136,7 @@ public class BPDataEntry
         value = value?.Replace(">", "&gt;");
         if (logger != null)
         {
-            logger.LogProcessingInfo($"Replaced text resulted in: {value}");
+            //logger.LogProcessingInfo($"Replaced text resulted in: {value}");
         }
 
         return value;
