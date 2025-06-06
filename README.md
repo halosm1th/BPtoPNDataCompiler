@@ -62,6 +62,41 @@ dotnet run
 
 You can pass any required arguments as needed. If the program expects input files or specific parameters, be sure to include them in your command line call (you may need to consult the code or usage examples for details).
 
+
+---
+## Help Menu
+
+To see the help menu use:
+```bash
+dotnet run -m
+```
+or
+```bash
+./BPtoPnDataCompiled -m
+```
+
+If entered, the following menu will print:
+```bash
+Description:
+  BP to PN Data Compiler: Compiles and updates bibliographic data from BP and PN sources.
+
+Usage:
+  BPtoPNDataCompiler [options]
+
+Options:
+  -s, --start-year <start-year>                  Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932. 
+                                                 [default: 1932]
+  -e, --end-year <end-year>                      Sets the end year for data compilation. Use -e or --end-year. Default is the current system year -1
+                                                 (Currently: 2024). Cannot be lower than the start year. [default: 1932]
+  -b, -bps, --bp-start-number <bp-start-number>  Sets the beginning number for BP data processing. Use -bps or --bp-start-number. Default is 0. Cannot be
+                                                 negative. [default: 8]
+  -bpe, -f, --bp-end-number <bp-end-number>      Sets the finishing number for BP data processing. Use -bpe or --bp-end-number. Default is maximum integer
+                                                 value. Cannot be less than the BP start number. [default: 10]
+  -m, --menu                                     Show help menu. [default: False]
+  --version                                      Show version information
+  -?, -h, --help                                 Show help and usage information
+```
+
 ---
 
 ## 📁 Project Structure
