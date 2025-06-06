@@ -58,7 +58,9 @@ public class BPEntryGatherer
                 rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
                 foreach (var node in rowNodes)
                 {
-                    if (node.InnerText.Contains("Indexbis"))
+                    //TODO 1932-0019 cehck why index bis is hitting for index
+                    //TODO check this  over again and again
+                    if (node.InnerText.Contains("Index bis"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
                         entry.IndexBis = Regex.Replace(textNode.InnerText, " {2, }", " ");
@@ -98,7 +100,7 @@ public class BPEntryGatherer
                         var textNode = node.SelectNodes(".//font")[0];
                         entry.CR =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
-                    else if (node.InnerText.Contains("SBandSEG"))
+                    else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
                         entry.SBandSEG =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");

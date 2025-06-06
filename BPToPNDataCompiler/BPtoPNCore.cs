@@ -637,7 +637,10 @@ public class BPtoPNCore
 
     private static void WritePNEntry(XMLDataEntry entry, string path)
     {
-        //TODO copy over the whole xml from the file
+        
+        
+        //TODO Figure out why we're copying the segs but not the part that marks thnem as origninal
+        //todo thus figure out why we're duplicating segs in stuff when we shoulnd't be.
         var xmlDocument = new XmlDocument();
         xmlDocument.Load(entry.PNFileName);
         var root = xmlDocument.DocumentElement;
@@ -646,7 +649,6 @@ public class BPtoPNCore
         var nsManager = new XmlNamespaceManager(xmlDocument.NameTable);
         nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-        //TODO figure out why the xml is ending in a wierd way
 
         // Get BP number using XPath
         var bpElement = root.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
@@ -682,6 +684,14 @@ public class BPtoPNCore
             root.AppendChild(newBpElement);
         }
 
+        //TODO for fixing the seg duplicates,
+        //TODO find out if it would be better to update hte text, or
+        //TODO r strip theorignla sections and add them in.
+        //TODO would be ncie if the type was added to them
+        //TODO in ours,t he seg subtype resume gets duplicated in a note element
+        //TODO <note resp="#BP">{info here}</note> overwrite if there is change in this
+        //TODO remove hte seg subtype number, we don't need it.
+        //TODO find out why this isn't printing pretty, maybe use newline printing
         if (name != null && entry.HasName)
         {
             bpElement.InnerText = entry.Name;
@@ -958,3 +968,16 @@ public class BPtoPNCore
         }
     }
 }
+
+//TODO Remove debug normal settings
+//TODO disable the name collision check
+//TODO check why 1932-0016 isn't grabbing correctly
+//TODO check 1932-0019
+//TODo look inot whitespace and shared whitespace stuff is the same
+//TODO changes to BP output, check why its saving at a bnunch fo xml files to a single text file
+//TODO for blank [BLANK] 
+//TODO running the project, make sure to talk about hte directory, put stuff on help file and flags in the readme
+//TODO display changes in BP file as: _from_ and _to_
+//TODO the filepath for the PnEntries and other entries beneth the checker should not have a timestep
+//TODO figure out why its making two files if there are two changes in a file.
+//TODO fix the file path stuff on saving the files so that its not hte idp data directory.
