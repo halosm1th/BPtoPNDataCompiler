@@ -14,9 +14,10 @@ public class GitFolderHandler
 
     public string GitBiblioDirectoryCheck()
     {
+        //TODO FIx file path going up
         //TODO make sure that this file path change works
         logger.Log($"Moving up from program directory before starting search. ({Directory.GetCurrentDirectory()})");
-        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../");
+        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../");
         Console.WriteLine($"{Directory.GetCurrentDirectory()}");
         logger.Log("Checking if PN folders exist");
         Console.WriteLine("Checking if PN folders exist.");
