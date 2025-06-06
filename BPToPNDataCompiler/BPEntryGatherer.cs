@@ -7,10 +7,8 @@ public class BPEntryGatherer
 {
     private int EndYear;
 
-    private int ENTRY_END = 9999; //80 //9999
-
-    //TODO restore to proper numbers
-    private int ENTRY_START = 1; //80 // 0
+    private int ENTRY_END = 9999;
+    private int ENTRY_START = 1;
     private int StartYear;
 
     public BPEntryGatherer(int startYear, int endYear, Logger logger, int entryStart, int entryEnd)
@@ -68,42 +66,42 @@ public class BPEntryGatherer
                     else if (node.InnerText.Contains("Index"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Index =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Index = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Titre"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Title =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Title = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Publication"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Publication = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("Résumé"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Resume = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("N°"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.No =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.No = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("internet"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Internet =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Internet = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("C.R."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                     else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.SBandSEG =  Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                 }
             }
@@ -140,7 +138,6 @@ public class BPEntryGatherer
         bool hasFailed = false;
         var Entries = new List<BPDataEntry>();
 
-        //TODO fix entryIndex <= to 9999
         for (int entryIndex = ENTRY_START; entryIndex <= ENTRY_END; entryIndex++)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
