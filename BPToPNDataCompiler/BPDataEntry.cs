@@ -1,31 +1,33 @@
 ﻿using System.Text;
+using DefaultNamespace;
 
-namespace DefaultNamespace;
+// ReSharper disable InconsistentNaming
+
+namespace BPtoPNDataCompiler;
 
 public class BPDataEntry
 {
-    private string? _bpNum = null;
-    private string? _cr = null;
-    private string? _index = null;
-    private string? _indexBis = null;
-    private string? _internet = null;
-    private string? _name = null;
-    private string? _no = null;
-    private string? _publication = null;
-    private string? _resume = null;
-    private string? _sbandseg = null;
-    private string? _title = null;
-
-    private string? annee = null;
+    private string? _annee;
+    private string? _bpNum;
+    private string? _cr;
+    private string? _index;
+    private string? _indexBis;
+    private string? _internet;
+    private string? _name;
+    private string? _no;
+    private string? _publication;
+    private string? _resume;
+    private string? _sbandseg;
+    private string? _title;
 
     //At a minimum all entries must have one number
     public BPDataEntry(string? number, Logger logger)
     {
         BPNumber = number;
-        this.logger = logger;
+        this.Logger = logger;
     }
 
-    protected Logger logger { get; }
+    protected Logger Logger { get; }
 
     public string? Index
     {
@@ -85,11 +87,11 @@ public class BPDataEntry
 
     public string? Annee
     {
-        get => annee;
-        set => annee = ReplaceInvalidText(value);
+        get => _annee;
+        set => _annee = ReplaceInvalidText(value);
     }
 
-    public bool HasAnnee => annee != null;
+    public bool HasAnnee => _annee != null;
 
     public string? Resume
     {
@@ -125,7 +127,7 @@ public class BPDataEntry
 
     private string? ReplaceInvalidText(string? value)
     {
-        if (logger != null)
+        if (Logger != null)
         {
             // logger.LogProcessingInfo($"Replacing invalid text in {value ?? ""}");
         }
@@ -134,7 +136,7 @@ public class BPDataEntry
         value = value?.Replace("&", "&amp;");
         value = value?.Replace("<", "&lt;");
         value = value?.Replace(">", "&gt;");
-        if (logger != null)
+        if (Logger != null)
         {
             //logger.LogProcessingInfo($"Replaced text resulted in: {value}");
         }
@@ -158,7 +160,7 @@ public class BPDataEntry
         if (_title != null) sb.Append($"<seg type=\"original\" subtype=\"titre\" resp=\"#BP\">{_title}</seg>\n");
         if (SBandSEG != null) sb.Append($"<seg type=\"original\" subtype=\"SBandSeg\" resp=\"#BP\">{SBandSEG}</seg>\n");
         if (No != null) sb.Append($"<seg type=\"original\" subtype=\"No\" resp=\"#BP\">{No}</seg>\n");
-        if (annee != null) sb.Append($"<seg type=\"original\" subtype=\"annee\" resp=\"#BP\">{annee}</seg>\n");
+        if (_annee != null) sb.Append($"<seg type=\"original\" subtype=\"annee\" resp=\"#BP\">{_annee}</seg>\n");
         if (Publication != null)
             sb.Append($"<seg type=\"original\" subtype=\"publication\" resp=\"#BP\">{Publication}</seg>\n");
         if (_resume != null) sb.Append($"<seg type=\"original\" subtype=\"resume\" resp=\"#BP\">{_resume}</seg>\n");

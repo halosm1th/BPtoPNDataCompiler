@@ -6,11 +6,13 @@ public class DataMatcherConflictUI
 {
     // Dictionary to store edited choices for each row, mapping row number to choice (B/P/N/S)
     private Dictionary<int, string?> _editedChoices = new Dictionary<int, string?>();
+    private bool ShouldCompareName = false;
 
-    public DataMatcherConflictUI(Logger logger)
+    public DataMatcherConflictUI(Logger logger, bool shouldCompareNames = false)
     {
         logger.LogProcessingInfo("Creating DataMatcherConflictUI.");
         this.logger = logger;
+        ShouldCompareName = shouldCompareNames;
     }
 
     private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
@@ -525,7 +527,7 @@ public class DataMatcherConflictUI
                 entriesMatches[(int) Comparisons.InternetMatch], selectedRow == 5,
                 _editedChoices.GetValueOrDefault(5) ?? string.Empty);
 
-        if (entry.HasName || matchingEntry.HasName)
+        if (entry.HasName || matchingEntry.HasName && ShouldCompareName)
             PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.NameMatch],
                 selectedRow == 6, _editedChoices.GetValueOrDefault(6) ?? string.Empty);
 

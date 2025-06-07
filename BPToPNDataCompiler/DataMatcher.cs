@@ -25,7 +25,8 @@ namespace BPtoPNDataCompiler
         /// </summary>
         /// <param name="xmlEntries">A list of XMLDataEntry objects to match against.</param>
         /// <param name="bpEntries">A list of BPDataEntry objects to be matched.</param>
-        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger logger)
+        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger logger,
+            bool shouldCompareNames = false)
         {
             logger.LogProcessingInfo(
                 $"Created Data Matcher with {xmlEntries.Count} xml entries and {bpEntries.Count} bp entries.");
@@ -33,7 +34,10 @@ namespace BPtoPNDataCompiler
             this.logger = logger;
             XmlEntries = xmlEntries;
             BpEntries = bpEntries;
+            ShouldCompareNames = shouldCompareNames;
         }
+
+        private bool ShouldCompareNames { get; set; }
 
         private Logger logger { get; }
 
@@ -121,7 +125,7 @@ namespace BPtoPNDataCompiler
             }
 
             // Collect all XML entries that are weak matches and not already in matchingEntries
-            var weakMatches = XmlEntries.Where(x => x.WeakMatch(entry));
+            var weakMatches = XmlEntries.Where(x => x.WeakMatch(entry, ShouldCompareNames));
             logger.LogProcessingInfo(
                 $"Collecting all XML entries that are weak matches that we had not already found, totalling {weakMatches.Count()}");
             foreach (var weakMatch in weakMatches)
@@ -141,7 +145,7 @@ namespace BPtoPNDataCompiler
             logger.LogProcessingInfo($"Checking {xmlDataEntries.Length} matching entries against entry ");
 
             // Case 1: Exactly one match and it's a full match. No action needed.
-            if (xmlDataEntries.Length == 1 && xmlDataEntries.First().FullMatch(entry))
+            if (xmlDataEntries.Length == 1 && xmlDataEntries.First().FullMatch(entry, ShouldCompareNames))
             {
                 perfectMatch++;
 
@@ -157,7 +161,7 @@ namespace BPtoPNDataCompiler
             }
 
             // Case 2: Exactly one match, but it's not a full match. User interaction required.
-            if (xmlDataEntries.Length == 1 && !xmlDataEntries.First().FullMatch(entry))
+            if (xmlDataEntries.Length == 1 && !xmlDataEntries.First().FullMatch(entry, ShouldCompareNames))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Found editable match. Launching conflict resolution UI.");
@@ -263,7 +267,7 @@ namespace BPtoPNDataCompiler
         {
             logger.Log(
                 $"Creating Datamatcher conflict UI to deal with match between {entry.Title} and {matchingEntry.Title}");
-            var matcherUI = new DataMatcherConflictUI(logger);
+            var matcherUI = new DataMatcherConflictUI(logger, ShouldCompareNames);
             matcherUI.HandleNonMatchingEntries(entry, matchingEntry);
 
             // Add the detailed update records from the UI to the DataMatcher's lists.

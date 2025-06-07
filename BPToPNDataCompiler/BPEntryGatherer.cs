@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using BPtoPNDataCompiler;
 using HtmlAgilityPack;
 
 namespace DefaultNamespace;
@@ -100,7 +101,7 @@ public class BPEntryGatherer
                     }
                     else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
                     {
-                        var textNode = node.SelectNodes(".//span")[0];
+                        var textNode = node.SelectNodes(".//font")[0];
                         entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
                     }
                 }

@@ -1,5 +1,8 @@
-﻿namespace DefaultNamespace;
+﻿using DefaultNamespace;
 
+namespace BPtoPNDataCompiler;
+
+// ReSharper disable once InconsistentNaming
 public class XMLDataEntry : BPDataEntry
 {
     public XMLDataEntry(string fileName, Logger logger) : base(null, logger)
@@ -36,20 +39,26 @@ public class XMLDataEntry : BPDataEntry
     {
         return $"{Name ?? ""} {Internet ?? ""} {Publication ?? ""} " +
                $"{Resume ?? ""} {Title ?? ""} {Index ?? ""} {IndexBis ?? ""} " +
-               $"{No ?? ""} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
+               $"{No} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
     }
 
-    public bool FullMatch(BPDataEntry entry)
+    public bool FullMatch(BPDataEntry entry, bool shouldCompareNames)
     {
-        logger.LogProcessingInfo($"Checking if {entry.Title} is a full match for {this.Title}");
-        //If htey both have share name, then shareName is equal if the names are equal.
-        //if they both don't have share name, then they share in not having a name
+        Logger.LogProcessingInfo($"Checking if {entry.Title} is a full match for {this.Title}");
+        //If they both have share name, then shareName is equal if the names are equal.
+        //If they both don't have share name, then they share in not having a name
+
         var shareName = HasName switch
         {
             true when entry.HasName => Name == entry.Name,
             false when !entry.HasName => true,
             _ => false
         };
+
+        if (!shouldCompareNames)
+        {
+            shareName = true;
+        }
 
         //Same for internet
         var shareNet = HasInternet switch
@@ -108,6 +117,7 @@ public class XMLDataEntry : BPDataEntry
         };
 
         //Same for internet
+        // ReSharper disable once InconsistentNaming
         var shareCR = HasCR switch
         {
             true when entry.HasCR => CR == entry.CR,
@@ -116,6 +126,7 @@ public class XMLDataEntry : BPDataEntry
         };
 
         //Same for internet
+        // ReSharper disable once InconsistentNaming
         var shareBP = HasBPNum switch
         {
             true when entry.HasBPNum => BPNumber == entry.BPNumber,
@@ -124,6 +135,7 @@ public class XMLDataEntry : BPDataEntry
         };
 
         //Same for internet
+        // ReSharper disable once InconsistentNaming
         var shareSBSEg = HasSBandSEG switch
         {
             true when entry.HasSBandSEG => SBandSEG == entry.SBandSEG,
@@ -133,7 +145,7 @@ public class XMLDataEntry : BPDataEntry
 
         var result = shareName && shareNet && sharePub && shareRes && shareTitle
                      && shareIndex && shareIndexBis && shareNo && shareCR && shareBP && shareSBSEg;
-        logger.LogProcessingInfo($"Copmarison done, result is: {result}");
+        Logger.LogProcessingInfo($"Comparison done, result is: {result}");
         return result;
     }
 
@@ -151,7 +163,7 @@ public class XMLDataEntry : BPDataEntry
         return true;
     }
 
-    private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry)
+    private bool[] GetComparisonsOfEntriesByLine(BPDataEntry entry, bool shouldCompareNames)
     {
         var matches = new bool[12];
         matches[((int) Comparisons.bpNumMatch)] =
@@ -160,7 +172,11 @@ public class XMLDataEntry : BPDataEntry
         matches[((int) Comparisons.indexMatch)] = (entry.HasBPNum && HasIndex) && (entry.Index == Index);
         matches[((int) Comparisons.indexBisMatch)] = (entry.HasBPNum && HasIndexBis) && (entry.IndexBis == IndexBis);
         matches[((int) Comparisons.internetMatch)] = (entry.HasBPNum && HasInternet) && (entry.Internet == Internet);
-        matches[((int) Comparisons.nameMatch)] = (entry.HasBPNum && HasName) && (entry.Name == Name);
+
+        if (shouldCompareNames)
+            matches[((int) Comparisons.nameMatch)] = (entry.HasBPNum && HasName) && (entry.Name == Name);
+        else matches[((int) Comparisons.nameMatch)] = true;
+
         matches[((int) Comparisons.publicationMatch)] =
             (entry.HasPublication && HasPublication) && (entry.Publication == Publication);
         matches[((int) Comparisons.resumeMatch)] = (entry.HasResume && HasResume) && (entry.Resume == Resume);
@@ -172,32 +188,32 @@ public class XMLDataEntry : BPDataEntry
         return matches;
     }
 
-    public int GetMatchStrength(BPDataEntry entry)
+    public int GetMatchStrength(BPDataEntry entry, bool shouldCompareNames = false)
     {
-        var match = GetComparisonsOfEntriesByLine(entry);
+        var match = GetComparisonsOfEntriesByLine(entry, shouldCompareNames);
         var str = match.Aggregate(0, (h, t) => t ? h + 1 : h);
         return str;
     }
 
-    public bool StrongMatch(BPDataEntry entry)
+    public bool StrongMatch(BPDataEntry entry, bool shouldCompareNames = false)
     {
-        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var matchStrength = GetComparisonsOfEntriesByLine(entry, shouldCompareNames);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         var strong = truthCount >= 9;
         return strong;
     }
 
-    public bool MediumMatch(BPDataEntry entry)
+    public bool MediumMatch(BPDataEntry entry, bool shouldCompareNames = false)
     {
-        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var matchStrength = GetComparisonsOfEntriesByLine(entry, shouldCompareNames);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         var medium = truthCount >= 6;
         return medium;
     }
 
-    public bool WeakMatch(BPDataEntry entry)
+    public bool WeakMatch(BPDataEntry entry, bool shouldCompareNames = false)
     {
-        var matchStrength = GetComparisonsOfEntriesByLine(entry);
+        var matchStrength = GetComparisonsOfEntriesByLine(entry, shouldCompareNames);
         var truthCount = matchStrength.Aggregate(0, (total, x) => x ? total = total + 1 : total);
         //If they match on more than one thing, find it and mention it.
         var weak = truthCount > 3;
@@ -216,8 +232,12 @@ public class XMLDataEntry : BPDataEntry
         noMatch = 6,
         publicationMatch = 7,
         resumeMatch = 8,
+
+        // ReSharper disable once IdentifierTypo
         sbandsegMatch = 9,
         titleMatch = 10,
+
+        // ReSharper disable once IdentifierTypo
         anneeMatch = 11
     }
 }
