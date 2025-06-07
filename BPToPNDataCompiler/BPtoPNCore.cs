@@ -18,7 +18,7 @@ public class BPtoPNCore
 #if DEBUG
     private static int endYear = 1932;
     private static int bpStartNumber = 9; // New: Default beginning number for BP data
-    private static int bpEndNumber = 9; // New: Default finishing number for BP data
+    private static int bpEndNumber = 19; // New: Default finishing number for BP data
 
 #else
     private static int endYear = DateTime.Now.Year - 1;
@@ -29,6 +29,7 @@ public class BPtoPNCore
     #region main and arg parsing
 
     public static Logger logger { get; private set; }
+    private static bool ShouldCompareName { get; set; } = false;
 
     public static async Task Main(string[] args)
     {
@@ -43,6 +44,14 @@ public class BPtoPNCore
                 "Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932."
             );
             startYearOption.AddAlias("-s"); // Add alias using AddAlias method
+
+            var shouldCompareAuthorNames = new Option<bool>(
+                name: "--compare-author-names",
+                getDefaultValue: () => ShouldCompareName,
+                description:
+                "Sets if the author names should be a field to be compared. Defaults to false."
+            );
+            startYearOption.AddAlias("-c"); // Add alias using AddAlias method
 
             var endYearOption = new Option<int>(
                 name: "--end-year",
@@ -87,6 +96,7 @@ public class BPtoPNCore
                     endYearOption,
                     bpStartNumberOption,
                     bpEndNumberOption,
+                    shouldCompareAuthorNames,
                     helpOption,
                 };
 
@@ -108,6 +118,7 @@ public class BPtoPNCore
                 endYear = context.ParseResult.GetValueForOption(endYearOption);
                 bpStartNumber = context.ParseResult.GetValueForOption(bpStartNumberOption);
                 bpEndNumber = context.ParseResult.GetValueForOption(bpEndNumberOption);
+                ShouldCompareName = context.ParseResult.GetValueForOption(shouldCompareAuthorNames);
 
                 // Perform custom validation after parsing
                 ValidateYears();
@@ -250,7 +261,7 @@ public class BPtoPNCore
 
             Console.Write("Preparing to start data matcher. ");
             logger.Log("Creating Datamatcher");
-            var dm = new DataMatcher(xmlEntries, bpEntries, logger);
+            var dm = new DataMatcher(xmlEntries, bpEntries, logger, ShouldCompareName);
 
             Console.WriteLine("Starting to match entries?");
             logger.Log("Starting to match entries");
@@ -342,7 +353,6 @@ public class BPtoPNCore
     /// <param name="saveLocation">The target directory for moving files.</param>
     private static void MoveBPXMLAndLogs(string saveLocation)
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
         var directory = Directory.GetCurrentDirectory();
         var dirs = Directory.GetDirectories(directory);
         if (dirs.Contains(directory + "\\BPXMLFiles"))
@@ -547,10 +557,10 @@ public class BPtoPNCore
         List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
-        var EndDataFolder = $"/../BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
-        var BPEntryPath = $"/../{EndDataFolder}/BPEntriesToUpdate".Replace(":", "_").Replace("-", "_");
-        var PnEntryPath = $"/../{EndDataFolder}/PNEntriesToUpdate".Replace(":", "_").Replace("-", "_");
-        var NewXmlEntryPath = $"/../{EndDataFolder}/NewXmlEntries".Replace(":", "_").Replace("-", "_");
+        var EndDataFolder = $"../BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
+        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate".Replace(":", "_").Replace("-", "_");
+        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate".Replace(":", "_").Replace("-", "_");
+        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries".Replace(":", "_").Replace("-", "_");
         logger.Log("Setting up directories for saving.");
         SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
 
@@ -647,8 +657,6 @@ public class BPtoPNCore
 
             var bpNumb = xmlDocument.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
 
-            //TODO check that hte name here is a good replacement for the xml's PNNumber
-            // Sanitize file path by replacing invalid characters
             var filePath = Path.Combine(path, $"{bpNumb.InnerText}.xml")
                 .Replace("\"", "")
                 .Replace(":", ".");
@@ -740,7 +748,7 @@ public class BPtoPNCore
         // Get BP number using XPath
         var bpElement = root.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
         var name = root.SelectSingleNode("//tei:seg[@subtype='nom']", nsManager);
-        var index = root.SelectSingleNode("//tei:set[@subtype='index']", nsManager);
+        var index = root.SelectSingleNode("//tei:seg[@subtype='index']", nsManager);
         var indexBis = root.SelectSingleNode("//tei:seg[@subtype='indexBis']", nsManager);
         var title = root.SelectSingleNode("//tei:seg[@subtype='titre']", nsManager);
         var publisher = root.SelectSingleNode("//tei:seg[@subtype='publication']", nsManager);
@@ -1104,32 +1112,29 @@ public class BPtoPNCore
     }
 }
 
-//TODO figure out why its readding elements which it shoulnd't be?
+//Big TODO's
 //TODO Remove debug settings for running the program, thereby assuming its built in debug on dotnet build
 
-//TODO disable the name collision check
-//TODO check why 1932-0016 isn't grabbing correctly
-//TODO check 1932-0019
-//TODo look inot whitespace and shared whitespace stuff is the same
-//TODO running the project, make sure to talk about hte directory, 
+//TODO Fix the file saving path stuff, most of the rest of saving is good now, but hte BPEntriestoUpdate is put in the wrong spot
+// and 
+
+//Simple TODO's
+
+//TODO Add to the readme discussion of how to run  the project, make sure to talk about hte directory, 
 //TODO fix the file path stuff on saving the files so that its not hte idp data directory.
 
 //In progress
-//TODO figure out why its making two files if there are two changes in a file.
-//TODO changes to BP output, check why its saving at a bnunch fo xml files to a single text file
-//TODO for blank [BLANK] 
+//Figure out why the white space isn't being trimmed when coming from BP
+//Then its onto file path work, fixing hte file path stuff so that its all unified and working well
+//Then ocne I have the directory stuff done and tested, it'll be updating the readme with path info, fixing the debug settings
+// and then we should be good with this version I think.
+
+//Debug TODO's
+//TODO check why 1932-0016 isn't grabbing correctly
+//TODO check 1932-0019
+//TODo look inot whitespace and shared whitespace stuff is the same
+//TODO check the BPEntryGatherer is actually culling extra text, bcz entry 0009 is having a spacing issue.
 
 //Done
-//TODO display changes in BP file as: _from_ and _to_
-//put stuff on help file and flags in the readme
-//TODO find out why the xml entries aren't printing pretty, maybe use newline printing
-//TODO the filepath for the PnEntries and other entries beneth the checker should not have a timestep
-//TODO in ours,the seg subtype resume gets duplicated in a note element
-//TODO <note resp="#BP">{info here}</note> overwrite if there is change in this
-//TODO would be ncie if the type was added to them, done.
-//Need to check if its simply failing to hit on the stuff above an thats why its making it new. Was failing to hit, now fixed
-//TODO Figure out why we're copying the segs but not the part that marks thnem as origninal
-//todo thus figure out why we're duplicating segs in stuff when we shoulnd't be.
-//TODO figure out why the xml is ending in a wierd way
-//TODO find out why the internal text isn't actually updating
-//TODO figure out why the saving is happening twice. Can we make a list of files we'ved edited one, And then save that lsit once they've all been updated so we can log and process all the changes?
+//TODO disable the name collision check. Done, added a flag to the program startup so that one can restore it if one wants
+//TODO figure out why its readding elements which it shoulnd't be? -- This should've been fixed by fixing the bug where it wans't grabbing the seg stuff right.
