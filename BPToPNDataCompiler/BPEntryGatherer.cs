@@ -62,47 +62,50 @@ public class BPEntryGatherer
                     if (node.InnerText.Contains("Index bis"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.IndexBis = Regex.Replace(textNode.InnerText, " {2, }", " ");
+                        var text = textNode.InnerText.Trim();
+                        entry.IndexBis = Regex.Replace(text, @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("Index"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Index = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        var text = textNode.InnerText.Trim();
+                        entry.Index = Regex.Replace(text, @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("Titre"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Title = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        var text = textNode.InnerText.Trim();
+                        entry.Title = Regex.Replace(text, @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("Publication"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Publication = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("Résumé"))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Resume = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("N°"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.No = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.No = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("internet"))
                     {
                         var textNode = node.SelectNodes(".//span")[0];
-                        entry.Internet = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("C.R."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
-                        entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), " {2, }", " ");
+                        entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                 }
             }
@@ -132,7 +135,7 @@ public class BPEntryGatherer
         return null;
     }
 
-    private List<BPDataEntry> GetEntriesForYear(int currentYear)
+    private List<BPDataEntry> GetEntriesForYear(int currentYear, string saveLocation)
     {
         logger.LogProcessingInfo(
             $"Getting entries for the year {currentYear}, starting at {ENTRY_START} to {ENTRY_END}");
@@ -178,7 +181,7 @@ public class BPEntryGatherer
                 Console.ForegroundColor = ConsoleColor.Gray;
                 // logger.LogProcessingInfo(
                 //     $"Found entry {currentYear}-{entryIndex}. Writing entry to disk and adding to entry list.");
-                WriteEntry(entry);
+                WriteEntry(entry, saveLocation);
                 Entries.Add(entry);
             }
         }
@@ -187,9 +190,9 @@ public class BPEntryGatherer
         return Entries;
     }
 
-    private async Task WriteEntry(BPDataEntry entry)
+    private async Task WriteEntry(BPDataEntry entry, string path)
     {
-        var fileName = Directory.GetCurrentDirectory() + $"/{entry.BPNumber}.xml";
+        var fileName = path + $"/{entry.BPNumber}.xml";
         //logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
 
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -201,11 +204,11 @@ public class BPEntryGatherer
         await File.WriteAllTextAsync(fileName, xml);
     }
 
-    private string SetDirectory()
+    private string SetDirectory(string depthLevel)
     {
         logger.LogProcessingInfo("Setting directory for saving Bp Entries");
 
-        var currentDir = Directory.GetCurrentDirectory();
+        var currentDir = Directory.GetCurrentDirectory() + depthLevel + "/";
         if (currentDir.ToLower().Contains("biblio"))
         {
             logger.LogProcessingInfo("Was in biblio directory, moving to parent directory");
@@ -221,19 +224,19 @@ public class BPEntryGatherer
         if (Directory.Exists(currentDir + "/BPXMLFiles"))
         {
             logger.LogProcessingInfo("Found BPXMLFiles, changing to that directory");
-            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
         }
         else
         {
             logger.LogProcessingInfo("Could not find BPXMLFiles, creating and changing to that directory");
-            Directory.CreateDirectory("BPXMLFiles");
-            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/BPXMLFiles");
+            Directory.CreateDirectory(currentDir + "BPXMLFiles");
         }
+
+        Directory.SetCurrentDirectory(currentDir + "/BPXMLFiles");
 
         return currentDir;
     }
 
-    public List<BPDataEntry> GatherEntries()
+    public List<BPDataEntry> GatherEntries(string depthLevel)
     {
         logger.Log("Beginning to gather BP Entries.");
         logger.LogProcessingInfo("Beginning to gather BP Entries.");
@@ -244,7 +247,7 @@ public class BPEntryGatherer
             var currentYear = StartYear;
 
             logger.LogProcessingInfo("Setting directory for saving BP Entries.");
-            var oldDir = SetDirectory();
+            var oldDir = SetDirectory(depthLevel);
 
 
             do
@@ -253,7 +256,8 @@ public class BPEntryGatherer
                 Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
                 logger.LogProcessingInfo($"Beginning to gather BP Entries for year: {currentYear}.");
 
-                foreach (var entry in GetEntriesForYear(currentYear))
+                //TODO fix the directory here to be one sanitized path
+                foreach (var entry in GetEntriesForYear(currentYear, Directory.GetCurrentDirectory()))
                 {
                     logger.LogProcessingInfo($"Adding {entry.Title} to BPentry list");
                     entries.Add(entry);

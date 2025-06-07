@@ -16,10 +16,18 @@ public class Logger
     private readonly string _sessionFolder;
     private Dictionary<string, StreamWriter> _logWriters;
 
-    public Logger()
+    /// <summary>
+    /// Create a new logger
+    /// </summary>
+    /// <param name="depthLevel">The depth level to place the log at, written as /.. for the number of levels up from the running dir to place the logger files at</param>
+    public Logger(string depthLevel)
     {
         // Create logs in the application directory
-        _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BPtoPNLogs");
+        Console.WriteLine(Directory.GetCurrentDirectory());
+        var path = Directory.GetCurrentDirectory() + $"{depthLevel}/BPtoPNLogs";
+        _logDirectory = path;
+        Console.WriteLine(_logDirectory);
+
         _sessionFolder = Path.Combine(_logDirectory, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
         _logWriters = new Dictionary<string, StreamWriter>();
 

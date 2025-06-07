@@ -12,17 +12,19 @@ public class GitFolderHandler
 
     private Logger logger { get; set; }
 
-    public string GitBiblioDirectoryCheck()
+    public string GitBiblioDirectoryCheck(string depthLevel = "../")
     {
-        logger.Log($"Moving up from program directory before starting search. ({Directory.GetCurrentDirectory()})");
-        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../");
+        logger.Log($"Moving up from program directory before starting search.");
+        //The depth level should be one below the directory where we meet the idp.data, so we need to go one more up
+        var oldDir = Directory.GetCurrentDirectory();
+        Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + depthLevel + "/../");
         Console.WriteLine($"{Directory.GetCurrentDirectory()}");
         logger.Log("Checking if PN folders exist");
         Console.WriteLine("Checking if PN folders exist.");
         var currentDirectory = ScanForGitDirectory();
 
         Console.WriteLine("Checking if Biblio Directory exists.");
-        return BiblioDirectoryCheck(currentDirectory);
+        return BiblioDirectoryCheck(currentDirectory, oldDir);
     }
 
     private string ScanForGitDirectory()
@@ -64,7 +66,7 @@ public class GitFolderHandler
         return currentDirectory;
     }
 
-    private string BiblioDirectoryCheck(string currentDirectory)
+    private string BiblioDirectoryCheck(string currentDirectory, string oldDir)
     {
         logger.LogProcessingInfo("Finding biblio directory");
         logger.Log("Finding biblio directory");
@@ -84,6 +86,7 @@ public class GitFolderHandler
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Git Biblio has been found. Program working directory set to: {currentDirectory}");
             Console.ForegroundColor = ConsoleColor.Gray;
+            Directory.SetCurrentDirectory(oldDir);
             return currentDirectory;
         }
 

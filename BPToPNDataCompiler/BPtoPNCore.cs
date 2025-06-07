@@ -3,22 +3,20 @@ using System.CommandLine.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
-using BPtoPNDataCompiler;
+using DefaultNamespace;
 
-// Required for command-line argument parsing
+// ReSharper disable InconsistentNaming
 
-// Required for parsing results
-
-namespace DefaultNamespace;
+namespace BPtoPNDataCompiler;
 
 public class BPtoPNCore
 {
     // Static fields to hold the parsed argument values
     private static int startYear = 1932;
 #if DEBUG
-    private static int endYear = 1932;
-    private static int bpStartNumber = 9; // New: Default beginning number for BP data
-    private static int bpEndNumber = 19; // New: Default finishing number for BP data
+    private static int endYear = DateTime.Now.Year - 1; //1932;
+    private static int bpStartNumber = 1; // New: Default beginning number for BP data
+    private static int bpEndNumber = 9999; // New: Default finishing number for BP data
 
 #else
     private static int endYear = DateTime.Now.Year - 1;
@@ -30,10 +28,12 @@ public class BPtoPNCore
 
     public static Logger logger { get; private set; }
     private static bool ShouldCompareName { get; set; } = false;
+    public static string DepthLevel = "/..";
+    private static bool NoDelete = false;
 
     public static async Task Main(string[] args)
     {
-        logger = new Logger();
+        logger = new Logger(DepthLevel);
         try
         {
             // Define command-line options for the application
@@ -60,6 +60,15 @@ public class BPtoPNCore
                 $"Sets the end year for data compilation. Use -e or --end-year. Default is the current system year -1 (Currently: {DateTime.Now.Year - 1}). Cannot be lower than the start year."
             );
             endYearOption.AddAlias("-e"); // Add alias using AddAlias method
+
+
+            var noDelete = new Option<bool>(
+                name: "--no-delete",
+                getDefaultValue: () => NoDelete,
+                description:
+                $"If used, will **not** delete the resulting folder that is zipped. By default this folder is zipped and deleted after the program is run"
+            );
+            endYearOption.AddAlias("-d"); // Add alias using AddAlias method
 
             var bpStartNumberOption = new Option<int>(
                 name: "--bp-start-number",
@@ -97,6 +106,7 @@ public class BPtoPNCore
                     bpStartNumberOption,
                     bpEndNumberOption,
                     shouldCompareAuthorNames,
+                    noDelete,
                     helpOption,
                 };
 
@@ -231,10 +241,12 @@ public class BPtoPNCore
         try
         {
             // This will check
+            var startingPath = Directory.GetCurrentDirectory();
             var gitHandler = new GitFolderHandler(logger);
             //If we have the git folder. Normally will error out before this if it cannot be found.
             //AS such we'll just let hte exceptions bubble up.
-            var biblioPath = gitHandler.GitBiblioDirectoryCheck();
+            var biblioPath = gitHandler.GitBiblioDirectoryCheck(DepthLevel);
+            var currentPath = Directory.GetCurrentDirectory();
 
             logger.Log("Creating BpEntry Gatherer");
             Console.WriteLine("Creating BPEntry Gatherer");
@@ -252,9 +264,12 @@ public class BPtoPNCore
             logger.Log("Gathering XML entries");
             Console.WriteLine("XmlEntry Gatherer created, gathering XML entries.");
             var xmlEntries = XMLEntryGatherer.GatherEntries();
+
+            currentPath = Directory.GetCurrentDirectory();
+
             logger.Log("Gathering BP entries.");
             Console.WriteLine("Gathered XMl Entries, gathering BP entries.");
-            var bpEntries = BPEntryGatherer.GatherEntries();
+            var bpEntries = BPEntryGatherer.GatherEntries(DepthLevel);
 
             logger.Log("Entries are gathered");
             Console.WriteLine("Entries have been gathered.");
@@ -274,7 +289,9 @@ public class BPtoPNCore
             var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
 
             logger.Log("Saving lists.");
-            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd);
+            //This sets us to one level up from where the code is 
+            currentPath = Directory.GetCurrentDirectory();
+            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd, currentPath);
             logger.Log("Finished saving lists. ");
 
             logger.Log(
@@ -333,7 +350,7 @@ public class BPtoPNCore
                 Console.WriteLine($"Successfully created ZIP file at: {zipPath}");
 
                 // Optionally delete the source directory after successful zip creation
-                // Directory.Delete(sourcePath, true);
+                if (!NoDelete) Directory.Delete(sourcePath, true);
             }
             else
             {
@@ -357,20 +374,21 @@ public class BPtoPNCore
         var dirs = Directory.GetDirectories(directory);
         if (dirs.Contains(directory + "\\BPXMLFiles"))
         {
-            Directory.Move(directory + "/BPXMLFiles/", directory + $"/{saveLocation}/BPXMLFiles");
+            Directory.Move(directory + "/BPXMLFiles/", $"{saveLocation}/BPXMLFiles");
         }
 
-        if (!Directory.GetDirectories(directory).Any(x => x == "BPtoPNLogs"))
+        var logDirs = Directory.GetDirectories(directory);
+        if (!logDirs.Any(x => x.Contains("BPtoPNLogs")))
         {
             dirs = Directory.GetDirectories(directory + "/../");
             if (dirs.Contains(directory + "/../BPtoPNLogs"))
             {
-                Directory.Move(directory + "/../BPtoPNLogs", directory + $"/{saveLocation}/BPtoPNLogs");
+                Directory.Move(directory + "/../BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
             }
         }
         else
         {
-            Directory.Move(directory + "/BPtoPNLogs", directory + $"/{saveLocation}/BPtoPNLogs");
+            Directory.Move(directory + "/BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
         }
     }
 
@@ -554,13 +572,15 @@ public class BPtoPNCore
     /// <param name="NewXmlEntriesToAdd">List of new XML entries to add.</param>
     /// <returns>The name of the folder where the data was saved.</returns>
     private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
-        List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd)
+        List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd, string basePath)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
-        var EndDataFolder = $"../BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
-        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate".Replace(":", "_").Replace("-", "_");
-        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate".Replace(":", "_").Replace("-", "_");
-        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries".Replace(":", "_").Replace("-", "_");
+        var EndDataFolder = $"/BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
+        EndDataFolder = basePath + EndDataFolder;
+        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate";
+        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate";
+        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries";
+
         logger.Log("Setting up directories for saving.");
         SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
 
@@ -589,7 +609,6 @@ public class BPtoPNCore
         logger.LogProcessingInfo(
             $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
         Console.WriteLine($"Setting up saving directories [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
-        if (Directory.GetCurrentDirectory().Contains("Biblio")) Directory.SetCurrentDirectory("..");
 
         logger.LogProcessingInfo("Creating directory for saving.");
         Directory.CreateDirectory(EndDataFolder);
@@ -680,7 +699,7 @@ public class BPtoPNCore
 
         logger.Log("Saving BP Entries");
         Console.WriteLine("Saving Bp Entries");
-        var filePath = path + "BPEntriesToUpdate.txt";
+        var filePath = path + "/BPEntriesToUpdate.txt";
         var sb = new StringBuilder();
         foreach (var bpEntries in bpEntriesToUpdate)
         {
@@ -1112,29 +1131,27 @@ public class BPtoPNCore
     }
 }
 
-//Big TODO's
-//TODO Remove debug settings for running the program, thereby assuming its built in debug on dotnet build
-
-//TODO Fix the file saving path stuff, most of the rest of saving is good now, but hte BPEntriestoUpdate is put in the wrong spot
-// and 
-
-//Simple TODO's
-
-//TODO Add to the readme discussion of how to run  the project, make sure to talk about hte directory, 
-//TODO fix the file path stuff on saving the files so that its not hte idp data directory.
-
-//In progress
-//Figure out why the white space isn't being trimmed when coming from BP
-//Then its onto file path work, fixing hte file path stuff so that its all unified and working well
-//Then ocne I have the directory stuff done and tested, it'll be updating the readme with path info, fixing the debug settings
-// and then we should be good with this version I think.
-
 //Debug TODO's
+
+//Done
+//TODO Add to the readme discussion of how to run  the project, make sure to talk about hte directory,
+//Figure out why the white space isn't being trimmed when coming from BP
+//TODO disable the name collision check. Done, added a flag to the program startup so that one can restore it if one wants
+//TODO figure out why its readding elements which it shoulnd't be? -- This should've been fixed by fixing the bug where it wans't grabbing the seg stuff right.
+//I believe I figured out the white space problem, now everything should be getting cut down to one space
 //TODO check why 1932-0016 isn't grabbing correctly
 //TODO check 1932-0019
 //TODo look inot whitespace and shared whitespace stuff is the same
 //TODO check the BPEntryGatherer is actually culling extra text, bcz entry 0009 is having a spacing issue.
+//Big TODO's
+//TODO Remove debug settings for running the program, thereby assuming its built in debug on dotnet build
 
-//Done
-//TODO disable the name collision check. Done, added a flag to the program startup so that one can restore it if one wants
-//TODO figure out why its readding elements which it shoulnd't be? -- This should've been fixed by fixing the bug where it wans't grabbing the seg stuff right.
+//Simple TODO's
+
+//In progress
+//TODO fix the file path stuff on saving the files so that its not hte idp data directory.
+//TODO Fix the file saving path stuff, mostly working, just need to get the logging lined up okay
+//Then its onto file path work, fixing hte file path stuff so that its all unified and working well
+//on the file path, just need to clean up the logging for it. 
+//Then ocne I have the directory stuff done and tested, it'll be updating the readme with path info, fixing the debug settings
+// and then we should be good with this version I think. 
