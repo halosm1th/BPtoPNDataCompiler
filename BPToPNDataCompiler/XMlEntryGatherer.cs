@@ -85,7 +85,7 @@ public class XMLEntryGatherer
         foreach (var file in Directory.GetFiles(folder))
         {
             var entry = GetEntry(file);
-            logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");
+            //logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");
             if (entry != null)
                 dataEntries.Add(entry);
         }

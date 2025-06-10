@@ -635,7 +635,8 @@ public class BPtoPNCore
             var filePath = Path.Combine(path, $"{newXml.Title}.xml")
                 .Replace("\"", "")
                 .Replace(":", "_")
-                .Replace(".", "_");
+                .Replace(".", "_")
+                .Replace(" ", "_");
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteBPXmlEntry(newXml, filePath);
