@@ -645,7 +645,7 @@ public class BPtoPNCore
     private static void WriteBPXmlEntry(BPDataEntry entry, string path)
     {
         var xml = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.BPNumber}\" type=\"book\">\n" +
+                  $"<bibl xmlns=\"http://www.tei-c.org/ns/1.0\" xml:id=\"b{entry.BPNumber}\" type=\"\">\n" +
                   $"{entry.ToXML()}" +
                   $"\n</bibl>";
 
