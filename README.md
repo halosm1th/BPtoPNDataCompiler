@@ -1,6 +1,6 @@
 # BPtoPNDataCompiler
 
-A utility for compiling BP data into PN format. This tool is developed with .NET Core and designed to run cross-platform.
+A utility for scraping data from the [Bibliographie Papyrologique en ligne](https://bibpap.be/bp-en-ligne/) (BP) and reformatting it in the XML format in which it appears in [papyri.info](https://papyri.info) (PN), to enable a side-by-side comparison of discrepancies between the two databases. Users can indicate which version of the file is correct, the results of which are logged to facilitate the improved integration of the two resources. This tool is developed with .NET Core and designed to run cross-platform.
 
 ## 🖥️ Requirements
 
@@ -88,14 +88,14 @@ Usage:
   BPtoPNDataCompiler [options]
 
 Options:
-  -s, --start-year <start-year>                  Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932. 
-                                                 [default: 1932]
-  -e, --end-year <end-year>                      Sets the end year for data compilation. Use -e or --end-year. Default is the current system year -1
-                                                 (Currently: 2024). Cannot be lower than the start year. [default: 1932]
-  -b, -bps, --bp-start-number <bp-start-number>  Sets the beginning number for BP data processing. Use -bps or --bp-start-number. Default is 0. Cannot be
-                                                 negative. [default: 8]
-  -bpe, -f, --bp-end-number <bp-end-number>      Sets the finishing number for BP data processing. Use -bpe or --bp-end-number. Default is maximum integer
-                                                 value. Cannot be less than the BP start number. [default: 10]
+  -s, -t, --start-year <start-year>              Sets the start year for data compilation. Use -s or --start-year. Default is 1932. Cannot be less than 1932. [default: 1932]
+  -d, -e, --end-year <end-year>                  Sets the end year for data compilation. Use -d or --end-year. Default is the current system year -1 (Currently: 2024). Cannot be lower than the start year. [default: 
+                                                 2024]
+  -b, -bps, --bp-start-number <bp-start-number>  Sets the beginning number for BP data processing. Use -bps or --bp-start-number. Default is 0. Cannot be negative. [default: 1]
+  -bpe, -f, --bp-end-number <bp-end-number>      Sets the finishing number for BP data processing. Use -bpe or --bp-end-number. Default is maximum integer value. Cannot be less than the BP start number. [default: 
+                                                 9999]
+  -c, --compare-author-names                     Sets if the author names should be a field to be compared. Defaults to false. [default: False]
+  -nd, --no-delete                               If used, will **not** delete the resulting folder that is zipped. By default this folder is zipped and deleted after the program is run [default: False]
   -m, --menu                                     Show help menu. [default: False]
   --version                                      Show version information
   -?, -h, --help                                 Show help and usage information
