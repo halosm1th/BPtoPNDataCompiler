@@ -218,7 +218,7 @@ namespace BPtoPNDataCompiler
                     // The NewValue is the same as OldValue here, indicating no direct change to the PN entry itself
                     // in this specific conflict resolution step, but it's flagged for review.
                     var update = new UpdateDetail<XMLDataEntry>(match, "BPNumber", match.BPNumber,
-                        (match.BPNumber + " THE BP NUMBER HAS BEEN UPDATED!!!!!!!!"));
+                        (match.BPNumber));
                     PnEntriesToUpdate.RemoveAll(ud =>
                         ud.Entry == match && ud.FieldName == "BPNumber"); // Prevent duplicates
                     PnEntriesToUpdate.Add(update);

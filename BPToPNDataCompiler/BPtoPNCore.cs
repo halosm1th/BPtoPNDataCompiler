@@ -14,7 +14,7 @@ public class BPtoPNCore
     // Static fields to hold the parsed argument values
     private static int startYear = 1932;
 #if DEBUG
-    private static int endYear = DateTime.Now.Year - 1; //1932;
+    private static int endYear = DateTime.Now.Year - 1;
     private static int bpStartNumber = 1; // New: Default beginning number for BP data
     private static int bpEndNumber = 9999; // New: Default finishing number for BP data
 
@@ -137,6 +137,9 @@ public class BPtoPNCore
                 logger.Log("Parsing args completed.");
                 Console.WriteLine($"Args parsed. Start Year: {startYear}, End Year: {endYear}.");
                 Console.WriteLine($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}.");
+                //TODO remove this.
+                Console.WriteLine("Pausing here to check.");
+                Console.ReadKey();
                 logger.Log($"Start Year: {startYear}, End Year: {endYear}");
                 logger.Log($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}");
 
@@ -325,7 +328,8 @@ public class BPtoPNCore
         // Make sure the target zip file doesn't already exist
         if (File.Exists(zipPath))
         {
-            File.Delete(zipPath);
+            //TODO confirm if we should delete
+            //File.Delete(zipPath);
         }
 
         // Wait a moment to ensure all file operations are complete
@@ -374,7 +378,9 @@ public class BPtoPNCore
         var dirs = Directory.GetDirectories(directory);
         if (dirs.Contains(directory + "\\BPXMLFiles"))
         {
-            Directory.Move(directory + "/BPXMLFiles/", $"{saveLocation}/BPXMLFiles");
+            var tempStartDir = Path.Combine(directory, "BPXMLFiles/");
+            var tempEndDir = Path.Combine(saveLocation, "BPXMLFiles/");
+            Directory.Move(tempStartDir, tempEndDir);
         }
 
         var logDirs = Directory.GetDirectories(directory);
@@ -428,10 +434,6 @@ public class BPtoPNCore
                 case "Name":
                     fixedEntry.Name = entry.NewValue;
                     break;
-                case "No":
-                    // If you check the definition of XMlEntry, the number is always set to equal to the BPNumber
-                    fixedEntry.BPNumber = entry.NewValue;
-                    break;
                 case "Publication":
                     fixedEntry.Publication = entry.NewValue;
                     break;
@@ -443,9 +445,6 @@ public class BPtoPNCore
                     break;
                 case "Title":
                     fixedEntry.Title = entry.NewValue;
-                    break;
-                case "Annee":
-                    fixedEntry.Annee = entry.NewValue;
                     break;
             }
 
@@ -575,26 +574,29 @@ public class BPtoPNCore
         List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd, string basePath)
     {
         logger.LogProcessingInfo("Creating paths for saving lists.");
-        var EndDataFolder = $"/BpToPnChecker-{DateTime.Now}".Replace(":", ".").Replace("-", "_");
-        EndDataFolder = basePath + EndDataFolder;
-        var BPEntryPath = $"{EndDataFolder}/BPEntriesToUpdate";
-        var PnEntryPath = $"{EndDataFolder}/PNEntriesToUpdate";
-        var NewXmlEntryPath = $"{EndDataFolder}/NewXmlEntries";
+
+        // Sanitize and build end folder path using Path.Combine
+        var folderName = $"BpToPnChecker_{DateTime.Now:yyyy_MM_dd_HH.mm.ss}";
+        var endDataFolder = Path.Combine(basePath, folderName);
+        var bpEntryPath = Path.Combine(endDataFolder, "BPEntriesToUpdate");
+        var pnEntryPath = Path.Combine(endDataFolder, "PNEntriesToUpdate");
+        var newXmlEntryPath = Path.Combine(endDataFolder, "NewXmlEntries");
 
         logger.Log("Setting up directories for saving.");
-        SetupDirectoriesForSaving(EndDataFolder, BPEntryPath, PnEntryPath, NewXmlEntryPath);
+        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, pnEntryPath, newXmlEntryPath);
 
         logger.Log("Saving Bp Entries.");
-        SaveBPEntries(BpEntriesToUpdate, BPEntryPath);
+        SaveBPEntries(BpEntriesToUpdate, bpEntryPath);
 
         logger.Log("Saving Pn Entries.");
-        SavePNEntries(updatedPNEntries, PnEntryPath);
+        SavePNEntries(updatedPNEntries, pnEntryPath);
 
         logger.Log("Saving XML of new entries.");
-        SaveNewXMlFromBPEntries(NewXmlEntriesToAdd, NewXmlEntryPath);
+        SaveNewXMlFromBPEntries(NewXmlEntriesToAdd, newXmlEntryPath);
 
-        return EndDataFolder;
+        return endDataFolder;
     }
+
 
     /// <summary>
     /// Sets up the necessary directories for saving the processed data.
@@ -677,9 +679,11 @@ public class BPtoPNCore
 
             var bpNumb = xmlDocument.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
 
-            var filePath = Path.Combine(path, $"{bpNumb.InnerText}.xml")
+            var bpFilename = bpNumb.InnerText
                 .Replace("\"", "")
                 .Replace(":", ".");
+
+            var filePath = Path.Combine(path, $"{bpFilename}.xml");
             Console.WriteLine($"Saving {bpNumb.InnerText} to {filePath}");
             logger.LogProcessingInfo($"Saving  {bpNumb.InnerText} to {filePath}");
             WritePNEntry(xmlDocument, filePath);
@@ -732,23 +736,37 @@ public class BPtoPNCore
     private static void WritePNEntry(XmlDocument xmlDocument, string path)
     {
         try
-
         {
-            // If the file already exists, append a (2) to the filename to avoid overwriting
-            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
-            var writer = new XmlTextWriter(path, Encoding.Default);
-            writer.Formatting = Formatting.Indented;
-            writer.Indentation = 4;
+            // Ensure parent directory exists before writing
+            var directory = Path.GetDirectoryName(path);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // If file exists, append (2) to filename
+            if (File.Exists(path))
+            {
+                var filenameWithoutExt = Path.GetFileNameWithoutExtension(path);
+                var ext = Path.GetExtension(path);
+                var newFilename = filenameWithoutExt + " (2)" + ext;
+                path = Path.Combine(directory, newFilename);
+            }
+
+            using var writer = new XmlTextWriter(path, Encoding.UTF8)
+            {
+                Formatting = Formatting.Indented,
+                Indentation = 4
+            };
 
             xmlDocument.WriteTo(writer);
-            writer.Flush();
-            writer.Dispose();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine($"Error writing PN entry: {e.Message}\n{e.StackTrace}");
         }
     }
+
 
     private static XmlDocument LoadAndChangeXmlDocument(XMLDataEntry entry)
     {
@@ -1131,28 +1149,3 @@ public class BPtoPNCore
         return xmlDocument;
     }
 }
-
-//Debug TODO's
-
-//Done
-//TODO Add to the readme discussion of how to run  the project, make sure to talk about hte directory,
-//Figure out why the white space isn't being trimmed when coming from BP
-//TODO disable the name collision check. Done, added a flag to the program startup so that one can restore it if one wants
-//TODO figure out why its readding elements which it shoulnd't be? -- This should've been fixed by fixing the bug where it wans't grabbing the seg stuff right.
-//I believe I figured out the white space problem, now everything should be getting cut down to one space
-//TODO check why 1932-0016 isn't grabbing correctly
-//TODO check 1932-0019
-//TODo look inot whitespace and shared whitespace stuff is the same
-//TODO check the BPEntryGatherer is actually culling extra text, bcz entry 0009 is having a spacing issue.
-//Big TODO's
-//TODO Remove debug settings for running the program, thereby assuming its built in debug on dotnet build
-
-//Simple TODO's
-
-//In progress
-//TODO fix the file path stuff on saving the files so that its not hte idp data directory.
-//TODO Fix the file saving path stuff, mostly working, just need to get the logging lined up okay
-//Then its onto file path work, fixing hte file path stuff so that its all unified and working well
-//on the file path, just need to clean up the logging for it. 
-//Then ocne I have the directory stuff done and tested, it'll be updating the readme with path info, fixing the debug settings
-// and then we should be good with this version I think. 

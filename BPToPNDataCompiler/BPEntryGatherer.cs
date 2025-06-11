@@ -97,15 +97,15 @@ public class BPEntryGatherer
                         var textNode = node.SelectNodes(".//span")[0];
                         entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
-                    else if (node.InnerText.Contains("C.R."))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
                     else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
                     {
                         var textNode = node.SelectNodes(".//font")[0];
                         entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                    }
+                    else if (node.InnerText.Contains("C.R."))
+                    {
+                        var textNode = node.SelectNodes(".//font")[0];
+                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                 }
             }
