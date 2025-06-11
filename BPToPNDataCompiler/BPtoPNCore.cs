@@ -585,7 +585,7 @@ public class BPtoPNCore
         var title = root?.SelectSingleNode("//tei:seg[@subtype='titre']", nsManager);
         var publisher = root?.SelectSingleNode("//tei:seg[@subtype='publication']", nsManager);
         var resume = root?.SelectSingleNode("//tei:seg[@subtype='resume']", nsManager);
-        var sbandSeg = root?.SelectSingleNode("//tei:seg", nsManager);
+        var sbandSeg = root?.SelectSingleNode("//tei:seg[@subtype='sbSeg']", nsManager);
         var cr = root?.SelectSingleNode("//tei:seg[@subtype='cr']", nsManager);
         var internet = root?.SelectSingleNode("//tei:seg[@subtype='internet']", nsManager);
 
