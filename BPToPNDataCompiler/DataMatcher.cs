@@ -220,7 +220,7 @@ namespace BPtoPNDataCompiler
                     var update = new UpdateDetail<XMLDataEntry>(match, "BPNumber", match.BPNumber,
                         (match.BPNumber));
                     PnEntriesToUpdate.RemoveAll(ud =>
-                        ud.Entry == match && ud.FieldName == "BPNumber"); // Prevent duplicates
+                        ud.Entry.PNFileName == match.PNFileName && ud.FieldName == "BPNumber"); // Prevent duplicates
                     PnEntriesToUpdate.Add(update);
                     pnEntriesUpdated++;
 

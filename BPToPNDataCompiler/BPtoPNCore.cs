@@ -461,8 +461,8 @@ public class BPtoPNCore
                     var nsManager = new XmlNamespaceManager(document.NameTable);
                     nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-                    var bpElement = document.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
-                    if (bpElement != null && bpElement.InnerText == entry.BPNumber)
+                    var bpElement = document.SelectSingleNode("//tei:idno[@type='pi']", nsManager);
+                    if (bpElement != null && bpElement.InnerText == entry.PNNumber)
                     {
                         return true;
                     }
@@ -684,8 +684,8 @@ public class BPtoPNCore
                 .Replace(":", ".");
 
             var filePath = Path.Combine(path, $"{bpFilename}.xml");
-            Console.WriteLine($"Saving {bpNumb.InnerText} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {bpNumb.InnerText} to {filePath}");
+            //Console.WriteLine($"Saving {bpNumb.InnerText} to {filePath}");
+            //logger.LogProcessingInfo($"Saving  {bpNumb.InnerText} to {filePath}");
             WritePNEntry(xmlDocument, filePath);
             // Assuming WriteEntry can handle XMLDataEntry or there's an overload
             // For now, casting to BPDataEntry if ToXML() is common, or create a new WriteEntry for XMLDataEntry
@@ -759,6 +759,9 @@ public class BPtoPNCore
                 Indentation = 4
             };
 
+            var numb = Path.GetFileNameWithoutExtension(path);
+            Console.WriteLine($"Wrote {numb} to {path}");
+            logger.LogProcessingInfo($"Wrote {numb} to {path}");
             xmlDocument.WriteTo(writer);
         }
         catch (Exception e)
