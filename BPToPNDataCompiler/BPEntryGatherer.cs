@@ -92,9 +92,9 @@ public class BPEntryGatherer
                         var textNode = node.SelectNodes(".//span")[0];
                         entry.No = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
-                    else if (node.InnerText.Contains("internet"))
+                    else if (node.InnerText.Contains("Internet") || node.InnerText.Contains("internet"))
                     {
-                        var textNode = node.SelectNodes(".//span")[0];
+                        var textNode = node.SelectNodes(".//a")[0];
                         entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                     }
                     else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
