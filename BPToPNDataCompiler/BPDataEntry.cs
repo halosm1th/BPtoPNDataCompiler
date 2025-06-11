@@ -21,13 +21,13 @@ public class BPDataEntry
     private string? _title;
 
     //At a minimum all entries must have one number
-    public BPDataEntry(string? number, Logger logger)
+    public BPDataEntry(string? number, Logger? logger)
     {
         BPNumber = number;
         this.Logger = logger;
     }
 
-    protected Logger Logger { get; }
+    protected Logger? Logger { get; }
 
     public string? Index
     {

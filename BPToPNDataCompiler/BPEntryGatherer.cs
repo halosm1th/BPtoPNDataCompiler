@@ -12,9 +12,9 @@ public class BPEntryGatherer
     private int ENTRY_START = 1;
     private int StartYear;
 
-    public BPEntryGatherer(int startYear, int endYear, Logger logger, int entryStart, int entryEnd)
+    public BPEntryGatherer(int startYear, int endYear, Logger? logger, int entryStart, int entryEnd)
     {
-        logger.LogProcessingInfo($"Created BPEntryGatherer with start {startYear} and end {endYear}.");
+        logger?.LogProcessingInfo($"Created BPEntryGatherer with start {startYear} and end {endYear}.");
         StartYear = startYear;
         EndYear = endYear;
         this.logger = logger;
@@ -22,13 +22,13 @@ public class BPEntryGatherer
         ENTRY_END = entryEnd;
     }
 
-    Logger logger { get; }
+    Logger? logger { get; }
 
     private BPDataEntry? GetEntry(int currentYear, int currentIndex)
     {
         try
         {
-            logger.LogProcessingInfo("Getting BP entry from BP website.");
+            logger?.LogProcessingInfo("Getting BP entry from BP website.");
             BPDataEntry? entry = null;
             var yearText = Convert.ToString(currentYear);
             var indexText = Convert.ToString(currentIndex);
@@ -54,81 +54,92 @@ public class BPEntryGatherer
                 entry = new BPDataEntry($"{yearText}-{indexText}", logger);
 
                 var rowNodes = table.SelectNodes(".//tr");
-                rowNodes.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
-                foreach (var node in rowNodes)
-                {
-                    //TODO 1932-0019 cehck why index bis is hitting for index
-                    //TODO check this  over again and again
-                    if (node.InnerText.Contains("Index bis"))
+                rowNodes?.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
+                if (rowNodes != null)
+                    foreach (var node in rowNodes)
                     {
-                        var textNode = node.SelectNodes(".//span")[0];
-                        var text = textNode.InnerText.Trim();
-                        entry.IndexBis = Regex.Replace(text, @"\s{2,}", " ");
+                        //TODO 1932-0019 cehck why index bis is hitting for index
+                        //TODO check this  over again and again
+                        if (node.InnerText.Contains("Index bis"))
+                        {
+                            var textNode = node.SelectNodes(".//span")?[0];
+                            var text = textNode?.InnerText.Trim();
+                            if (text != null) entry.IndexBis = Regex.Replace(text, @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("Index"))
+                        {
+                            var textNode = node.SelectNodes(".//span")?[0];
+                            if (textNode != null)
+                            {
+                                var text = textNode.InnerText.Trim();
+                                entry.Index = Regex.Replace(text, @"\s{2,}", " ");
+                            }
+                        }
+                        else if (node.InnerText.Contains("Titre"))
+                        {
+                            var textNode = node.SelectNodes(".//font")?[0];
+                            if (textNode != null)
+                            {
+                                var text = textNode.InnerText.Trim();
+                                entry.Title = Regex.Replace(text, @"\s{2,}", " ");
+                            }
+                        }
+                        else if (node.InnerText.Contains("Publication"))
+                        {
+                            var textNode = node.SelectNodes(".//font")?[0];
+                            if (textNode != null)
+                                entry.Publication = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("Résumé"))
+                        {
+                            var textNode = node.SelectNodes(".//font")?[0];
+                            if (textNode != null)
+                                entry.Resume = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("N°"))
+                        {
+                            var textNode = node.SelectNodes(".//span")?[0];
+                            if (textNode != null) entry.No = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("Internet") || node.InnerText.Contains("internet"))
+                        {
+                            var textNode = node.SelectNodes(".//a")?[0];
+                            if (textNode != null)
+                                entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
+                        {
+                            var textNode = node.SelectNodes(".//font")?[0];
+                            if (textNode != null)
+                                entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
+                        else if (node.InnerText.Contains("C.R."))
+                        {
+                            var textNode = node.SelectNodes(".//font")?[0];
+                            if (textNode != null) entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
+                        }
                     }
-                    else if (node.InnerText.Contains("Index"))
-                    {
-                        var textNode = node.SelectNodes(".//span")[0];
-                        var text = textNode.InnerText.Trim();
-                        entry.Index = Regex.Replace(text, @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("Titre"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        var text = textNode.InnerText.Trim();
-                        entry.Title = Regex.Replace(text, @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("Publication"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.Publication = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("Résumé"))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.Resume = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("N°"))
-                    {
-                        var textNode = node.SelectNodes(".//span")[0];
-                        entry.No = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("Internet") || node.InnerText.Contains("internet"))
-                    {
-                        var textNode = node.SelectNodes(".//a")[0];
-                        entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                    else if (node.InnerText.Contains("C.R."))
-                    {
-                        var textNode = node.SelectNodes(".//font")[0];
-                        entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
-                    }
-                }
             }
             else
             {
-                logger.LogProcessingInfo("Could not find table");
+                logger?.LogProcessingInfo("Could not find table");
                 entry = null;
             }
 
             if (entry != null)
             {
-                logger.LogProcessingInfo($"Found entry: {entry.Title} {entry.Publication}");
+                logger?.LogProcessingInfo($"Found entry: {entry.Title} {entry.Publication}");
             }
             else
             {
-                logger.LogProcessingInfo("No entry found");
+                logger?.LogProcessingInfo("No entry found");
             }
 
             return entry;
         }
         catch (Exception e)
         {
-            logger.LogError($"Error in gathering BP entry {currentYear}-{currentIndex}", e);
+            logger?.LogError($"Error in gathering BP entry {currentYear}-{currentIndex}", e);
             Console.WriteLine(e);
         }
 
@@ -137,7 +148,7 @@ public class BPEntryGatherer
 
     private List<BPDataEntry> GetEntriesForYear(int currentYear, string saveLocation)
     {
-        logger.LogProcessingInfo(
+        logger?.LogProcessingInfo(
             $"Getting entries for the year {currentYear}, starting at {ENTRY_START} to {ENTRY_END}");
         bool hasFailed = false;
         var Entries = new List<BPDataEntry>();
@@ -154,7 +165,7 @@ public class BPEntryGatherer
             }
             catch (Exception e)
             {
-                logger.LogError($"Could not gather entry {currentYear}-{entryIndex}", e);
+                logger?.LogError($"Could not gather entry {currentYear}-{entryIndex}", e);
             }
 
             if (entry == null)
@@ -186,11 +197,11 @@ public class BPEntryGatherer
             }
         }
 
-        logger.LogProcessingInfo($"Found a total of {Entries.Count} BP entries for year {currentYear}.");
+        logger?.LogProcessingInfo($"Found a total of {Entries.Count} BP entries for year {currentYear}.");
         return Entries;
     }
 
-    private async Task WriteEntry(BPDataEntry entry, string path)
+    private void WriteEntry(BPDataEntry entry, string path)
     {
         var fileName = path + $"/{entry.BPNumber}.xml";
         //logger.LogProcessingInfo($"Writing {entry.Title} to {fileName}");
@@ -201,33 +212,33 @@ public class BPEntryGatherer
                   $"{entry.ToXML()}" +
                   $"\n</bibl>";
 
-        await File.WriteAllTextAsync(fileName, xml);
+        File.WriteAllText(fileName, xml);
     }
 
     private string SetDirectory(string depthLevel)
     {
-        logger.LogProcessingInfo("Setting directory for saving Bp Entries");
+        logger?.LogProcessingInfo("Setting directory for saving Bp Entries");
 
         var currentDir = Directory.GetCurrentDirectory() + depthLevel + "/";
         if (currentDir.ToLower().Contains("biblio"))
         {
-            logger.LogProcessingInfo("Was in biblio directory, moving to parent directory");
+            logger?.LogProcessingInfo("Was in biblio directory, moving to parent directory");
             Directory.SetCurrentDirectory("..");
         }
 
         if (currentDir.ToLower().Contains("BPXMLFiles"))
         {
-            logger.LogProcessingInfo("Was in BPXMLFiles directory, moving to parent directory");
+            logger?.LogProcessingInfo("Was in BPXMLFiles directory, moving to parent directory");
             Directory.SetCurrentDirectory("..");
         }
 
         if (Directory.Exists(currentDir + "/BPXMLFiles"))
         {
-            logger.LogProcessingInfo("Found BPXMLFiles, changing to that directory");
+            logger?.LogProcessingInfo("Found BPXMLFiles, changing to that directory");
         }
         else
         {
-            logger.LogProcessingInfo("Could not find BPXMLFiles, creating and changing to that directory");
+            logger?.LogProcessingInfo("Could not find BPXMLFiles, creating and changing to that directory");
             Directory.CreateDirectory(currentDir + "BPXMLFiles");
         }
 
@@ -238,15 +249,15 @@ public class BPEntryGatherer
 
     public List<BPDataEntry> GatherEntries(string depthLevel)
     {
-        logger.Log("Beginning to gather BP Entries.");
-        logger.LogProcessingInfo("Beginning to gather BP Entries.");
+        logger?.Log("Beginning to gather BP Entries.");
+        logger?.LogProcessingInfo("Beginning to gather BP Entries.");
 
         var entries = new List<BPDataEntry>();
         try
         {
             var currentYear = StartYear;
 
-            logger.LogProcessingInfo("Setting directory for saving BP Entries.");
+            logger?.LogProcessingInfo("Setting directory for saving BP Entries.");
             var oldDir = SetDirectory(depthLevel);
 
 
@@ -254,12 +265,12 @@ public class BPEntryGatherer
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"Gathering BP Entries for year: {currentYear}.");
-                logger.LogProcessingInfo($"Beginning to gather BP Entries for year: {currentYear}.");
+                logger?.LogProcessingInfo($"Beginning to gather BP Entries for year: {currentYear}.");
 
                 //TODO fix the directory here to be one sanitized path
                 foreach (var entry in GetEntriesForYear(currentYear, Directory.GetCurrentDirectory()))
                 {
-                    logger.LogProcessingInfo($"Adding {entry.Title} to BPentry list");
+                    logger?.LogProcessingInfo($"Adding {entry.Title} to BPentry list");
                     entries.Add(entry);
                 }
 
@@ -270,12 +281,12 @@ public class BPEntryGatherer
         }
         catch (Exception e)
         {
-            logger.LogError("There was an error collecting BP entries", e);
+            logger?.LogError("There was an error collecting BP entries", e);
             Console.WriteLine(e);
         }
 
-        logger.LogProcessingInfo($"Gathered {entries.Count} BP entries for processing.");
-        logger.Log($"Gathered {entries.Count} BP entries.");
+        logger?.LogProcessingInfo($"Gathered {entries.Count} BP entries for processing.");
+        logger?.Log($"Gathered {entries.Count} BP entries.");
         return entries;
     }
 }

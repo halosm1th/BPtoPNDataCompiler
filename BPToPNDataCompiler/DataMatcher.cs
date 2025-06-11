@@ -25,10 +25,10 @@ namespace BPtoPNDataCompiler
         /// </summary>
         /// <param name="xmlEntries">A list of XMLDataEntry objects to match against.</param>
         /// <param name="bpEntries">A list of BPDataEntry objects to be matched.</param>
-        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger logger,
+        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger? logger,
             bool shouldCompareNames = false)
         {
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Created Data Matcher with {xmlEntries.Count} xml entries and {bpEntries.Count} bp entries.");
             Console.WriteLine("Creating Data matcher...");
             this.logger = logger;
@@ -39,7 +39,7 @@ namespace BPtoPNDataCompiler
 
         private bool ShouldCompareNames { get; set; }
 
-        private Logger logger { get; }
+        private Logger? logger { get; }
 
         // Lists to store different categories of entries after matching process
         public List<BPDataEntry> NewXmlEntriesToAdd { get; } = new List<BPDataEntry>();
@@ -61,22 +61,22 @@ namespace BPtoPNDataCompiler
         {
             Console.WriteLine("Starting Entry Checker");
             Console.WriteLine($"Checking: {BpEntries.Count} entries");
-            logger.Log(
+            logger?.Log(
                 $"Starting match checker to compare {BpEntries.Count} entries to {XmlEntries.Count} XML entries.");
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Starting match checker to compare {BpEntries.Count} entries to {XmlEntries.Count} XML entries.");
 
             foreach (var entry in BpEntries)
             {
                 Console.Write($"Trying entry: {entry.Title}. ");
-                logger.LogProcessingInfo($"Trying entry: {entry.Title}.");
+                logger?.LogProcessingInfo($"Trying entry: {entry.Title}.");
                 // Check if any weak match or exact BPNumber match exists in XML entries
                 if (XmlEntries.Any(x => x.WeakMatch(entry) || x.BPNumber == entry.BPNumber))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Found potential match.\n");
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    logger.LogProcessingInfo($"Found potential match for {entry.Title}, testing it.");
+                    logger?.LogProcessingInfo($"Found potential match for {entry.Title}, testing it.");
                     HandleMatch(entry);
                 }
                 else
@@ -84,16 +84,16 @@ namespace BPtoPNDataCompiler
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("No match found, this is a new entry.");
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    logger.LogProcessingInfo($"no match found for {entry.Title}, creating new xml entry.");
+                    logger?.LogProcessingInfo($"no match found for {entry.Title}, creating new xml entry.");
                     NewXmlEntriesToAdd.Add(entry); // Add to list of new entries if no match
                     newXmlEntriesAdded++;
                     noMatch++;
                 }
             }
 
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
-            logger.Log(
+            logger?.Log(
                 $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             Console.WriteLine(
                 $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
@@ -107,34 +107,34 @@ namespace BPtoPNDataCompiler
         /// <param name="entry">The BPDataEntry being processed.</param>
         private void HandleMatch(BPDataEntry entry)
         {
-            logger.Log($"Handling match with {entry.Title}");
-            logger.LogProcessingInfo($"Handling match with {entry.Title}");
+            logger?.Log($"Handling match with {entry.Title}");
+            logger?.LogProcessingInfo($"Handling match with {entry.Title}");
 
             var matchingEntries = new List<XMLDataEntry>();
 
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Checking if any XML entries have a BPNumber which exactly matches this entries bp number ({entry.BPNumber}).");
             // Collect all XML entries that have the same BPNumber
             if (XmlEntries.Any(x => x.BPNumber == entry.BPNumber))
             {
-                logger.LogProcessingInfo("Gathering all xml entries with the same BPNumber as the current entry.");
+                logger?.LogProcessingInfo("Gathering all xml entries with the same BPNumber as the current entry.");
                 var entriesWithMatchingBPNum = XmlEntries.Where(x => x.BPNumber == entry.BPNumber);
-                logger.LogProcessingInfo(
+                logger?.LogProcessingInfo(
                     $"Gathered {entriesWithMatchingBPNum.Count()} entries that share a BPNumber with {entry.BPNumber}.");
                 matchingEntries.AddRange(entriesWithMatchingBPNum);
             }
 
             // Collect all XML entries that are weak matches and not already in matchingEntries
             var weakMatches = XmlEntries.Where(x => x.WeakMatch(entry, ShouldCompareNames));
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Collecting all XML entries that are weak matches that we had not already found, totalling {weakMatches.Count()}");
             foreach (var weakMatch in weakMatches)
             {
-                logger.LogProcessingInfo(
+                logger?.LogProcessingInfo(
                     $"Checking if {weakMatch.Title} ({weakMatch.BPNumber} | {weakMatch.PNNumber}) is already in the list of matching entries.");
                 if (!matchingEntries.Contains(weakMatch))
                 {
-                    logger.LogProcessingInfo(
+                    logger?.LogProcessingInfo(
                         $"{weakMatch.Title} ({weakMatch.BPNumber} | {weakMatch.PNNumber}) is not in the list of matching entries, adding it.");
                     matchingEntries.Add(weakMatch);
                 }
@@ -142,7 +142,7 @@ namespace BPtoPNDataCompiler
 
             var xmlDataEntries = matchingEntries.ToArray();
 
-            logger.LogProcessingInfo($"Checking {xmlDataEntries.Length} matching entries against entry ");
+            logger?.LogProcessingInfo($"Checking {xmlDataEntries.Length} matching entries against entry ");
 
             // Case 1: Exactly one match and it's a full match. No action needed.
             if (xmlDataEntries.Length == 1 && xmlDataEntries.First().FullMatch(entry, ShouldCompareNames))
@@ -153,9 +153,9 @@ namespace BPtoPNDataCompiler
                 Console.WriteLine(
                     $"{entry.Title} has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for this entry.");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                logger.Log(
+                logger?.Log(
                     $"{entry.Title} has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for this entry.");
-                logger.LogProcessingInfo(
+                logger?.LogProcessingInfo(
                     $"{entry.Title} has exactly 1 entry in the XML, which is a total match. Therefore nothing will be done for this entry.");
                 return;
             }
@@ -166,8 +166,8 @@ namespace BPtoPNDataCompiler
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Found editable match. Launching conflict resolution UI.");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                logger.LogProcessingInfo("Found editable match. Launching conflict resolution UI.");
-                logger.Log("Found editable match. Launching conflict resolution UI.");
+                logger?.LogProcessingInfo("Found editable match. Launching conflict resolution UI.");
+                logger?.Log("Found editable match. Launching conflict resolution UI.");
                 matchMenu++;
                 HandleNonMatchingEntries(entry, xmlDataEntries.First());
             }
@@ -178,8 +178,8 @@ namespace BPtoPNDataCompiler
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Found multiple matches. Handling as a conflict.");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                logger.LogProcessingInfo($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
-                logger.Log($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
+                logger?.LogProcessingInfo($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
+                logger?.Log($"Found multiple matches ({xmlDataEntries.Length}). Handling as a conflict.");
                 HandleMultipleMatches(entry, xmlDataEntries);
                 multipleMatches++;
             }
@@ -193,13 +193,13 @@ namespace BPtoPNDataCompiler
         /// <param name="xmlDataEntries">An array of XMLDataEntry objects that are conflicting matches.</param>
         private void HandleMultipleMatches(BPDataEntry entry, XMLDataEntry[] xmlDataEntries)
         {
-            logger.LogProcessingInfo(
+            logger?.LogProcessingInfo(
                 $"Processing multiple matches with entry {entry.Title}. Starting by generating the short list of matches");
             var shortList = GenerateShortList(entry, xmlDataEntries);
 
             if (shortList.Count > 1)
             {
-                logger.LogProcessingInfo(
+                logger?.LogProcessingInfo(
                     $"Found more than one match by BP. A total of {shortList.Count} entries with matching BP #'s were found.");
                 Console.WriteLine(
                     $"The match shortlist has {shortList.Count} conflicting elements with matching BPNumber.");
@@ -224,7 +224,7 @@ namespace BPtoPNDataCompiler
                     PnEntriesToUpdate.Add(update);
                     pnEntriesUpdated++;
 
-                    logger.Log(
+                    logger?.Log(
                         $"Added {update.Entry.Title} to the PN entry update list, changing {update.FieldName} from {update.OldValue} to {update.NewValue}.");
                 }
 
@@ -241,20 +241,20 @@ namespace BPtoPNDataCompiler
         /// <returns>A list of XMLDataEntry objects that are considered strong matches or share BPNumber.</returns>
         private List<XMLDataEntry> GenerateShortList(BPDataEntry entry, XMLDataEntry[] xmlDataEntries)
         {
-            logger.LogProcessingInfo("Generating short list of possible multi-matches");
+            logger?.LogProcessingInfo("Generating short list of possible multi-matches");
             var shortList = new List<XMLDataEntry>();
 
             // Add all XML entries that have the same BPNumber as the current BP entry
             if (xmlDataEntries.Any(x => x.BPNumber == entry.BPNumber))
             {
-                var entriesWithMatchingBPNum = xmlDataEntries.Where(x => x.BPNumber == entry.BPNumber);
-                Console.WriteLine($"Found {entriesWithMatchingBPNum.Count()} entries with matching BPNumber in XML.");
-                logger.LogProcessingInfo(
-                    $"Found {entriesWithMatchingBPNum.Count()} entries with matching BPNumber in XML, adding them to be processed.");
-                shortList.AddRange(entriesWithMatchingBPNum);
+                var entriesWithMatchingBpNum = xmlDataEntries.Where(x => x.BPNumber == entry.BPNumber);
+                Console.WriteLine($"Found {entriesWithMatchingBpNum.Count()} entries with matching BPNumber in XML.");
+                logger?.LogProcessingInfo(
+                    $"Found {entriesWithMatchingBpNum.Count()} entries with matching BPNumber in XML, adding them to be processed.");
+                shortList.AddRange(entriesWithMatchingBpNum);
             }
 
-            logger.LogProcessingInfo($"Short list is finished, it is composed of: {shortList.Count} elements.");
+            logger?.LogProcessingInfo($"Short list is finished, it is composed of: {shortList.Count} elements.");
             return shortList;
         }
 
@@ -265,13 +265,13 @@ namespace BPtoPNDataCompiler
         /// <param name="matchingEntry">The XMLDataEntry that partially matches.</param>
         private void HandleNonMatchingEntries(BPDataEntry entry, XMLDataEntry matchingEntry)
         {
-            logger.Log(
+            logger?.Log(
                 $"Creating Datamatcher conflict UI to deal with match between {entry.Title} and {matchingEntry.Title}");
             var matcherUI = new DataMatcherConflictUI(logger, ShouldCompareNames);
             matcherUI.HandleNonMatchingEntries(entry, matchingEntry);
 
             // Add the detailed update records from the UI to the DataMatcher's lists.
-            logger.Log("finished with Data matcher, adding its lists to the BP and PN entry lists.");
+            logger?.Log("finished with Data matcher, adding its lists to the BP and PN entry lists.");
             var mUiBP = matcherUI.BpEntriesToUpdate;
             var mUiPN = matcherUI.PnEntriesToUpdate;
             bpEntriesUpdated += mUiBP.Count;

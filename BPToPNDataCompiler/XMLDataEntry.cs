@@ -5,17 +5,17 @@ namespace BPtoPNDataCompiler;
 // ReSharper disable once InconsistentNaming
 public class XMLDataEntry : BPDataEntry
 {
-    public XMLDataEntry(string fileName, Logger logger) : base(null, logger)
+    public XMLDataEntry(string fileName, Logger? logger) : base(null, logger)
     {
         PNFileName = fileName;
     }
 
-    public bool HasNo => HasBPNum;
-    public string No => BPNumber ?? "0000-0000";
+    public new bool HasNo => HasBPNum;
+    public new string No => BPNumber ?? "0000-0000";
 
 
     public string PNFileName { get; set; }
-    public string PNNumber { get; set; }
+    public string? PNNumber { get; set; }
 
     public bool AnyMatch(BPDataEntry entry)
     {
@@ -44,7 +44,7 @@ public class XMLDataEntry : BPDataEntry
 
     public bool FullMatch(BPDataEntry entry, bool shouldCompareNames)
     {
-        Logger.LogProcessingInfo($"Checking if {entry.Title} is a full match for {this.Title}");
+        Logger?.LogProcessingInfo($"Checking if {entry.Title} is a full match for {this.Title}");
         //If they both have share name, then shareName is equal if the names are equal.
         //If they both don't have share name, then they share in not having a name
 
@@ -145,7 +145,7 @@ public class XMLDataEntry : BPDataEntry
 
         var result = shareName && shareNet && sharePub && shareRes && shareTitle
                      && shareIndex && shareIndexBis && shareNo && shareCR && shareBP && shareSBSEg;
-        Logger.LogProcessingInfo($"Comparison done, result is: {result}");
+        Logger?.LogProcessingInfo($"Comparison done, result is: {result}");
         return result;
     }
 
