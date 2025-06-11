@@ -1,6 +1,6 @@
 # BPtoPNDataCompiler
 
-A utility for scraping data from the [Bibliographie Papyrologique en ligne](https://bibpap.be/bp-en-ligne/) (BP) and reformatting it in the XML format in which it appears in [papyri.info](https://papyri.info) (PN), to enable a side-by-side comparison of discrepancies between the two databases. Users can indicate which version of the file is correct, the results of which are logged to facilitate the improved integration of the two resources. This tool is developed with .NET Core and designed to run cross-platform.
+A utility for scraping data from the [Bibliographie Papyrologique en ligne](https://bibpap.be/bp-en-ligne/) (BP) and reformatting it in the XML format in which it appears in [papyri.info](https://papyri.info) (PN), to enable a computational comparison of the two systems' versions of a given item. Users are presented with a side-by-side, element-by-element comparison of discrepancies and can elect to indicate which version of the file is correct, the results of which are logged to facilitate the improved integration of these two foundational resources in digital papyrology. This tool is developed with .NET Core and designed to run cross-platform.
 
 ## 🖥️ Requirements
 
