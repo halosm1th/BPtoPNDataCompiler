@@ -638,7 +638,9 @@ public class BPtoPNCore
                 .Replace("\"", "")
                 .Replace(":", "_")
                 .Replace(".", "_")
-                .Replace(" ", "_");
+                .Replace(" ", "_")
+                .Replace("&", "")
+                .Replace(";", "");
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteBPXmlEntry(newXml, filePath);
