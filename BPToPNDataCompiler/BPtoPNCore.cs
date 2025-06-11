@@ -634,13 +634,16 @@ public class BPtoPNCore
         foreach (var newXml in NewXmlEntriesToAdd)
         {
             // Sanitize file path by replacing invalid characters
-            var filePath = Path.Combine(path, $"{newXml.Title}.xml")
-                .Replace("\"", "")
+            var title = newXml.Title.Replace("\"", "")
                 .Replace(":", "_")
                 .Replace(".", "_")
                 .Replace(" ", "_")
                 .Replace("&", "")
-                .Replace(";", "");
+                .Replace(";", "")
+                .Replace("?", "");
+
+            var filePath = Path.Combine(path, title);
+            filePath = filePath + ".xml";
             Console.WriteLine($"Saving {newXml.Title} to {filePath}");
             logger.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
             WriteBPXmlEntry(newXml, filePath);
