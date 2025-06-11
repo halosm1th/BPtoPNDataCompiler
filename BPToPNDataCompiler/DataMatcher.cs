@@ -209,10 +209,12 @@ namespace BPtoPNDataCompiler
                 // Here, we are just noting their involvement in the conflict without changing their values,
                 // but you could modify their BPNumber or other fields if required.
                 var sb = new StringBuilder();
-                sb.Append("Conflicting PN Matches (BPNumbers): ");
+                var sbStart = new StringBuilder();
+                sbStart.Append($"Conflicting PN Matches (BPNumbers: {entry.BPNumber}");
                 foreach (var match in shortList)
                 {
                     sb.Append($"{match.Title ?? "NULL"} ");
+                    sbStart.Append($" | {match.PNNumber}");
                     // Add an UpdateDetail for each conflicting XML entry.
                     // This creates a record that this PN entry was part of a multiple match conflict.
                     // The NewValue is the same as OldValue here, indicating no direct change to the PN entry itself
@@ -228,7 +230,10 @@ namespace BPtoPNDataCompiler
                         $"Added {update.Entry.Title} to the PN entry update list, changing {update.FieldName} from {update.OldValue} to {update.NewValue}.");
                 }
 
-                Console.WriteLine(sb.ToString());
+                sbStart.Append("): ");
+                sb.Append(sb.ToString());
+
+                Console.WriteLine(sbStart.ToString());
             }
         }
 

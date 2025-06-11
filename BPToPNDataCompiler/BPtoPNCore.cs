@@ -468,15 +468,13 @@ public class BPtoPNCore
             var nsManager = new XmlNamespaceManager(xmlDocument.NameTable);
             nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-            var bpNumb = xmlDocument.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
+            var piNumb = xmlDocument.SelectSingleNode("//tei:idno[@type='pi']", nsManager);
 
-            var bpFilename = bpNumb?.InnerText
+            var filePath = Path.Combine(path, $"{piNumb.InnerText}.xml")
                 .Replace("\"", "")
                 .Replace(":", ".");
-
-            var filePath = Path.Combine(path, $"{bpFilename}.xml");
-            //Console.WriteLine($"Saving {bpNumb.InnerText} to {filePath}");
-            //logger.LogProcessingInfo($"Saving  {bpNumb.InnerText} to {filePath}");
+            Console.WriteLine($"Saving {piNumb.InnerText} to {filePath}");
+            logger.LogProcessingInfo($"Saving  {piNumb.InnerText} to {filePath}");
             WritePNEntry(xmlDocument, filePath);
             // Assuming WriteEntry can handle XMLDataEntry or there's an overload
             // For now, casting to BPDataEntry if ToXML() is common, or create a new WriteEntry for XMLDataEntry
