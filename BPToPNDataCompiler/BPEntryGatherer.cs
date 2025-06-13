@@ -60,13 +60,13 @@ public class BPEntryGatherer
                     {
                         //TODO 1932-0019 cehck why index bis is hitting for index
                         //TODO check this  over again and again
-                        if (node.InnerText.Contains("Index bis"))
+                        if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Index bis"))
                         {
                             var textNode = node.SelectNodes(".//span")?[0];
                             var text = textNode?.InnerText.Trim();
                             if (text != null) entry.IndexBis = Regex.Replace(text, @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("Index"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Index"))
                         {
                             var textNode = node.SelectNodes(".//span")?[0];
                             if (textNode != null)
@@ -75,7 +75,7 @@ public class BPEntryGatherer
                                 entry.Index = Regex.Replace(text, @"\s{2,}", " ");
                             }
                         }
-                        else if (node.InnerText.Contains("Titre"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Titre"))
                         {
                             var textNode = node.SelectNodes(".//font")?[0];
                             if (textNode != null)
@@ -84,36 +84,37 @@ public class BPEntryGatherer
                                 entry.Title = Regex.Replace(text, @"\s{2,}", " ");
                             }
                         }
-                        else if (node.InnerText.Contains("Publication"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Publication"))
                         {
                             var textNode = node.SelectNodes(".//font")?[0];
                             if (textNode != null)
                                 entry.Publication = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("Résumé"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Résumé"))
                         {
                             var textNode = node.SelectNodes(".//font")?[0];
                             if (textNode != null)
                                 entry.Resume = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("N°"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("N°"))
                         {
                             var textNode = node.SelectNodes(".//span")?[0];
                             if (textNode != null) entry.No = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("Internet") || node.InnerText.Contains("internet"))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("Internet") ||
+                                 node.InnerText.Contains("internet"))
                         {
                             var textNode = node.SelectNodes(".//a")?[0];
                             if (textNode != null)
                                 entry.Internet = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("S.B. &amp; S.E.G."))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("S.B. &amp; S.E.G."))
                         {
                             var textNode = node.SelectNodes(".//font")?[0];
                             if (textNode != null)
                                 entry.SBandSEG = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");
                         }
-                        else if (node.InnerText.Contains("C.R."))
+                        else if (node.ChildNodes.First(x => x.Name == "td").InnerText.Contains("C.R."))
                         {
                             var textNode = node.SelectNodes(".//font")?[0];
                             if (textNode != null) entry.CR = Regex.Replace(textNode.InnerText.Trim(), @"\s{2,}", " ");

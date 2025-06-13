@@ -20,6 +20,7 @@ public class DataMatcherConflictUI
     // Updated lists to store detailed update information using the new UpdateDetail class
     public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
     public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
+    public List<UpdateDetail<BPDataEntry>> SharedList { get; } = new List<UpdateDetail<BPDataEntry>>();
 
     private Logger? logger { get; }
 
@@ -302,9 +303,7 @@ public class DataMatcherConflictUI
                 // Decide which value to standardize on, e.g., BP's value for both
                 // For demonstration, let's say we standardize to BP's value for both if they differ.
                 // You might need more complex logic here based on your "Shared" definition.
-                PnEntriesToUpdate.Add(new UpdateDetail<XMLDataEntry>(xmlEntry, fieldName, pnValue, bpValue));
-                BpEntriesToUpdate.Add(new UpdateDetail<BPDataEntry>(bpEntry, fieldName, bpValue,
-                    bpValue)); // No actual change if BP is chosen as the standard
+                SharedList.Add(new UpdateDetail<BPDataEntry>(xmlEntry, fieldName, bpValue, pnValue));
 
                 logger?.LogProcessingInfo(
                     $"Added Shared update for field '{fieldName}'. Standardized to BP's value. PN Old: '{pnValue ?? "NULL"}', PN New: '{bpValue ?? "NULL"}'.");

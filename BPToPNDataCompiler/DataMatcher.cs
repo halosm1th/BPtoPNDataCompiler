@@ -19,6 +19,7 @@ namespace BPtoPNDataCompiler
         private int noMatch = 0;
         private int perfectMatch = 0;
         private int pnEntriesUpdated = 0;
+        private int SharedEntriesUpdated = 0;
 
         /// <summary>
         /// Initializes a new instance of the DataMatcher class.
@@ -48,9 +49,9 @@ namespace BPtoPNDataCompiler
         // This allows tracking which entry, which field, its old value, and its new value.
         public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
         public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
+        public List<UpdateDetail<BPDataEntry>> SharedEntriesToLog { get; } = new List<UpdateDetail<BPDataEntry>>();
 
         private List<XMLDataEntry> XmlEntries { get; set; }
-        private List<(List<BPDataEntry>, List<XMLDataEntry>)>? ProblemMultipleEntries { get; set; }
         private List<BPDataEntry> BpEntries { get; set; }
 
         /// <summary>
@@ -92,11 +93,11 @@ namespace BPtoPNDataCompiler
             }
 
             logger?.LogProcessingInfo(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, {SharedEntriesUpdated} shared entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             logger?.Log(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, {SharedEntriesUpdated} shared entries,and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             Console.WriteLine(
-                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
+                $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, {SharedEntriesUpdated} shared entries,and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
         }
 
 
@@ -279,8 +280,11 @@ namespace BPtoPNDataCompiler
             logger?.Log("finished with Data matcher, adding its lists to the BP and PN entry lists.");
             var mUiBP = matcherUI.BpEntriesToUpdate;
             var mUiPN = matcherUI.PnEntriesToUpdate;
+            var MUIShared = matcherUI.SharedList;
             bpEntriesUpdated += mUiBP.Count;
             pnEntriesUpdated += mUiPN.Count;
+            SharedEntriesUpdated += MUIShared.Count;
+            SharedEntriesToLog.AddRange(MUIShared);
             BpEntriesToUpdate.AddRange(mUiBP);
             PnEntriesToUpdate.AddRange(mUiPN);
         }

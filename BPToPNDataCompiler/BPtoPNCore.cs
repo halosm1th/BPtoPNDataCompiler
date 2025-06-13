@@ -77,7 +77,8 @@ public class BPtoPNCore
             logger?.Log("Saving lists.");
             //This sets us to one level up from where the code is 
             currentPath = Directory.GetCurrentDirectory();
-            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd, currentPath);
+            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd, dm.SharedEntriesToLog,
+                currentPath);
             logger?.Log("Finished saving lists. ");
 
             logger?.Log(
@@ -137,7 +138,7 @@ public class BPtoPNCore
                 Console.WriteLine($"Successfully created ZIP file at: {zipPath}");
 
                 // Optionally delete the source directory after successful zip creation
-                if (!NoDelete) Directory.Delete(sourcePath, true);
+                if (Delete) Directory.Delete(sourcePath, true);
             }
             else
             {
@@ -354,7 +355,8 @@ public class BPtoPNCore
     /// <param name="NewXmlEntriesToAdd">List of new XML entries to add.</param>
     /// <returns>The name of the folder where the data was saved.</returns>
     private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
-        List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd, string basePath)
+        List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd,
+        List<UpdateDetail<BPDataEntry>> SharedEntriesToLog, string basePath)
     {
         logger?.LogProcessingInfo("Creating paths for saving lists.");
 
@@ -364,9 +366,10 @@ public class BPtoPNCore
         var bpEntryPath = Path.Combine(endDataFolder, "BPEntriesToUpdate");
         var pnEntryPath = Path.Combine(endDataFolder, "PNEntriesToUpdate");
         var newXmlEntryPath = Path.Combine(endDataFolder, "NewXmlEntries");
+        var sharedEntriesPath = Path.Combine(endDataFolder, "MinorDeviations");
 
         logger?.Log("Setting up directories for saving.");
-        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, pnEntryPath, newXmlEntryPath);
+        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, pnEntryPath, newXmlEntryPath, sharedEntriesPath);
 
         logger?.Log("Saving Bp Entries.");
         SaveBPEntries(BpEntriesToUpdate, bpEntryPath);
@@ -377,7 +380,28 @@ public class BPtoPNCore
         logger?.Log("Saving XML of new entries.");
         SaveNewXMlFromBPEntries(NewXmlEntriesToAdd, newXmlEntryPath);
 
+        logger?.Log("Saving Minor Deviations");
+        SaveMinorDeviations(SharedEntriesToLog, sharedEntriesPath);
+
         return endDataFolder;
+    }
+
+    private static void SaveMinorDeviations(List<UpdateDetail<BPDataEntry>> sharedEntriesToLog,
+        string sharedEntriesPath)
+    {
+        var sb = new StringBuilder();
+        foreach (var entry in sharedEntriesToLog)
+        {
+            sb.Append(
+                $"BP# {entry.Entry.BPNumber}. For [{entry.FieldName}] _BP has_ [{entry.OldValue}] :: _PN has_ [{entry.NewValue}].\n");
+        }
+
+        var minorDeviationPath = Path.Combine(sharedEntriesPath, "MinorDeviations.txt");
+        Console.WriteLine($"Saving minorDeviations to {minorDeviationPath}");
+        logger?.LogProcessingInfo($"Saving minorDeviations to {minorDeviationPath}");
+
+        if (File.Exists(minorDeviationPath)) minorDeviationPath = minorDeviationPath.Replace(".xml", " (2).xml");
+        File.WriteAllText(minorDeviationPath, sb.ToString());
     }
 
 
@@ -389,7 +413,7 @@ public class BPtoPNCore
     /// <param name="PnEntryPath">Path for PN entries to update.</param>
     /// <param name="NewXmlEntryPath">Path for new XML entries.</param>
     private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,
-        string NewXmlEntryPath)
+        string NewXmlEntryPath, string SharedListPath)
     {
         logger?.LogProcessingInfo(
             $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
@@ -401,8 +425,10 @@ public class BPtoPNCore
         Directory.CreateDirectory(BPEntryPath);
         logger?.LogProcessingInfo("Creating PnEnties To Update Folder.");
         Directory.CreateDirectory(PnEntryPath);
-        logger?.LogProcessingInfo("Creating New Xml Enties for PN Folder.");
+        logger?.LogProcessingInfo("Creating New Xml Entries for PN Folder.");
         Directory.CreateDirectory(NewXmlEntryPath);
+        logger?.LogProcessingInfo("Creating New Shared Entries Folder.");
+        Directory.CreateDirectory(SharedListPath);
     }
 
     /// <summary>
@@ -946,7 +972,7 @@ public class BPtoPNCore
     public static Logger? logger { get; private set; }
     private static bool ShouldCompareName { get; set; } = false;
     public static string DepthLevel = "/..";
-    private static bool NoDelete = false;
+    private static bool Delete = false;
 
     public static void Main(string[] args)
     {
@@ -982,10 +1008,10 @@ public class BPtoPNCore
 
 
             var noDelete = new Option<bool>(
-                name: "--no-delete",
-                getDefaultValue: () => NoDelete,
+                name: "delete",
+                getDefaultValue: () => Delete,
                 description:
-                $"If used, will **not** delete the resulting folder that is zipped. By default this folder is zipped and deleted after the program is run"
+                $"If used, will delete the resulting folder that is zipped. By default this folder is zipped and not deleted after the program is run"
             );
             noDelete.AddAlias("-nd");
 
