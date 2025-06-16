@@ -56,7 +56,7 @@ public class BPEntryGatherer
                 var rowNodes = table.SelectNodes(".//tr");
                 rowNodes?.RemoveAt(0); //remove the first node, which is the Imprimer cette fiche
                 if (rowNodes != null)
-                    foreach (var node in rowNodes)
+                        foreach (var node in rowNodes)
                     {
                         //TODO 1932-0019 cehck why index bis is hitting for index
                         //TODO check this  over again and again

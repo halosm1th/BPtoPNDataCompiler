@@ -1180,3 +1180,9 @@ public class BPtoPNCore
 
     #endregion
 }
+
+//todo CREATE MINOR DIVATIONS
+//And if shared, that means both are right, change that to both are wrong.
+//DO not rename when there are duplicate BP idno, for those wonesones call them 
+//Duplicate Bp number is a different than a situation where the BP is right and need to overwrite something in papyri
+// put something in the file name to make sure if they 
