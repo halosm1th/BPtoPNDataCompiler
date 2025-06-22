@@ -361,7 +361,7 @@ public class BPtoPNCore
         logger?.LogProcessingInfo("Creating paths for saving lists.");
 
         // Sanitize and build end folder path using Path.Combine
-        var folderName = $"BpToPnChecker_{DateTime.Now:yyyy_MM_dd_HH.mm.ss}";
+        var folderName = $"BpToPnOutput";
         var endDataFolder = Path.Combine(basePath, folderName);
         var bpEntryPath = Path.Combine(endDataFolder, "BPEntriesToUpdate");
         var pnEntryPath = Path.Combine(endDataFolder, "PNEntriesToUpdate");
