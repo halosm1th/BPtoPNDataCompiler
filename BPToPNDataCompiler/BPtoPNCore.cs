@@ -1082,9 +1082,6 @@ public class BPtoPNCore
                 logger.Log("Parsing args completed.");
                 Console.WriteLine($"Args parsed. Start Year: {startYear}, End Year: {endYear}.");
                 Console.WriteLine($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}.");
-                //TODO remove this.
-                Console.WriteLine("Pausing here to check.");
-                Console.ReadKey();
                 logger.Log($"Start Year: {startYear}, End Year: {endYear}");
                 logger.Log($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}");
 
@@ -1180,3 +1177,17 @@ public class BPtoPNCore
 
     #endregion
 }
+
+//todo CREATE MINOR DIVATIONS
+//And if shared, that means both are right, change that to both are wrong.
+//DO not rename when there are duplicate BP idno, for those wonesones call them 
+//Duplicate Bp number is a different than a situation where the BP is right and need to overwrite something in papyri
+// put something in the file name to make sure if they 
+
+
+
+/*
+
+
+
+*/

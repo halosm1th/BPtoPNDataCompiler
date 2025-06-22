@@ -530,9 +530,9 @@ public class DataMatcherConflictUI
             PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.NameMatch],
                 selectedRow == 6, _editedChoices.GetValueOrDefault(6) ?? string.Empty);
 
-        if (entry.HasNo || matchingEntry.HasNo)
-            PrintWrappedRow(7, "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.NoMatch],
-                selectedRow == 7, _editedChoices.GetValueOrDefault(7) ?? string.Empty);
+        //if (entry.HasNo || matchingEntry.HasNo)
+        //    PrintWrappedRow(7, "No", entry.No, matchingEntry.No, entriesMatches[(int) Comparisons.NoMatch],
+        //        selectedRow == 7, _editedChoices.GetValueOrDefault(7) ?? string.Empty);
 
         if (entry.HasPublication || matchingEntry.HasPublication)
             PrintWrappedRow(8, "Publication", entry.Publication, matchingEntry.Publication,

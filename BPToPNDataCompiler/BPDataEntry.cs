@@ -161,14 +161,16 @@ public class BPDataEntry
         if (IndexBis != null) sb.Append($"<seg type=\"original\" subtype=\"indexBis\" resp=\"#BP\">{IndexBis}</seg>\n");
         if (_title != null) sb.Append($"<seg type=\"original\" subtype=\"titre\" resp=\"#BP\">{_title}</seg>\n");
         if (SBandSEG != null) sb.Append($"<seg type=\"original\" subtype=\"SBandSeg\" resp=\"#BP\">{SBandSEG}</seg>\n");
-        if (No != null) sb.Append($"<seg type=\"original\" subtype=\"No\" resp=\"#BP\">{No}</seg>\n");
+       // if (No != null) sb.Append($"<seg type=\"original\" subtype=\"No\" resp=\"#BP\">{No}</seg>\n");
         if (_annee != null) sb.Append($"<seg type=\"original\" subtype=\"annee\" resp=\"#BP\">{_annee}</seg>\n");
         if (Publication != null)
             sb.Append($"<seg type=\"original\" subtype=\"publication\" resp=\"#BP\">{Publication}</seg>\n");
         if (_resume != null) sb.Append($"<seg type=\"original\" subtype=\"resume\" resp=\"#BP\">{_resume}</seg>\n");
         if (CR != null) sb.Append($"<seg type=\"original\" subtype=\"cr\" resp=\"#BP\">{CR}</seg>\n");
         if (Name != null) sb.Append($"<seg type=\"original\" subtype=\"nom\" resp=\"#BP\">{Name}</seg>\n");
-        if (_internet != null) sb.Append($"<ptr target=\"{_internet}\"\n");
+        else sb.Append("<seg type=\"original\" subtype=\"nom\" resp=\"#BP\"></seg>");
+        
+        if (_internet != null) sb.Append($"<ptr target=\"{_internet}\" />\n");
 
         return sb.ToString();
     }
