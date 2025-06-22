@@ -62,7 +62,7 @@ public class BPtoPNCore
 
             Console.Write("Preparing to start data matcher. ");
             logger?.Log("Creating Datamatcher");
-            var dm = new DataMatcher(xmlEntries, bpEntries, logger, ShouldCompareName);
+            var dm = new DataMatcher(xmlEntries, bpEntries, logger, ShouldCompareName, RunDataMatcher);
 
             Console.WriteLine("Starting to match entries?");
             logger?.Log("Starting to match entries");
@@ -105,7 +105,17 @@ public class BPtoPNCore
     {
         var directory = Directory.GetCurrentDirectory();
         var sourcePath = Path.Combine(directory, saveLocation);
-        var zipPath = Path.Combine(directory, $"{saveLocation}.zip");
+        var fileName = Path.GetFileName(saveLocation);
+        int count = 0;
+        
+        if (Directory.GetFiles(directory).Any(x => x.Contains($"{fileName}")))
+        {
+            count = Directory.GetFiles(directory).Count(x => x.Contains($"{fileName}")) + 1;
+        }
+
+        var countText = count > 0 ? $" ({count})" : "";
+        
+        var zipPath = Path.Combine(directory, $"{saveLocation}{countText}.zip");
 
         Console.WriteLine($"Zipping files from {sourcePath} to {zipPath}");
 
@@ -160,11 +170,21 @@ public class BPtoPNCore
     {
         var directory = Directory.GetCurrentDirectory();
         var dirs = Directory.GetDirectories(directory);
-        if (dirs.Contains(directory + "\\BPXMLFiles"))
+        if (dirs.Contains(directory + "BPXMLFiles/"))
         {
             var tempStartDir = Path.Combine(directory, "BPXMLFiles/");
-            var tempEndDir = Path.Combine(saveLocation, "BPXMLFiles/");
-            Directory.Move(tempStartDir, tempEndDir);
+            if (dirs.Contains(saveLocation + "/BPXMLFiles"))
+            {
+                var count = dirs.Count(x => x.Contains(saveLocation + "\\BPXMLFiles/")) + 1;
+                var tempEndDir = Path.Combine(saveLocation, $"BPXMLFiles ({count})/");
+                Directory.Move(tempStartDir, tempEndDir);
+            }
+
+            else
+            {
+                var tempEndDir = Path.Combine(saveLocation, "BPXMLFiles/");
+                Directory.Move(tempStartDir, tempEndDir);
+            }
         }
 
         var logDirs = Directory.GetDirectories(directory);
@@ -173,12 +193,36 @@ public class BPtoPNCore
             dirs = Directory.GetDirectories(directory + "/../");
             if (dirs.Contains(directory + "/../BPtoPNLogs"))
             {
-                Directory.Move(directory + "/../BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
+                
+                if (dirs.Contains(saveLocation + "/BPtoPNLogs"))
+                {
+                    var count = dirs.Count(x => x.Contains(saveLocation + "/BPtoPNLogs/")) + 1;
+                    var tempEndDir = Path.Combine(saveLocation, $"BPtoPNLogs ({count})/");
+                    Directory.Move(directory + "/../BPtoPNLogs", tempEndDir);
+                }
+
+                else
+                {
+                    Directory.Move(directory + "/../BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
+
+                }
             }
         }
         else
         {
-            Directory.Move(directory + "/BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
+            dirs = Directory.GetDirectories(saveLocation);
+            if (dirs.Any(x => x.Contains( "BPtoPNLogs")))
+            {
+                var count = dirs.Count(x => x.Contains(saveLocation + "/BPtoPNLogs")) +1;
+                var tempEndDir = Path.Combine(saveLocation, $"BPtoPNLogs ({count})/");
+                Directory.Move(directory + "/BPtoPNLogs", tempEndDir);
+            }
+            else
+            {
+                Directory.Move(directory + "/BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
+
+            }
+            
         }
     }
 
@@ -447,11 +491,20 @@ public class BPtoPNCore
             {
                 var title = newXml.Title.Replace("\"", "")
                     .Replace(":", "_")
+                    .Replace("\\","")
+                    .Replace("/","")
                     .Replace(".", "_")
                     .Replace(" ", "_")
                     .Replace("&", "")
                     .Replace(";", "")
-                    .Replace("?", "");
+                    .Replace("?", "")
+                    .Replace(",", "")
+                    .Replace("(", "")
+                    .Replace(")", "")
+                    .Replace("=","")
+                    .Replace("'", "");
+
+                title = title.Substring(0, Math.Min(title.Length, 80));
 
                 var filePath = Path.Combine(path, title);
                 filePath = filePath + ".xml";
@@ -498,7 +551,8 @@ public class BPtoPNCore
 
             var filePath = Path.Combine(path, $"{piNumb.InnerText}.xml")
                 .Replace("\"", "")
-                .Replace(":", ".");
+                .Replace(":", ".")
+                .Replace(",", "");
             Console.WriteLine($"Saving {piNumb.InnerText} to {filePath}");
             logger.LogProcessingInfo($"Saving  {piNumb.InnerText} to {filePath}");
             WritePNEntry(xmlDocument, filePath);
@@ -973,6 +1027,7 @@ public class BPtoPNCore
     private static bool ShouldCompareName { get; set; } = false;
     public static string DepthLevel = "/..";
     private static bool Delete = false;
+    public static bool RunDataMatcher = false;
 
     public static void Main(string[] args)
     {
@@ -1023,6 +1078,12 @@ public class BPtoPNCore
             );
             bpStartNumberOption.AddAlias("-bps"); // Add alias using AddAlias method
             bpStartNumberOption.AddAlias("-b"); // Add alias using AddAlias method
+            
+            var noDataMatcher = new Option<bool>(
+                name: "--no-data-matcher",
+                getDefaultValue: () => RunDataMatcher,
+                description: "Disables the data matcher ui, basically just running a count without having the user do anything"
+                );
 
             var bpEndNumberOption = new Option<int>(
                 name: "--bp-end-number",
@@ -1053,6 +1114,7 @@ public class BPtoPNCore
                     shouldCompareAuthorNames,
                     noDelete,
                     helpOption,
+                    noDataMatcher,
                 };
 
 
@@ -1074,6 +1136,8 @@ public class BPtoPNCore
                 bpStartNumber = context.ParseResult.GetValueForOption(bpStartNumberOption);
                 bpEndNumber = context.ParseResult.GetValueForOption(bpEndNumberOption);
                 ShouldCompareName = context.ParseResult.GetValueForOption(shouldCompareAuthorNames);
+                Delete = context.ParseResult.GetValueForOption(noDelete);
+                RunDataMatcher = context.ParseResult.GetValueForOption(noDataMatcher);
 
                 // Perform custom validation after parsing
                 ValidateYears();

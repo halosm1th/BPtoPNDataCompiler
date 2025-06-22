@@ -27,7 +27,7 @@ namespace BPtoPNDataCompiler
         /// <param name="xmlEntries">A list of XMLDataEntry objects to match against.</param>
         /// <param name="bpEntries">A list of BPDataEntry objects to be matched.</param>
         public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger? logger,
-            bool shouldCompareNames = false)
+            bool shouldCompareNames = false, bool noDataMatcher = false)
         {
             logger?.LogProcessingInfo(
                 $"Created Data Matcher with {xmlEntries.Count} xml entries and {bpEntries.Count} bp entries.");
@@ -36,7 +36,11 @@ namespace BPtoPNDataCompiler
             XmlEntries = xmlEntries;
             BpEntries = bpEntries;
             ShouldCompareNames = shouldCompareNames;
+            NoDataMatcher = noDataMatcher;
+            ;
         }
+
+        public bool NoDataMatcher = false;
 
         private bool ShouldCompareNames { get; set; }
 
@@ -170,7 +174,7 @@ namespace BPtoPNDataCompiler
                 logger?.LogProcessingInfo("Found editable match. Launching conflict resolution UI.");
                 logger?.Log("Found editable match. Launching conflict resolution UI.");
                 matchMenu++;
-                HandleNonMatchingEntries(entry, xmlDataEntries.First());
+                if(!NoDataMatcher) HandleNonMatchingEntries(entry, xmlDataEntries.First());
             }
 
             // Case 3: More than one match. This indicates a conflict that needs specific handling.
