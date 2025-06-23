@@ -72,7 +72,7 @@ public class BPtoPNCore
             logger?.Log("Finished matching entries.");
             logger?.Log("Updating BPEntries before saving.");
             logger?.Log("Updating PnEntries before saving.");
-            var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate).ToList();
+            var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate);
 
             logger?.Log("Saving lists.");
             //This sets us to one level up from where the code is 
@@ -107,14 +107,14 @@ public class BPtoPNCore
         var sourcePath = Path.Combine(directory, saveLocation);
         var fileName = Path.GetFileName(saveLocation);
         int count = 0;
-        
+
         if (Directory.GetFiles(directory).Any(x => x.Contains($"{fileName}")))
         {
             count = Directory.GetFiles(directory).Count(x => x.Contains($"{fileName}")) + 1;
         }
 
         var countText = count > 0 ? $" ({count})" : "";
-        
+
         var zipPath = Path.Combine(directory, $"{saveLocation}{countText}.zip");
 
         Console.WriteLine($"Zipping files from {sourcePath} to {zipPath}");
@@ -193,7 +193,6 @@ public class BPtoPNCore
             dirs = Directory.GetDirectories(directory + "/../");
             if (dirs.Contains(directory + "/../BPtoPNLogs"))
             {
-                
                 if (dirs.Contains(saveLocation + "/BPtoPNLogs"))
                 {
                     var count = dirs.Count(x => x.Contains(saveLocation + "/BPtoPNLogs/")) + 1;
@@ -204,25 +203,22 @@ public class BPtoPNCore
                 else
                 {
                     Directory.Move(directory + "/../BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
-
                 }
             }
         }
         else
         {
             dirs = Directory.GetDirectories(saveLocation);
-            if (dirs.Any(x => x.Contains( "BPtoPNLogs")))
+            if (dirs.Any(x => x.Contains("BPtoPNLogs")))
             {
-                var count = dirs.Count(x => x.Contains(saveLocation + "/BPtoPNLogs")) +1;
+                var count = dirs.Count(x => x.Contains("BPtoPNLogs")) + 1;
                 var tempEndDir = Path.Combine(saveLocation, $"BPtoPNLogs ({count})/");
                 Directory.Move(directory + "/BPtoPNLogs", tempEndDir);
             }
             else
             {
                 Directory.Move(directory + "/BPtoPNLogs", $"{saveLocation}/BPtoPNLogs");
-
             }
-            
         }
     }
 
@@ -231,7 +227,8 @@ public class BPtoPNCore
     /// </summary>
     /// <param name="pnEntriesNeedingUpdates">List of update details for PN entries.</param>
     /// <returns>An enumerable of updated XMLDataEntry objects.</returns>
-    private static IEnumerable<XmlDocument> UpdatePnEntries(List<UpdateDetail<XMLDataEntry>> pnEntriesNeedingUpdates)
+    private static Dictionary<string, XmlDocument> UpdatePnEntries(
+        List<UpdateDetail<XMLDataEntry>> pnEntriesNeedingUpdates)
     {
         logger?.Log($"Fixing {pnEntriesNeedingUpdates.Count} PN Entries.");
         var fixedEntries = new List<XMLDataEntry>();
@@ -267,6 +264,7 @@ public class BPtoPNCore
                     break;
                 case "Resume":
                     fixedEntry.Resume = entry.NewValue;
+                    fixedEntry.Note = entry.NewValue;
                     break;
                 case "SBandSEG":
                     fixedEntry.SBandSEG = entry.NewValue;
@@ -279,17 +277,17 @@ public class BPtoPNCore
             fixedEntries.Add(fixedEntry);
         }
 
-        var xmlDocments = new List<XmlDocument>();
+        var xmlDocments = new Dictionary<string, XmlDocument>();
 
         foreach (var entry in fixedEntries)
         {
             if (xmlDocments.Any(document =>
                 {
                     // Create namespace manager
-                    var nsManager = new XmlNamespaceManager(document.NameTable);
+                    var nsManager = new XmlNamespaceManager(document.Value.NameTable);
                     nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-                    var bpElement = document.SelectSingleNode("//tei:idno[@type='pi']", nsManager);
+                    var bpElement = document.Value.SelectSingleNode("//tei:idno[@type='pi']", nsManager);
                     if (bpElement != null && bpElement.InnerText == entry.PNNumber)
                     {
                         return true;
@@ -303,10 +301,10 @@ public class BPtoPNCore
                 var bpElement = xmlDocments.First(document =>
                 {
                     // Create namespace manager
-                    var nsManager = new XmlNamespaceManager(document.NameTable);
+                    var nsManager = new XmlNamespaceManager(document.Value.NameTable);
                     nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-                    var bpElement = document.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
+                    var bpElement = document.Value.SelectSingleNode("//tei:idno[@type='bp']", nsManager);
                     if (bpElement != null && bpElement.InnerText == entry.BPNumber)
                     {
                         return true;
@@ -317,79 +315,18 @@ public class BPtoPNCore
                     }
                 });
 
-                ChangeXmlDocument(entry, bpElement);
+                ChangeXmlDocument(entry, bpElement.Value);
             }
             else
             {
                 var xmlDocument = LoadAndChangeXmlDocument(entry);
-                xmlDocments.Add(xmlDocument);
+                xmlDocments.Add(entry.PNFileName, xmlDocument);
             }
         }
 
         return xmlDocments;
     }
 
-    /// <summary>
-    /// Updates BP entries based on the provided update details.
-    /// </summary>
-    /// <param name="bpEntriesNeedingUpdates">List of update details for BP entries.</param>
-    /// <returns>An enumerable of updated BPDataEntry objects.</returns>
-    private static IEnumerable<BPDataEntry> UpdateBpEntries(List<UpdateDetail<BPDataEntry>> bpEntriesNeedingUpdates)
-    {
-        logger?.LogProcessingInfo($"Correcting {bpEntriesNeedingUpdates.Count} Bp Entries.");
-        var fixedEntries = new List<BPDataEntry>();
-        foreach (var entry in bpEntriesNeedingUpdates)
-        {
-            logger?.LogProcessingInfo(
-                $"Fixed {entry.FieldName} on {entry.Entry.Title} from {entry.OldValue} to {entry.NewValue}");
-
-            var fixedEntry = entry.Entry;
-            // Using a switch statement for better readability and maintainability
-            switch (entry.FieldName)
-            {
-                case "BPNumber":
-                    fixedEntry.BPNumber = entry.NewValue;
-                    break;
-                case "CR":
-                    fixedEntry.CR = entry.NewValue;
-                    break;
-                case "Index":
-                    fixedEntry.Index = entry.NewValue;
-                    break;
-                case "IndexBis":
-                    fixedEntry.IndexBis = entry.NewValue;
-                    break;
-                case "Internet":
-                    fixedEntry.Internet = entry.NewValue;
-                    break;
-                case "Name":
-                    fixedEntry.Name = entry.NewValue;
-                    break;
-                case "No":
-                    fixedEntry.No = entry.NewValue;
-                    break;
-                case "Publication":
-                    fixedEntry.Publication = entry.NewValue;
-                    break;
-                case "Resume":
-                    fixedEntry.Resume = entry.NewValue;
-                    break;
-                case "SBandSEG":
-                    fixedEntry.SBandSEG = entry.NewValue;
-                    break;
-                case "Title":
-                    fixedEntry.Title = entry.NewValue;
-                    break;
-                case "Annee":
-                    fixedEntry.Annee = entry.NewValue;
-                    break;
-            }
-
-            fixedEntries.Add(fixedEntry);
-        }
-
-        return fixedEntries;
-    }
 
     /// <summary>
     /// Saves the compiled lists of BP, PN, and new XML entries to disk.
@@ -399,7 +336,7 @@ public class BPtoPNCore
     /// <param name="NewXmlEntriesToAdd">List of new XML entries to add.</param>
     /// <returns>The name of the folder where the data was saved.</returns>
     private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
-        List<XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd,
+        Dictionary<string, XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd,
         List<UpdateDetail<BPDataEntry>> SharedEntriesToLog, string basePath)
     {
         logger?.LogProcessingInfo("Creating paths for saving lists.");
@@ -408,18 +345,17 @@ public class BPtoPNCore
         var folderName = $"BpToPnOutput";
         var endDataFolder = Path.Combine(basePath, folderName);
         var bpEntryPath = Path.Combine(endDataFolder, "BPEntriesToUpdate");
-        var pnEntryPath = Path.Combine(endDataFolder, "PNEntriesToUpdate");
         var newXmlEntryPath = Path.Combine(endDataFolder, "NewXmlEntries");
         var sharedEntriesPath = Path.Combine(endDataFolder, "MinorDeviations");
 
         logger?.Log("Setting up directories for saving.");
-        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, pnEntryPath, newXmlEntryPath, sharedEntriesPath);
+        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, newXmlEntryPath, sharedEntriesPath);
 
         logger?.Log("Saving Bp Entries.");
         SaveBPEntries(BpEntriesToUpdate, bpEntryPath);
 
         logger?.Log("Saving Pn Entries.");
-        SavePNEntries(updatedPNEntries, pnEntryPath);
+        SavePNEntries(updatedPNEntries);
 
         logger?.Log("Saving XML of new entries.");
         SaveNewXMlFromBPEntries(NewXmlEntriesToAdd, newXmlEntryPath);
@@ -456,19 +392,17 @@ public class BPtoPNCore
     /// <param name="BPEntryPath">Path for BP entries to update.</param>
     /// <param name="PnEntryPath">Path for PN entries to update.</param>
     /// <param name="NewXmlEntryPath">Path for new XML entries.</param>
-    private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath, string PnEntryPath,
+    private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath,
         string NewXmlEntryPath, string SharedListPath)
     {
         logger?.LogProcessingInfo(
-            $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
-        Console.WriteLine($"Setting up saving directories [{BPEntryPath}, {PnEntryPath}, {NewXmlEntryPath}]");
+            $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {NewXmlEntryPath}]");
+        Console.WriteLine($"Setting up saving directories [{BPEntryPath},  {NewXmlEntryPath}]");
 
         logger?.LogProcessingInfo("Creating directory for saving.");
         Directory.CreateDirectory(EndDataFolder);
         logger?.LogProcessingInfo("Creating BPEntry To Update Folder.");
         Directory.CreateDirectory(BPEntryPath);
-        logger?.LogProcessingInfo("Creating PnEnties To Update Folder.");
-        Directory.CreateDirectory(PnEntryPath);
         logger?.LogProcessingInfo("Creating New Xml Entries for PN Folder.");
         Directory.CreateDirectory(NewXmlEntryPath);
         logger?.LogProcessingInfo("Creating New Shared Entries Folder.");
@@ -491,8 +425,8 @@ public class BPtoPNCore
             {
                 var title = newXml.Title.Replace("\"", "")
                     .Replace(":", "_")
-                    .Replace("\\","")
-                    .Replace("/","")
+                    .Replace("\\", "")
+                    .Replace("/", "")
                     .Replace(".", "_")
                     .Replace(" ", "_")
                     .Replace("&", "")
@@ -501,7 +435,7 @@ public class BPtoPNCore
                     .Replace(",", "")
                     .Replace("(", "")
                     .Replace(")", "")
-                    .Replace("=","")
+                    .Replace("=", "")
                     .Replace("'", "");
 
                 title = title.Substring(0, Math.Min(title.Length, 80));
@@ -538,27 +472,13 @@ public class BPtoPNCore
     /// </summary>
     /// <param name="xmlDocuments">List of XMLDataEntry objects to be saved as XML.</param>
     /// <param name="path">The directory path where the XML files will be saved.</param>
-    private static void SavePNEntries(List<XmlDocument> xmlDocuments, string path)
+    private static void SavePNEntries(Dictionary<string, XmlDocument> xmlDocuments)
     {
         logger?.LogProcessingInfo("Saving PN Entries");
         Console.WriteLine("Saving Pn Entries");
         foreach (var xmlDocument in xmlDocuments)
         {
-            var nsManager = new XmlNamespaceManager(xmlDocument.NameTable);
-            nsManager.AddNamespace("tei", "http://www.tei-c.org/ns/1.0");
-
-            var piNumb = xmlDocument.SelectSingleNode("//tei:idno[@type='pi']", nsManager);
-
-            var filePath = Path.Combine(path, $"{piNumb.InnerText}.xml")
-                .Replace("\"", "")
-                .Replace(":", ".")
-                .Replace(",", "");
-            Console.WriteLine($"Saving {piNumb.InnerText} to {filePath}");
-            logger.LogProcessingInfo($"Saving  {piNumb.InnerText} to {filePath}");
-            WritePNEntry(xmlDocument, filePath);
-            // Assuming WriteEntry can handle XMLDataEntry or there's an overload
-            // For now, casting to BPDataEntry if ToXML() is common, or create a new WriteEntry for XMLDataEntry
-            // For this example, assuming XMLDataEntry has a ToXML() method similar to BPDataEntry
+            WritePNEntry(xmlDocument.Value, xmlDocument.Key);
         }
     }
 
@@ -613,14 +533,6 @@ public class BPtoPNCore
                 Directory.CreateDirectory(directory);
             }
 
-            // If file exists, append (2) to filename
-            if (File.Exists(path))
-            {
-                var filenameWithoutExt = Path.GetFileNameWithoutExtension(path);
-                var ext = Path.GetExtension(path);
-                var newFilename = filenameWithoutExt + " (2)" + ext;
-                if (directory != null) path = Path.Combine(directory, newFilename);
-            }
 
             using var writer = new XmlTextWriter(path, Encoding.UTF8)
             {
@@ -666,6 +578,7 @@ public class BPtoPNCore
         var sbandSeg = root?.SelectSingleNode("//tei:seg[@subtype='sbSeg']", nsManager);
         var cr = root?.SelectSingleNode("//tei:seg[@subtype='cr']", nsManager);
         var internet = root?.SelectSingleNode("//tei:seg[@subtype='internet']", nsManager);
+        var note = root?.SelectSingleNode("//tei:note[@resp='#BP']", nsManager);
 
         if (bpElement != null && entry.HasBPNum)
         {
@@ -686,6 +599,30 @@ public class BPtoPNCore
 
             // Insert as first child of root element
             root?.AppendChild(newBpElement);
+        }
+
+        logger?.LogProcessingInfo("Checking if note exists");
+        if (note != null && entry.HasResume)
+        {
+            logger?.LogProcessingInfo($"There is a note, updating it to contain: {entry.Resume}");
+            note.InnerText = entry.Resume ?? "[none]";
+        }
+        else if (note == null & entry.HasResume)
+        {
+            logger.LogProcessingInfo($"There was no note. Creating a new note and inserting {entry.Resume}");
+            // Create new seg element with TEI namespace 
+            var newNameElement = xmlDocument.CreateElement("note", "http://www.tei-c.org/ns/1.0");
+
+            // Set resp attribute
+            var respAttr = xmlDocument.CreateAttribute("resp");
+            respAttr.Value = "#BP";
+            newNameElement.Attributes.Append(respAttr);
+
+            // Set name text
+            newNameElement.InnerText = entry.Resume ?? "[none]";
+
+            // Insert as first child of root element
+            root?.AppendChild(newNameElement);
         }
 
 
@@ -1078,12 +1015,13 @@ public class BPtoPNCore
             );
             bpStartNumberOption.AddAlias("-bps"); // Add alias using AddAlias method
             bpStartNumberOption.AddAlias("-b"); // Add alias using AddAlias method
-            
+
             var noDataMatcher = new Option<bool>(
                 name: "--no-data-matcher",
                 getDefaultValue: () => RunDataMatcher,
-                description: "Disables the data matcher ui, basically just running a count without having the user do anything"
-                );
+                description:
+                "Disables the data matcher ui, basically just running a count without having the user do anything"
+            );
 
             var bpEndNumberOption = new Option<int>(
                 name: "--bp-end-number",
@@ -1247,11 +1185,3 @@ public class BPtoPNCore
 //DO not rename when there are duplicate BP idno, for those wonesones call them 
 //Duplicate Bp number is a different than a situation where the BP is right and need to overwrite something in papyri
 // put something in the file name to make sure if they 
-
-
-
-/*
-
-
-
-*/

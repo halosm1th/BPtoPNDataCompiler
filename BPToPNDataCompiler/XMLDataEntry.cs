@@ -14,6 +14,8 @@ public class XMLDataEntry : BPDataEntry
     public new string No => BPNumber ?? "0000-0000";
 
 
+    public string Note { get; set; }
+
     public string PNFileName { get; set; }
     public string? PNNumber { get; set; }
 
