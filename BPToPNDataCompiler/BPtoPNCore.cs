@@ -651,7 +651,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -686,7 +686,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -721,7 +721,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -756,7 +756,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -786,7 +786,7 @@ public class BPtoPNCore
 
             // Set subtype attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set resp attribute
@@ -835,7 +835,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set resp attribute
@@ -875,7 +875,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -910,7 +910,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -945,7 +945,7 @@ public class BPtoPNCore
 
             // Set type attribute
             var type = xmlDocument.CreateAttribute("type");
-            subtypeAttr.Value = "original";
+            type.Value = "original";
             newNameElement.Attributes.Append(type);
 
             // Set name text
@@ -1179,9 +1179,3 @@ public class BPtoPNCore
 
     #endregion
 }
-
-//todo CREATE MINOR DIVATIONS
-//And if shared, that means both are right, change that to both are wrong.
-//DO not rename when there are duplicate BP idno, for those wonesones call them 
-//Duplicate Bp number is a different than a situation where the BP is right and need to overwrite something in papyri
-// put something in the file name to make sure if they 
