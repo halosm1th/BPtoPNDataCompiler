@@ -21,6 +21,7 @@ public class DataMatcherConflictUI
     public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
     public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
     public List<UpdateDetail<BPDataEntry>> SharedList { get; } = new List<UpdateDetail<BPDataEntry>>();
+    public List<(BPDataEntry, XMLDataEntry)> CREntriesToWorkWith { get; } = new List<(BPDataEntry, XMLDataEntry)>();
 
     private Logger? logger { get; }
 
@@ -322,6 +323,15 @@ public class DataMatcherConflictUI
                 $"Neither BP nor PN was chosen as correct for field '{fieldName}'. Any previous updates for this field have been removed.");
             Console.WriteLine(
                 $"Neither BP nor PN was chosen as correct for field '{fieldName}'. Any previous updates for this field have been removed.");
+        }
+
+
+        //this is the code for handling the special CR case 
+        if (choice == "B" && ((Comparisons) (rowNum - 1) == Comparisons.CrMatch) && bpEntry.HasCR)
+        {
+            logger.LogProcessingInfo(
+                $"{bpEntry.BPNumber} had its CR value marked as correct, so it has been added to the list of CR values to check again.");
+            CREntriesToWorkWith.Add((bpEntry, xmlEntry));
         }
     }
 

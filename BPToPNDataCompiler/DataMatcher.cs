@@ -16,6 +16,8 @@ namespace BPtoPNDataCompiler
         private int matchMenu = 0;
         private int multipleMatches = 0;
         private int newXmlEntriesAdded = 0;
+
+        public bool NoDataMatcher = false;
         private int noMatch = 0;
         private int perfectMatch = 0;
         private int pnEntriesUpdated = 0;
@@ -40,8 +42,6 @@ namespace BPtoPNDataCompiler
             ;
         }
 
-        public bool NoDataMatcher = false;
-
         private bool ShouldCompareNames { get; set; }
 
         private Logger? logger { get; }
@@ -54,6 +54,8 @@ namespace BPtoPNDataCompiler
         public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
         public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
         public List<UpdateDetail<BPDataEntry>> SharedEntriesToLog { get; } = new List<UpdateDetail<BPDataEntry>>();
+
+        public List<(BPDataEntry, XMLDataEntry)> CREntriesToUpdate { get; } = new List<(BPDataEntry, XMLDataEntry)>();
 
         private List<XMLDataEntry> XmlEntries { get; set; }
         private List<BPDataEntry> BpEntries { get; set; }
@@ -174,7 +176,7 @@ namespace BPtoPNDataCompiler
                 logger?.LogProcessingInfo("Found editable match. Launching conflict resolution UI.");
                 logger?.Log("Found editable match. Launching conflict resolution UI.");
                 matchMenu++;
-                if(!NoDataMatcher) HandleNonMatchingEntries(entry, xmlDataEntries.First());
+                if (!NoDataMatcher) HandleNonMatchingEntries(entry, xmlDataEntries.First());
             }
 
             // Case 3: More than one match. This indicates a conflict that needs specific handling.
@@ -291,6 +293,7 @@ namespace BPtoPNDataCompiler
             SharedEntriesToLog.AddRange(MUIShared);
             BpEntriesToUpdate.AddRange(mUiBP);
             PnEntriesToUpdate.AddRange(mUiPN);
+            CREntriesToUpdate.AddRange(matcherUI.CREntriesToWorkWith);
         }
     }
 }
