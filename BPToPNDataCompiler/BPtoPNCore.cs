@@ -63,6 +63,7 @@ public class BPtoPNCore
             Console.Write("Preparing to start data matcher. ");
             logger?.Log("Creating Datamatcher");
             var dm = new DataMatcher(xmlEntries, bpEntries, logger, ShouldCompareName, RunDataMatcher);
+            var parser = new CRReviewParser(logger, xmlEntries, startingPath);
 
             Console.WriteLine("Starting to match entries?");
             logger?.Log("Starting to match entries");
@@ -73,28 +74,50 @@ public class BPtoPNCore
             logger?.Log("Updating BPEntries before saving.");
             logger?.Log("Updating PnEntries before saving.");
             var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate);
+            var lastPNAsString = xmlEntries.OrderByDescending(x => x.PNNumber).First().PNNumber;
+            int lastPN = -1;
 
-            logger?.Log("Saving lists.");
-            //This sets us to one level up from where the code is 
-            currentPath = Directory.GetCurrentDirectory();
-            var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd, dm.SharedEntriesToLog,
-                currentPath);
-            logger?.Log("Finished saving lists. ");
+            if (!Int32.TryParse(lastPNAsString, out lastPN))
+            {
+                Console.WriteLine($"There was an error parsing the last PN number! {lastPNAsString}.\nExiting");
+                logger.Log($"There was an error parsing the last PN Number! {lastPNAsString}");
+            }
+            else
+            {
+                logger.Log("Setting up CREntryParsing.");
+                var CREntries = ParseCRReviews(parser, lastPN, dm.CREntriesToUpdate);
+                logger.Log("Getting last PN Number");
 
-            logger?.Log(
-                "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
-            Console.WriteLine(
-                "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
-            logger?.Dispose();
-            MoveBPXMLAndLogs(saveLocation);
-            ZipDataDeleteWorkingDirs(saveLocation);
-            Console.WriteLine("Finished saving lists.\nPress enter to exit...");
-            Console.ReadLine();
+
+                logger?.Log("Saving lists.");
+                //This sets us to one level up from where the code is 
+                currentPath = Directory.GetCurrentDirectory();
+                var saveLocation = SaveLists(dm.BpEntriesToUpdate, PnEntries, dm.NewXmlEntriesToAdd,
+                    dm.SharedEntriesToLog, CREntries, parser, currentPath);
+                logger?.Log("Finished saving lists. ");
+
+                logger?.Log(
+                    "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
+                Console.WriteLine(
+                    "Finshied saving lists. Logger will dispose of self to allow the moving of BPXMLData to folder and BPtoPNLogs folder to final folder, then Will zip files, and then delete working areas.");
+                logger?.Dispose();
+                MoveBPXMLAndLogs(saveLocation);
+                ZipDataDeleteWorkingDirs(saveLocation);
+                Console.WriteLine("Finished saving lists.\nPress enter to exit...");
+                Console.ReadLine();
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+    }
+
+    private static List<CRReviewData> ParseCRReviews(CRReviewParser parser, int lastPN,
+        List<(BPDataEntry, XMLDataEntry)> dmCrEntriesToUpdate)
+    {
+        logger.Log("Starting CR Review parser");
+        return parser.ParseReviews(dmCrEntriesToUpdate, lastPN);
     }
 
     /// <summary>
@@ -337,7 +360,8 @@ public class BPtoPNCore
     /// <returns>The name of the folder where the data was saved.</returns>
     private static string SaveLists(List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate,
         Dictionary<string, XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd,
-        List<UpdateDetail<BPDataEntry>> SharedEntriesToLog, string basePath)
+        List<UpdateDetail<BPDataEntry>> SharedEntriesToLog, List<CRReviewData> CREntries, CRReviewParser parser,
+        string basePath)
     {
         logger?.LogProcessingInfo("Creating paths for saving lists.");
 
@@ -347,9 +371,10 @@ public class BPtoPNCore
         var bpEntryPath = Path.Combine(endDataFolder, "BPEntriesToUpdate");
         var newXmlEntryPath = Path.Combine(endDataFolder, "NewXmlEntries");
         var sharedEntriesPath = Path.Combine(endDataFolder, "MinorDeviations");
+        var CREntriesPath = Path.Combine(endDataFolder, "CREntries");
 
         logger?.Log("Setting up directories for saving.");
-        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, newXmlEntryPath, sharedEntriesPath);
+        SetupDirectoriesForSaving(endDataFolder, bpEntryPath, newXmlEntryPath, CREntriesPath, sharedEntriesPath);
 
         logger?.Log("Saving Bp Entries.");
         SaveBPEntries(BpEntriesToUpdate, bpEntryPath);
@@ -363,7 +388,15 @@ public class BPtoPNCore
         logger?.Log("Saving Minor Deviations");
         SaveMinorDeviations(SharedEntriesToLog, sharedEntriesPath);
 
+        logger?.Log("Saving CR Entries");
+        SaveCREntries(CREntries, parser, CREntriesPath);
+
         return endDataFolder;
+    }
+
+    private static void SaveCREntries(List<CRReviewData> crEntries, CRReviewParser parser, string crEntriesPath)
+    {
+        parser.SaveCRReviews(crEntries, crEntriesPath);
     }
 
     private static void SaveMinorDeviations(List<UpdateDetail<BPDataEntry>> sharedEntriesToLog,
@@ -393,7 +426,7 @@ public class BPtoPNCore
     /// <param name="PnEntryPath">Path for PN entries to update.</param>
     /// <param name="NewXmlEntryPath">Path for new XML entries.</param>
     private static void SetupDirectoriesForSaving(string EndDataFolder, string BPEntryPath,
-        string NewXmlEntryPath, string SharedListPath)
+        string NewXmlEntryPath, string CRPath, string SharedListPath)
     {
         logger?.LogProcessingInfo(
             $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {NewXmlEntryPath}]");
@@ -407,6 +440,8 @@ public class BPtoPNCore
         Directory.CreateDirectory(NewXmlEntryPath);
         logger?.LogProcessingInfo("Creating New Shared Entries Folder.");
         Directory.CreateDirectory(SharedListPath);
+        logger?.LogProcessingInfo("Creating New CR Entries Folder.");
+        Directory.CreateDirectory(CRPath);
     }
 
     /// <summary>
@@ -1087,8 +1122,18 @@ public class BPtoPNCore
                 logger.Log($"Start Year: {startYear}, End Year: {endYear}");
                 logger.Log($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}");
 
-                // If all validations pass, proceed with the core application logic
-                Core();
+                Console.WriteLine("Have you pulled the latest version of IDP_DATA? (y/n)");
+                var input = Console.ReadLine().ToLower();
+                if (input == "y")
+                {
+                    // If all validations pass, proceed with the core application logic
+                    Core();
+                }
+                else
+                {
+                    Console.WriteLine("If you don't have the most up to date info, this program should not run. " +
+                                      "Please git pull for the newest info and then run me.");
+                }
             });
 
 

@@ -31,15 +31,16 @@ public class XMLEntryGatherer
     public string BiblioPath { get; set; }
     private Logger? logger { get; }
 
-    private XMLDataEntry GetEntry(string filePath)
+    public XMLDataEntry GetEntry(string filePath)
     {
         //logger.LogProcessingInfo($"Getting entry at {filePath}");
         var entry = new XMLDataEntry(filePath, logger);
         var doc = new XmlDocument();
+
+        //Console.WriteLine($"getting: {filePath}");
         doc.Load(filePath);
         //logger.LogProcessingInfo("Entry loaded.");
 
-        //Console.WriteLine($"getting: {filePath}");
 
         if (doc?.DocumentElement?.ChildNodes != null)
             foreach (var rawNode in doc.DocumentElement.ChildNodes)
