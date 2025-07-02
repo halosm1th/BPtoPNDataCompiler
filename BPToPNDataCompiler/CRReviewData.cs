@@ -85,7 +85,7 @@ public class CRReviewData
                   <biblScope type="pp" from="{PageStart}" to="{PageEnd}">{PageStart}-{PageEnd}</biblScope>
                   <relatedItem type="appearsIn">
                       <bibl>
-                         <ptr target="https://papyri.info/biblio/{JournalID}"/>
+                         <ptr target="https://papyri.info/biblio/{JournalID.Replace(" ", "")}"/>
                          <!--ignore - start, i.e. SoSOL users may not edit this-->
                          <!--ignore - stop-->
                       </bibl>
