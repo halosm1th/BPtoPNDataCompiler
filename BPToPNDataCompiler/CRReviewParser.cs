@@ -6,11 +6,14 @@ namespace BPtoPNDataCompiler;
 
 public class CRReviewParser
 {
-    public CRReviewParser(Logger _logger, List<XMLDataEntry> _entries)
+    public CRReviewParser(Logger _logger, List<XMLDataEntry> _entries, string StartingPath)
     {
         logger = _logger;
         PNEntries = _entries;
+        PathToJournalCSV = StartingPath;
     }
+
+    private string PathToJournalCSV { get; set; }
 
     private Logger logger { get; set; }
     private List<XMLDataEntry> PNEntries { get; set; }
@@ -23,11 +26,11 @@ public class CRReviewParser
         var currentPN = lastPN + 1;
         foreach (var entry in CREntries)
         {
-            var result = ParseEntry(entry, currentPN);
-            logger.LogProcessingInfo($"finished processing entry, returned: {result.IDNumber}");
+            var results = ParseEntry(entry, currentPN);
+            logger.LogProcessingInfo($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
 
-            Console.WriteLine($"finished processing entry, returned: {result.IDNumber}");
-            currentPN++;
+            Console.WriteLine($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
+            returnList.AddRange(results);
         }
 
 
@@ -35,10 +38,10 @@ public class CRReviewParser
         return returnList;
     }
 
-    private CRReviewData ParseEntry((BPDataEntry, XMLDataEntry) entryPath, int currentPN)
+    private List<CRReviewData> ParseEntry((BPDataEntry, XMLDataEntry) entryPath, int currentPN)
     {
         var CR = entryPath.Item1.CR;
-        var pageRanges = GetPagesRangesfromCR(CR);
+        var pageRanges = GetPagesRangesfromCR(CR, entryPath.Item2.PNNumber);
 
         var URlsForReviwsOfXml = GetReviews(entryPath.Item2);
         var reviewEntries = GetEntriesFromURLs(URlsForReviwsOfXml);
@@ -47,27 +50,31 @@ public class CRReviewParser
         var entriesNotInXML = GetNewEntries(entriesWithoutReviews, PNEntries);
         var formattedNewEntries = CreateEntriesFromCR(entriesNotInXML, currentPN);
 
+        return formattedNewEntries;
         throw new NotImplementedException();
     }
 
-    private List<CRReviewData> CreateEntriesFromCR(List<(string year, string pageRange, string cr)> entriesNotInXml,
+    private List<CRReviewData> CreateEntriesFromCR(
+        List<(string year, string pageRange, string cr, string articleReviewed)> entriesNotInXml,
         int nextNumb)
     {
         var results = new List<CRReviewData>();
         foreach (var entry in entriesNotInXml)
         {
-            results.Add(new CRReviewData(entry.pageRange, entry.year, entry.cr, nextNumb.ToString()));
+            results.Add(new CRReviewData(entry.pageRange, entry.year, entry.cr, nextNumb.ToString(), PathToJournalCSV,
+                entry.articleReviewed));
             nextNumb++;
         }
 
         return results;
     }
 
-    private List<(string year, string pageRange, string CR)> GetNewEntries(
-        List<(string year, string pageRange, string CR)> pageRanges, List<XMLDataEntry> reviewEntries)
+    private List<(string year, string pageRange, string CR, string articleReviewed)> GetNewEntries(
+        List<(string year, string pageRange, string CR, string articleReviewed)> pageRanges,
+        List<XMLDataEntry> reviewEntries)
     {
         var entryMatches = new List<(string cr, XMLDataEntry match)>();
-        var noMatch = new List<(string year, string pageRange, string cr)>();
+        var noMatch = new List<(string year, string pageRange, string cr, string articleReviewed)>();
 
         foreach (var pageRange in pageRanges)
         {
@@ -99,9 +106,10 @@ public class CRReviewParser
         return noMatch;
     }
 
-    private List<(string year, string pageRange, string cr)> GetPagesRangesfromCR(string? cr)
+    private List<(string year, string pageRange, string cr, string articleReviewed)> GetPagesRangesfromCR(string? cr,
+        string src)
     {
-        var pageRanges = new List<(string year, string range, string cr)>();
+        var pageRanges = new List<(string year, string range, string cr, string articleReviewed)>();
         cr = cr.Replace("C.R. par ", "");
         cr = cr.Replace("C.R. ", "");
 
@@ -115,7 +123,7 @@ public class CRReviewParser
             var year = yearRegex.Match(part);
             var pagesWithPP = pageWithPPRegex.Match(part);
             var pages = pageRegex.Match(pagesWithPP.Value);
-            pageRanges.Add((year.Value, pages.Value, part));
+            pageRanges.Add((year.Value, pages.Value, part, src));
         }
 
         return pageRanges;
@@ -202,7 +210,6 @@ public class CRReviewParser
             Console.WriteLine($"Saving {entry.IDNumber} to {crEntry}");
             logger?.LogProcessingInfo($"Saving {entry.IDNumber} to {crEntry}");
 
-            if (File.Exists(crEntry)) crEntry = crEntry.Replace(".xml", " (2).xml");
             File.WriteAllText(crEntry, entry.ToString());
         }
     }

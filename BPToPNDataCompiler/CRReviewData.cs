@@ -4,18 +4,20 @@ namespace BPtoPNDataCompiler;
 
 public class CRReviewData
 {
-    public CRReviewData(string pageRange, string year, string cr, string idNumber)
+    public CRReviewData(string pageRange, string year, string cr, string idNumber, string startingPathToCsVv,
+        string articleReviewing)
     {
         //Thomas Schmidt, MusHelv 68 (2011) pp. 232-233.
         //Lajos Berkes, Gnomon 85 (2013) pp. 464-466.
         IDNumber = idNumber;
-
+        startingPath = startingPathToCsVv;
+        CRData = cr;
 
         var name = cr.Split(",")[0];
         var nameParts = name.Split(" ");
         Forename = nameParts[0];
         var lastName = "";
-        for (int i = 0; i < nameParts.Length; i++)
+        for (int i = 1; i < nameParts.Length; i++)
         {
             lastName += nameParts[i] + " ";
         }
@@ -30,39 +32,43 @@ public class CRReviewData
         var issueMatch = issueRegex.Match(cr);
         Issue = issueMatch.Value;
 
-        var journal = pages[^1];
+        var journal = cr.Split(",")[^1];
         journal = journal.Split(year)[0].Replace("(", "");
         journal = journal.Replace(Issue, "").Trim();
 
         JournalID = GetJournalID(journal);
+
+        AppearsInID = articleReviewing;
     }
 
-    public CRReviewData(string idNumber, string forename, string lastname, string issue, string bpNumber, string date,
-        string pageStart, string pageEnd)
-    {
-        IDNumber = idNumber;
-        Forename = forename;
-        Lastname = lastname;
-        Issue = issue;
-        BPNumber = bpNumber;
-        Date = date;
-        PageStart = pageStart;
-        PageEnd = pageEnd;
-    }
+    private string startingPath { get; set; }
+
 
     public string IDNumber { get; } = "[NONE]";
     public string Forename { get; } = "[NONE]";
     public string Lastname { get; } = "[NONE]";
     public string Issue { get; } = "[NONE]";
     public string JournalID { get; } = "[NONE]";
-    public string Jounral { get; } = "[NONE]";
-    public string BPNumber { get; } = "[NONE]";
+    public string AppearsInID { get; } = "[NONE]";
+    public string CRData { get; } = "[NONE]";
     public string Date { get; } = "[NONE]";
     public string PageStart { get; } = "[NONE]";
     public string PageEnd { get; } = "[NONE]";
 
     private string GetJournalID(string journal)
     {
+        var file = File.ReadAllLines(startingPath + "/PN_Journal_IDs.csv");
+        var listOFJournals = new Dictionary<string, string>();
+        foreach (var line in file)
+        {
+            var text = line.Split(',');
+            if (!listOFJournals.ContainsKey(text[0])) listOFJournals.Add(text[0], text[1]);
+        }
+
+        var id = listOFJournals[journal];
+
+        return id;
+
         throw new NotImplementedException();
     }
 
@@ -87,13 +93,13 @@ public class CRReviewData
                   <biblScope type="issue">{Issue}</biblScope>
                   <relatedItem type="reviews" n="1">
                       <bibl>
-                         <ptr target="https://papyri.info/biblio/{IDNumber}"/>
+                         <ptr target="https://papyri.info/biblio/{AppearsInID}"/>
                          <!--ignore - start, i.e. SoSOL users may not edit this-->
                          <!--ignore - stop-->
                       </bibl>
                   </relatedItem>
                   <idno type="pi">{IDNumber}</idno>
-                  <seg type="original" subtype="cr" resp="#BP">{BPNumber}</seg>
+                  <seg type="original" subtype="cr" resp="#BP">{CRData}</seg>
                 </bibl>
                 """;
     }

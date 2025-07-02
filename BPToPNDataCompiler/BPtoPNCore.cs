@@ -63,7 +63,7 @@ public class BPtoPNCore
             Console.Write("Preparing to start data matcher. ");
             logger?.Log("Creating Datamatcher");
             var dm = new DataMatcher(xmlEntries, bpEntries, logger, ShouldCompareName, RunDataMatcher);
-            var parser = new CRReviewParser(logger, xmlEntries);
+            var parser = new CRReviewParser(logger, xmlEntries, startingPath);
 
             Console.WriteLine("Starting to match entries?");
             logger?.Log("Starting to match entries");
@@ -388,6 +388,7 @@ public class BPtoPNCore
         logger?.Log("Saving Minor Deviations");
         SaveMinorDeviations(SharedEntriesToLog, sharedEntriesPath);
 
+        logger?.Log("Saving CR Entries");
         SaveCREntries(CREntries, parser, CREntriesPath);
 
         return endDataFolder;
