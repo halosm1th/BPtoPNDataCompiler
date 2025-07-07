@@ -72,9 +72,7 @@ public class BPtoPNCore
             Console.WriteLine("Done matching entries. Now saving lists.");
             logger?.Log("Finished matching entries.");
             logger?.Log("Updating BPEntries before saving.");
-            logger?.Log("Updating PnEntries before saving.");
-            var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate);
-            var lastPNAsString = xmlEntries.OrderByDescending(x => x.PNNumber).First().PNNumber;
+            var lastPNAsString = GetLastPN(xmlEntries);
             int lastPN = -1;
 
             if (!Int32.TryParse(lastPNAsString, out lastPN))
@@ -88,6 +86,9 @@ public class BPtoPNCore
                 var CREntries = ParseCRReviews(parser, lastPN, dm.CREntriesToUpdate);
                 logger.Log("Getting last PN Number");
 
+
+                logger?.Log("Updating PnEntries before saving.");
+                var PnEntries = UpdatePnEntries(dm.PnEntriesToUpdate);
 
                 logger?.Log("Saving lists.");
                 //This sets us to one level up from where the code is 
@@ -111,6 +112,22 @@ public class BPtoPNCore
         {
             Console.WriteLine(e);
         }
+    }
+
+    private static string? GetLastPN(List<XMLDataEntry> xmlEntries)
+    {
+        var entries = xmlEntries.OrderBy(x => x.PNNumber);
+
+        var largestPN = 0;
+        foreach (var entry in entries)
+        {
+            if (Int32.TryParse(entry.PNNumber, out int numb))
+            {
+                if (numb > largestPN) largestPN = numb;
+            }
+        }
+
+        return Convert.ToString(largestPN);
     }
 
     private static List<CRReviewData> ParseCRReviews(CRReviewParser parser, int lastPN,
@@ -262,37 +279,37 @@ public class BPtoPNCore
 
             var fixedEntry = entry.Entry;
             // Using a switch statement for better readability and maintainability
-            switch (entry.FieldName)
+            switch (entry.FieldName.ToLower())
             {
-                case "BPNumber":
+                case "bpnumber":
                     fixedEntry.BPNumber = entry.NewValue;
                     break;
-                case "CR":
+                case "cr":
                     fixedEntry.CR = entry.NewValue;
                     break;
-                case "Index":
+                case "index":
                     fixedEntry.Index = entry.NewValue;
                     break;
-                case "IndexBis":
+                case "indexbis":
                     fixedEntry.IndexBis = entry.NewValue;
                     break;
-                case "Internet":
+                case "internet":
                     fixedEntry.Internet = entry.NewValue;
                     break;
-                case "Name":
+                case "name":
                     fixedEntry.Name = entry.NewValue;
                     break;
-                case "Publication":
+                case "publication":
                     fixedEntry.Publication = entry.NewValue;
                     break;
-                case "Resume":
+                case "resume":
                     fixedEntry.Resume = entry.NewValue;
                     fixedEntry.Note = entry.NewValue;
                     break;
-                case "SBandSEG":
+                case "sbandseg":
                     fixedEntry.SBandSEG = entry.NewValue;
                     break;
-                case "Title":
+                case "title":
                     fixedEntry.Title = entry.NewValue;
                     break;
             }
