@@ -1,11 +1,12 @@
 ﻿using System.Text.RegularExpressions;
+using DefaultNamespace;
 
 namespace BPtoPNDataCompiler;
 
 public class CRReviewData
 {
     public CRReviewData(string pageRange, string year, string cr, string idNumber, string startingPathToCsVv,
-        string articleReviewing)
+        string articleReviewing, Logger _logger)
     {
         //Thomas Schmidt, MusHelv 68 (2011) pp. 232-233.
         //Lajos Berkes, Gnomon 85 (2013) pp. 464-466.
@@ -38,8 +39,19 @@ public class CRReviewData
 
         JournalID = GetJournalID(journal);
 
+        if (journal == "-1")
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"The reviews for {articleReviewing} may need to be created manually");
+            Console.ResetColor();
+            logger.Log($"The reviews for {articleReviewing} may need to be created manually");
+        }
+
         AppearsInID = articleReviewing;
+        logger = _logger;
     }
+
+    private Logger logger { get; }
 
     private string startingPath { get; set; }
 
@@ -57,17 +69,28 @@ public class CRReviewData
 
     private string GetJournalID(string journal)
     {
-        var file = File.ReadAllLines(startingPath + "/PN_Journal_IDs.csv");
-        var listOFJournals = new Dictionary<string, string>();
-        foreach (var line in file)
+        try
         {
-            var text = line.Split(',');
-            if (!listOFJournals.ContainsKey(text[0])) listOFJournals.Add(text[0], text[1]);
+            var file = File.ReadAllLines(startingPath + "/PN_Journal_IDs.csv");
+            var listOFJournals = new Dictionary<string, string>();
+            foreach (var line in file)
+            {
+                var text = line.Split(',');
+                if (!listOFJournals.ContainsKey(text[0])) listOFJournals.Add(text[0], text[1]);
+            }
+
+            var id = listOFJournals[journal];
+
+            return id;
         }
-
-        var id = listOFJournals[journal];
-
-        return id;
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Could not find a journal to match {journal}. Threw error: {e}");
+            logger.LogProcessingInfo($"Could not find a journal to match {journal}. Threw error: {e}");
+            Console.ResetColor();
+            return "-1";
+        }
 
         throw new NotImplementedException();
     }

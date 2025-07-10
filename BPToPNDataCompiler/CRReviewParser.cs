@@ -22,19 +22,30 @@ public class CRReviewParser
     {
         logger.LogProcessingInfo($"Starting to parse {CREntries.Count} reviews.");
         var returnList = new List<CRReviewData>();
-
-        var currentPN = lastPN + 1;
-        foreach (var entry in CREntries)
+        try
         {
-            var results = ParseEntry(entry, currentPN);
-            logger.LogProcessingInfo($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
+            var currentPN = lastPN + 1;
+            foreach (var entry in CREntries)
+            {
+                var results = ParseEntry(entry, currentPN);
+                logger.LogProcessingInfo(
+                    $"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
 
-            Console.WriteLine($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
-            returnList.AddRange(results);
+                Console.WriteLine($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
+                returnList.AddRange(results);
+            }
+
+
+            logger.LogProcessingInfo($"Finished processing reviews, there are {returnList.Count} new entries.");
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Ran into an error: {e}");
+            logger.LogError($"Ran into an error: {e}", e);
+            Console.ResetColor();
         }
 
-
-        logger.LogProcessingInfo($"Finished processing reviews, there are {returnList.Count} new entries.");
         return returnList;
     }
 
@@ -62,7 +73,7 @@ public class CRReviewParser
         foreach (var entry in entriesNotInXml)
         {
             results.Add(new CRReviewData(entry.pageRange, entry.year, entry.cr, nextNumb.ToString(), PathToJournalCSV,
-                entry.articleReviewed));
+                entry.articleReviewed, logger));
             nextNumb++;
         }
 
@@ -174,8 +185,8 @@ public class CRReviewParser
 
         if (ptrNodes.Count == 0)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Notice! Document {entryPathItem2.PNFileName} did not have any relatedItem nodes.");
+            Console.WriteLine($"Notice, Document {entryPathItem2.PNFileName} did not have any relatedItem nodes.");
+            logger.LogProcessingInfo($"Document {entryPathItem2.PNFileName} did not have any relatedItem nodes.");
             Console.ResetColor();
         }
 

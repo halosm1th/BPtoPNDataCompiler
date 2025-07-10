@@ -28,8 +28,8 @@ namespace BPtoPNDataCompiler
         /// </summary>
         /// <param name="xmlEntries">A list of XMLDataEntry objects to match against.</param>
         /// <param name="bpEntries">A list of BPDataEntry objects to be matched.</param>
-        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, Logger? logger,
-            bool shouldCompareNames = false, bool noDataMatcher = false)
+        public DataMatcher(List<XMLDataEntry> xmlEntries, List<BPDataEntry> bpEntries, string basePath,
+            Logger? logger, bool shouldCompareNames = false, bool noDataMatcher = false)
         {
             logger?.LogProcessingInfo(
                 $"Created Data Matcher with {xmlEntries.Count} xml entries and {bpEntries.Count} bp entries.");
@@ -39,23 +39,34 @@ namespace BPtoPNDataCompiler
             BpEntries = bpEntries;
             ShouldCompareNames = shouldCompareNames;
             NoDataMatcher = noDataMatcher;
-            ;
+            BasePath = basePath;
+            fileSaver = new FileSaver(BasePath, logger);
+            parser = new CRReviewParser(logger, xmlEntries, basePath);
         }
+
+        private string BasePath { get; }
+
+        private FileSaver fileSaver { get; }
+        private CRReviewParser parser { get; }
 
         private bool ShouldCompareNames { get; set; }
 
         private Logger? logger { get; }
 
         // Lists to store different categories of entries after matching process
-        public List<BPDataEntry> NewXmlEntriesToAdd { get; } = new List<BPDataEntry>();
+        public List<BPDataEntry> NewXmlEntriesToAdd { get; set; } = new List<BPDataEntry>();
 
         // Updated lists to store detailed update information using the UpdateDetail class
         // This allows tracking which entry, which field, its old value, and its new value.
-        public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; } = new List<UpdateDetail<BPDataEntry>>();
-        public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; } = new List<UpdateDetail<XMLDataEntry>>();
-        public List<UpdateDetail<BPDataEntry>> SharedEntriesToLog { get; } = new List<UpdateDetail<BPDataEntry>>();
+        public List<UpdateDetail<BPDataEntry>> BpEntriesToUpdate { get; set; } = new List<UpdateDetail<BPDataEntry>>();
 
-        public List<(BPDataEntry, XMLDataEntry)> CREntriesToUpdate { get; } = new List<(BPDataEntry, XMLDataEntry)>();
+        public List<UpdateDetail<XMLDataEntry>> PnEntriesToUpdate { get; set; } =
+            new List<UpdateDetail<XMLDataEntry>>();
+
+        public List<UpdateDetail<BPDataEntry>> SharedEntriesToLog { get; set; } = new List<UpdateDetail<BPDataEntry>>();
+
+        public List<(BPDataEntry, XMLDataEntry)> CREntriesToUpdate { get; set; } =
+            new List<(BPDataEntry, XMLDataEntry)>();
 
         private List<XMLDataEntry> XmlEntries { get; set; }
         private List<BPDataEntry> BpEntries { get; set; }
@@ -64,7 +75,7 @@ namespace BPtoPNDataCompiler
         /// Initiates the entry matching process.
         /// Iterates through BP entries and attempts to find corresponding XML entries.
         /// </summary>
-        public void MatchEntries()
+        public string MatchEntries()
         {
             Console.WriteLine("Starting Entry Checker");
             Console.WriteLine($"Checking: {BpEntries.Count} entries");
@@ -104,6 +115,8 @@ namespace BPtoPNDataCompiler
                 $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, {SharedEntriesUpdated} shared entries,and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
             Console.WriteLine(
                 $"Processed {BpEntries.Count}, resultling in: {bpEntriesUpdated} updates to BP entries, {pnEntriesUpdated} updates to PN entries, {SharedEntriesUpdated} shared entries,and {newXmlEntriesAdded} new XML entries. (perfect match: {perfectMatch}, no match: {noMatch}, multiple match: {multipleMatches}, match menu: {matchMenu})");
+
+            return fileSaver.EndDataFolder;
         }
 
 
@@ -241,6 +254,8 @@ namespace BPtoPNDataCompiler
                 sb.Append(sb.ToString());
 
                 Console.WriteLine(sbStart.ToString());
+
+                ParseCRUpdateAndSave();
             }
         }
 
@@ -287,13 +302,82 @@ namespace BPtoPNDataCompiler
             var mUiBP = matcherUI.BpEntriesToUpdate;
             var mUiPN = matcherUI.PnEntriesToUpdate;
             var MUIShared = matcherUI.SharedList;
+
             bpEntriesUpdated += mUiBP.Count;
             pnEntriesUpdated += mUiPN.Count;
             SharedEntriesUpdated += MUIShared.Count;
+
             SharedEntriesToLog.AddRange(MUIShared);
             BpEntriesToUpdate.AddRange(mUiBP);
             PnEntriesToUpdate.AddRange(mUiPN);
             CREntriesToUpdate.AddRange(matcherUI.CREntriesToWorkWith);
+
+            ParseCRUpdateAndSave();
+        }
+
+        private void ParseCRUpdateAndSave()
+        {
+            try
+            {
+                logger.Log("Saving entries");
+                var parser = new CRReviewParser(logger, XmlEntries, BasePath);
+
+                logger.Log("Setting up CREntryParsing.");
+                var updatedCrEntries = fileSaver.ParseCRReviews(parser, GetLastPN(), CREntriesToUpdate);
+                logger.Log("Getting last PN Number");
+
+
+                logger?.Log("Updating PnEntries before saving.");
+                var updatedPNEntries = fileSaver.UpdatePnEntries(PnEntriesToUpdate);
+
+                fileSaver.SaveLists(BpEntriesToUpdate, updatedPNEntries, NewXmlEntriesToAdd,
+                    SharedEntriesToLog, updatedCrEntries, parser);
+
+                BpEntriesToUpdate = new List<UpdateDetail<BPDataEntry>>();
+                NewXmlEntriesToAdd = new List<BPDataEntry>();
+                SharedEntriesToLog = new List<UpdateDetail<BPDataEntry>>();
+                CREntriesToUpdate = new List<(BPDataEntry, XMLDataEntry)>();
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e);
+                logger.LogError("There was an error parsing, Cr updating, or saving the file: ", e);
+                Console.ResetColor();
+            }
+        }
+
+        private int GetLastPN()
+        {
+            var lastPNAsString = GetLastPNText();
+            int lastPN = -1;
+
+            if (!Int32.TryParse(lastPNAsString, out lastPN))
+            {
+                Console.WriteLine($"There was an error parsing the last PN number! {lastPNAsString}.\nExiting");
+                logger.Log($"There was an error parsing the last PN Number! {lastPNAsString}");
+                return lastPN;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private string? GetLastPNText()
+        {
+            var entries = XmlEntries.OrderBy(x => x.PNNumber);
+
+            var largestPN = 0;
+            foreach (var entry in entries)
+            {
+                if (Int32.TryParse(entry.PNNumber, out int numb))
+                {
+                    if (numb > largestPN) largestPN = numb;
+                }
+            }
+
+            return Convert.ToString(largestPN);
         }
     }
 }
