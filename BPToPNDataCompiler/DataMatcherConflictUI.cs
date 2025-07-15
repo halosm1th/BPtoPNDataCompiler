@@ -239,8 +239,8 @@ public class DataMatcherConflictUI
                 pnValue = xmlEntry.Resume;
                 break;
             case Comparisons.SbandsegMatch:
-                bpValue = bpEntry.SBandSEG;
-                pnValue = xmlEntry.SBandSEG;
+                bpValue = bpEntry.sbSeg;
+                pnValue = xmlEntry.sbSeg;
                 break;
             case Comparisons.TitleMatch:
                 bpValue = bpEntry.Title;
@@ -554,8 +554,8 @@ public class DataMatcherConflictUI
                 entriesMatches[(int) Comparisons.ResumeMatch], selectedRow == 9,
                 _editedChoices.GetValueOrDefault(9) ?? string.Empty);
 
-        if (entry.HasSBandSEG || matchingEntry.HasSBandSEG)
-            PrintWrappedRow(10, "Segs", entry.SBandSEG, matchingEntry.SBandSEG,
+        if (entry.HasSbSeg || matchingEntry.HasSbSeg)
+            PrintWrappedRow(10, "Segs", entry.sbSeg, matchingEntry.sbSeg,
                 entriesMatches[(int) Comparisons.SbandsegMatch], selectedRow == 10,
                 _editedChoices.GetValueOrDefault(10) ?? string.Empty);
 
@@ -600,7 +600,7 @@ public class DataMatcherConflictUI
         matches[((int) Comparisons.ResumeMatch)] =
             (entry.HasResume && matchingEntry.HasResume) && (CheckEquals(entry.Resume, matchingEntry.Resume));
         matches[((int) Comparisons.SbandsegMatch)] =
-            (entry.HasSBandSEG && matchingEntry.HasSBandSEG) && (CheckEquals(entry.SBandSEG, matchingEntry.SBandSEG));
+            (entry.HasSbSeg && matchingEntry.HasSbSeg) && (CheckEquals(entry.sbSeg, matchingEntry.sbSeg));
         matches[((int) Comparisons.TitleMatch)] =
             (entry.HasTitle && matchingEntry.HasTitle) && (CheckEquals(entry.Title, matchingEntry.Title));
         matches[((int) Comparisons.AnneeMatch)] =

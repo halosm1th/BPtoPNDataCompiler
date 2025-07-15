@@ -18,7 +18,7 @@ public class XMLEntryGatherer
         {"seg:nom", (node, entry) => entry.Name = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
         {"seg:resume", (node, entry) => entry.Resume = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
         {"seg:internet", (node, entry) => entry.Internet = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:sbSeg", (node, entry) => entry.SBandSEG = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")}
+        {"seg:sbSeg", (node, entry) => entry.sbSeg = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")}
     };
 
     public XMLEntryGatherer(string path, Logger? logger)

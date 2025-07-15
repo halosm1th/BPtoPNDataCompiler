@@ -17,7 +17,7 @@ public class BPDataEntry
     private string? _no;
     private string? _publication;
     private string? _resume;
-    private string? _sbandseg;
+    private string? _sbSeg;
     private string? _title;
 
     //At a minimum all entries must have one number
@@ -69,13 +69,13 @@ public class BPDataEntry
 
     public bool HasInternet => _internet != null;
 
-    public string? SBandSEG
+    public string? sbSeg
     {
-        get => _sbandseg;
-        set => _sbandseg = ReplaceInvalidText(value);
+        get => _sbSeg;
+        set => _sbSeg = ReplaceInvalidText(value);
     }
 
-    public bool HasSBandSEG => _sbandseg != null;
+    public bool HasSbSeg => _sbSeg != null;
 
     public string? No
     {
@@ -150,7 +150,7 @@ public class BPDataEntry
     {
         return $"{Name ?? ""} {Internet ?? ""} {Publication ?? ""} " +
                $"{Resume ?? ""} {Title ?? ""} {Index ?? ""} {IndexBis ?? ""} " +
-               $"{No ?? ""} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
+               $"{No ?? ""} {CR ?? ""} {BPNumber ?? ""} {sbSeg ?? ""}";
     }
 
     public string ToXML()
@@ -160,8 +160,8 @@ public class BPDataEntry
         if (_index != null) sb.Append($"<seg type=\"original\" subtype=\"index\" resp=\"#BP\">{_index}</seg>\n");
         if (IndexBis != null) sb.Append($"<seg type=\"original\" subtype=\"indexBis\" resp=\"#BP\">{IndexBis}</seg>\n");
         if (_title != null) sb.Append($"<seg type=\"original\" subtype=\"titre\" resp=\"#BP\">{_title}</seg>\n");
-        if (SBandSEG != null) sb.Append($"<seg type=\"original\" subtype=\"SBandSeg\" resp=\"#BP\">{SBandSEG}</seg>\n");
-       // if (No != null) sb.Append($"<seg type=\"original\" subtype=\"No\" resp=\"#BP\">{No}</seg>\n");
+        if (sbSeg != null) sb.Append($"<seg type=\"original\" subtype=\"sbSeg\" resp=\"#BP\">{sbSeg}</seg>\n");
+        // if (No != null) sb.Append($"<seg type=\"original\" subtype=\"No\" resp=\"#BP\">{No}</seg>\n");
         if (_annee != null) sb.Append($"<seg type=\"original\" subtype=\"annee\" resp=\"#BP\">{_annee}</seg>\n");
         if (Publication != null)
             sb.Append($"<seg type=\"original\" subtype=\"publication\" resp=\"#BP\">{Publication}</seg>\n");
@@ -169,7 +169,7 @@ public class BPDataEntry
         if (CR != null) sb.Append($"<seg type=\"original\" subtype=\"cr\" resp=\"#BP\">{CR}</seg>\n");
         if (Name != null) sb.Append($"<seg type=\"original\" subtype=\"nom\" resp=\"#BP\">{Name}</seg>\n");
         else sb.Append("<seg type=\"original\" subtype=\"nom\" resp=\"#BP\"></seg>");
-        
+
         if (_internet != null) sb.Append($"<ptr target=\"{_internet}\" />\n");
 
         return sb.ToString();

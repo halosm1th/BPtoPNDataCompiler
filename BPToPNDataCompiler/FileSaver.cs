@@ -309,8 +309,8 @@ public class FileSaver
                     fixedEntry.Resume = entry.NewValue;
                     fixedEntry.Note = entry.NewValue;
                     break;
-                case "sbandseg":
-                    fixedEntry.SBandSEG = entry.NewValue;
+                case "sbSeg":
+                    fixedEntry.sbSeg = entry.NewValue;
                     break;
                 case "title":
                     fixedEntry.Title = entry.NewValue;
@@ -676,15 +676,15 @@ public class FileSaver
             root?.AppendChild(newNameElement);
         }
 
-        if (sbandSeg != null && entry.HasSBandSEG)
+        if (sbandSeg != null && entry.HasSbSeg)
         {
-            sbandSeg.InnerText = entry.SBandSEG ?? "[none]";
+            sbandSeg.InnerText = entry.sbSeg ?? "[none]";
         }
-        else if (sbandSeg != null && !entry.HasSBandSEG)
+        else if (sbandSeg != null && !entry.HasSbSeg)
         {
-            sbandSeg.InnerText = entry.SBandSEG ?? "[none]";
+            sbandSeg.InnerText = entry.sbSeg ?? "[none]";
         }
-        else if (sbandSeg == null && entry.HasSBandSEG)
+        else if (sbandSeg == null && entry.HasSbSeg)
         {
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
@@ -705,7 +705,7 @@ public class FileSaver
             newNameElement.Attributes.Append(type);
 
             // Set name text
-            newNameElement.InnerText = entry.SBandSEG ?? "[none]";
+            newNameElement.InnerText = entry.sbSeg ?? "[none]";
 
             // Insert as first child of root element
             root?.AppendChild(newNameElement);

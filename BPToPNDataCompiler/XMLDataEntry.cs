@@ -31,7 +31,7 @@ public class XMLDataEntry : BPDataEntry
                         || ((entry.HasNo && HasNo) && (entry.No == No))
                         || ((entry.HasCR && HasCR) && (entry.CR == CR))
                         || ((entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber))
-                        || ((entry.HasSBandSEG && HasSBandSEG) && (entry.SBandSEG == SBandSEG));
+                        || ((entry.HasSbSeg && HasSbSeg) && (entry.sbSeg == sbSeg));
 
         return anyMatch;
     }
@@ -41,7 +41,7 @@ public class XMLDataEntry : BPDataEntry
     {
         return $"{Name ?? ""} {Internet ?? ""} {Publication ?? ""} " +
                $"{Resume ?? ""} {Title ?? ""} {Index ?? ""} {IndexBis ?? ""} " +
-               $"{No} {CR ?? ""} {BPNumber ?? ""} {SBandSEG ?? ""}";
+               $"{No} {CR ?? ""} {BPNumber ?? ""} {sbSeg ?? ""}";
     }
 
     public bool FullMatch(BPDataEntry entry, bool shouldCompareNames)
@@ -138,10 +138,10 @@ public class XMLDataEntry : BPDataEntry
 
         //Same for internet
         // ReSharper disable once InconsistentNaming
-        var shareSBSEg = HasSBandSEG switch
+        var shareSBSEg = HasSbSeg switch
         {
-            true when entry.HasSBandSEG => SBandSEG == entry.SBandSEG,
-            false when !entry.HasSBandSEG => true,
+            true when entry.HasSbSeg => sbSeg == entry.sbSeg,
+            false when !entry.HasSbSeg => true,
             _ => false
         };
 
@@ -182,7 +182,7 @@ public class XMLDataEntry : BPDataEntry
         matches[((int) Comparisons.publicationMatch)] =
             (entry.HasPublication && HasPublication) && (entry.Publication == Publication);
         matches[((int) Comparisons.resumeMatch)] = (entry.HasResume && HasResume) && (entry.Resume == Resume);
-        matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSBandSEG && HasSBandSEG) && (entry.SBandSEG == SBandSEG);
+        matches[((int) Comparisons.sbandsegMatch)] = (entry.HasSbSeg && HasSbSeg) && (entry.sbSeg == sbSeg);
         matches[((int) Comparisons.titleMatch)] = (entry.HasTitle && HasTitle) && (entry.Title == Title);
         matches[((int) Comparisons.anneeMatch)] = (entry.HasAnnee && HasAnnee) && (entry.Annee == Annee);
         matches[((int) Comparisons.noMatch)] = (entry.HasNo && HasNo) && (entry.No == No);
