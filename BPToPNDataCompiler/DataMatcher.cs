@@ -203,6 +203,8 @@ namespace BPtoPNDataCompiler
                 HandleMultipleMatches(entry, xmlDataEntries);
                 multipleMatches++;
             }
+
+            ParseCRUpdateAndSave();
         }
 
         /// <summary>
