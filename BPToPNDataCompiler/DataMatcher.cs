@@ -13,6 +13,8 @@ namespace BPtoPNDataCompiler
     class DataMatcher
     {
         private int bpEntriesUpdated = 0;
+
+        private int LastPN = -1;
         private int matchMenu = 0;
         private int multipleMatches = 0;
         private int newXmlEntriesAdded = 0;
@@ -321,17 +323,17 @@ namespace BPtoPNDataCompiler
         {
             try
             {
+                LastPN = GetLastPN();
                 logger.Log("Saving entries");
                 var parser = new CRReviewParser(logger, XmlEntries, BasePath);
 
                 logger.Log("Setting up CREntryParsing.");
-                var updatedCrEntries = fileSaver.ParseCRReviews(parser, GetLastPN(), CREntriesToUpdate);
+                var updatedCrEntries = fileSaver.ParseCRReviews(parser, ref LastPN, CREntriesToUpdate);
                 logger.Log("Getting last PN Number");
 
 
                 logger?.Log("Updating PnEntries before saving.");
                 var updatedPNEntries = fileSaver.UpdatePnEntries(PnEntriesToUpdate);
-
                 fileSaver.SaveLists(BpEntriesToUpdate, updatedPNEntries, NewXmlEntriesToAdd,
                     SharedEntriesToLog, updatedCrEntries, parser);
 
@@ -351,19 +353,27 @@ namespace BPtoPNDataCompiler
 
         private int GetLastPN()
         {
-            var lastPNAsString = GetLastPNText();
-            int lastPN = -1;
+            if (LastPN == -1)
+            {
+                var lastPNAsString = GetLastPNText();
 
-            if (!Int32.TryParse(lastPNAsString, out lastPN))
-            {
-                Console.WriteLine($"There was an error parsing the last PN number! {lastPNAsString}.\nExiting");
-                logger.Log($"There was an error parsing the last PN Number! {lastPNAsString}");
-                return lastPN;
+                if (Int32.TryParse(lastPNAsString, out LastPN))
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"Converted PN to string: {lastPNAsString}.\n");
+                    Console.ResetColor();
+                    logger.Log($"Converted PN to string: {lastPNAsString}.\n");
+                    return LastPN;
+                }
+                else
+                {
+                    Console.WriteLine($"There was an error parsing the last PN number! {lastPNAsString}.\nExiting");
+                    logger.Log($"There was an error parsing the last PN Number! {lastPNAsString}");
+                    return -1;
+                }
             }
-            else
-            {
-                return -1;
-            }
+
+            return LastPN;
         }
 
         private string? GetLastPNText()

@@ -96,7 +96,7 @@ public class XMLEntryGatherer
         logger?.Log($"Getting entries from folder {folder}");
         logger?.LogProcessingInfo($"Getting entries from folder {folder}");
         var dataEntries = new List<XMLDataEntry>();
-        foreach (var file in Directory.GetFiles(folder))
+        foreach (var file in Directory.GetFiles(folder).Where(x => Path.GetExtension(x) == ".xml"))
         {
             var entry = GetEntry(file);
             //logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");

@@ -33,6 +33,10 @@ public class FileSaver
         Dictionary<string, XmlDocument> updatedPNEntries, List<BPDataEntry> NewXmlEntriesToAdd,
         List<UpdateDetail<BPDataEntry>> SharedEntriesToLog, List<CRReviewData> CREntries, CRReviewParser parser)
     {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("Saving lists");
+        Console.ResetColor();
+
         logger.LogProcessingInfo("Saving Lists");
         // Sanitize and build end folder path using Path.Combine
 
@@ -54,34 +58,50 @@ public class FileSaver
         logger?.LogProcessingInfo("Finished saving lists. ");
     }
 
-    public List<CRReviewData> ParseCRReviews(CRReviewParser parser, int lastPN,
+    public List<CRReviewData> ParseCRReviews(CRReviewParser parser, ref int lastPN,
         List<(BPDataEntry, XMLDataEntry)> dmCrEntriesToUpdate)
     {
         logger?.Log("Starting CR Review parser");
-        return parser.ParseReviews(dmCrEntriesToUpdate, lastPN);
+        return parser.ParseReviews(dmCrEntriesToUpdate, ref lastPN);
     }
 
     private void SaveCREntries(List<CRReviewData> crEntries, CRReviewParser parser, string crEntriesPath)
     {
-        parser.SaveCRReviews(crEntries, crEntriesPath);
+        try
+        {
+            parser.SaveCRReviews(crEntries, crEntriesPath);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"There was an error while trying to save new CR reviews: {e}");
+            logger.LogError($"There was an error while trying to save new CR reviews ", e);
+        }
     }
 
     private void SaveMinorDeviations(List<UpdateDetail<BPDataEntry>> sharedEntriesToLog,
         string sharedEntriesPath)
     {
-        var sb = new StringBuilder();
-        foreach (var entry in sharedEntriesToLog)
+        try
         {
-            sb.Append(
-                $"BP# {entry.Entry.BPNumber}. For [{entry.FieldName}] _BP has_ [{entry.OldValue}] :: _PN has_ [{entry.NewValue}].\n");
+            var sb = new StringBuilder();
+            foreach (var entry in sharedEntriesToLog)
+            {
+                sb.Append(
+                    $"BP# {entry.Entry.BPNumber}. For [{entry.FieldName}] _BP has_ [{entry.OldValue}] :: _PN has_ [{entry.NewValue}].\n");
+            }
+
+            var minorDeviationPath = Path.Combine(sharedEntriesPath, "MinorDeviations.txt");
+            Console.WriteLine($"Saving minorDeviations to {minorDeviationPath}");
+            logger?.LogProcessingInfo($"Saving minorDeviations to {minorDeviationPath}");
+
+            if (File.Exists(minorDeviationPath)) minorDeviationPath = minorDeviationPath.Replace(".xml", " (2).xml");
+            File.WriteAllText(minorDeviationPath, sb.ToString());
         }
-
-        var minorDeviationPath = Path.Combine(sharedEntriesPath, "MinorDeviations.txt");
-        Console.WriteLine($"Saving minorDeviations to {minorDeviationPath}");
-        logger?.LogProcessingInfo($"Saving minorDeviations to {minorDeviationPath}");
-
-        if (File.Exists(minorDeviationPath)) minorDeviationPath = minorDeviationPath.Replace(".xml", " (2).xml");
-        File.WriteAllText(minorDeviationPath, sb.ToString());
+        catch (Exception e)
+        {
+            Console.WriteLine($"There was an error while trying to save Minor deviations: {e}");
+            logger.LogError($"There was an error while trying to save minor deviations", e);
+        }
     }
 
 
@@ -99,16 +119,32 @@ public class FileSaver
             $"Setting up directories for saving. Paths are: {EndDataFolder} [{BPEntryPath}, {NewXmlEntryPath}]");
         Console.WriteLine($"Setting up saving directories [{BPEntryPath},  {NewXmlEntryPath}]");
 
-        logger?.LogProcessingInfo("Creating directory for saving.");
-        Directory.CreateDirectory(EndDataFolder);
-        logger?.LogProcessingInfo("Creating BPEntry To Update Folder.");
-        Directory.CreateDirectory(BPEntryPath);
-        logger?.LogProcessingInfo("Creating New Xml Entries for PN Folder.");
-        Directory.CreateDirectory(NewXmlEntryPath);
-        logger?.LogProcessingInfo("Creating New Shared Entries Folder.");
-        Directory.CreateDirectory(SharedListPath);
-        logger?.LogProcessingInfo("Creating New CR Entries Folder.");
-        Directory.CreateDirectory(CRPath);
+        try
+        {
+            CheckOrCreateDir(EndDataFolder, "Main Save");
+            CheckOrCreateDir(BPEntryPath, "BPEntry To Update");
+            CheckOrCreateDir(NewXmlEntryPath, "NewXmlEntries");
+            CheckOrCreateDir(SharedListPath, "SharedList");
+            CheckOrCreateDir(CRPath, "New CR Entries");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"There was an error while trying to setup save directories: {e}");
+            logger.LogError($"There was an error while trying to setup save directories", e);
+        }
+    }
+
+    private void CheckOrCreateDir(string path, string locationName)
+    {
+        if (!Directory.Exists(path))
+        {
+            logger?.LogProcessingInfo($"Creating {locationName} directory @ {path}.");
+            Directory.CreateDirectory(path);
+        }
+        else
+        {
+            logger.LogProcessingInfo($"Found existing directory {locationName}, not creating a directory.");
+        }
     }
 
     /// <summary>
@@ -118,36 +154,50 @@ public class FileSaver
     /// <param name="path">The directory path where the XML files will be saved.</param>
     private void SaveNewXMlFromBPEntries(List<BPDataEntry> NewXmlEntriesToAdd, string path)
     {
-        logger?.LogProcessingInfo("Saving XMl Entries..");
-        Console.WriteLine("Saving Xml Entries");
-        foreach (var newXml in NewXmlEntriesToAdd)
+        try
         {
-            // Sanitize file path by replacing invalid characters
-            if (newXml.Title != null)
+            logger?.LogProcessingInfo("Saving XMl Entries..");
+            Console.WriteLine($"Saving Xml Entries to {path}");
+            foreach (var newXml in NewXmlEntriesToAdd)
             {
-                var title = newXml.Title.Replace("\"", "")
-                    .Replace(":", "_")
-                    .Replace("\\", "")
-                    .Replace("/", "")
-                    .Replace(".", "_")
-                    .Replace(" ", "_")
-                    .Replace("&", "")
-                    .Replace(";", "")
-                    .Replace("?", "")
-                    .Replace(",", "")
-                    .Replace("(", "")
-                    .Replace(")", "")
-                    .Replace("=", "")
-                    .Replace("'", "");
+                // Sanitize file path by replacing invalid characters
+                if (newXml.Title != null)
+                {
+                    var title = newXml.Title.Replace("\"", "")
+                        .Replace(":", "_")
+                        .Replace("\\", "")
+                        .Replace("/", "")
+                        .Replace(".", "_")
+                        .Replace(" ", "_")
+                        .Replace("&", "")
+                        .Replace(";", "")
+                        .Replace("?", "")
+                        .Replace(",", "")
+                        .Replace("(", "")
+                        .Replace(")", "")
+                        .Replace("=", "")
+                        .Replace("'", "");
 
-                title = title.Substring(0, Math.Min(title.Length, 80));
+                    title = title.Substring(0, Math.Min(title.Length, 80));
 
-                var filePath = Path.Combine(path, title);
-                filePath = filePath + ".xml";
-                Console.WriteLine($"Saving {newXml.Title} to {filePath}");
-                logger?.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
-                WriteBPXmlEntry(newXml, filePath);
+                    var filePath = Path.Combine(path, title);
+                    filePath = filePath + ".xml";
+                    Console.WriteLine($"Saving {newXml.Title} to {filePath}");
+                    logger?.LogProcessingInfo($"Saving  {newXml.Title} to {filePath}");
+                    WriteBPXmlEntry(newXml, filePath);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Could not save as there was no title?");
+                    Console.ResetColor();
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"There was an error while trying to save new XML entries: {e}");
+            logger.LogError($"There was an error while trying to save new XML entries", e);
         }
     }
 
@@ -160,7 +210,14 @@ public class FileSaver
 
         try
         {
-            if (File.Exists(path)) path = path.Replace(".xml", " (2).xml");
+            if (File.Exists(path))
+            {
+                var countPath = path.Replace(".xml", "");
+                var count = Directory.GetFiles(Directory.GetParent(countPath).FullName)
+                    .Count(x => x.Contains(countPath)) + 1;
+                path = path.Replace(".xml", $" ({count}).xml");
+            }
+
             File.WriteAllText(path, xml);
         }
         catch (Exception e)
@@ -176,11 +233,21 @@ public class FileSaver
     /// <param name="path">The directory path where the XML files will be saved.</param>
     private void SavePNEntries(Dictionary<string, XmlDocument> xmlDocuments)
     {
-        logger?.LogProcessingInfo("Saving PN Entries");
-        Console.WriteLine("Saving Pn Entries");
-        foreach (var xmlDocument in xmlDocuments)
+        try
         {
-            WritePNEntry(xmlDocument.Value, xmlDocument.Key);
+            logger?.LogProcessingInfo("Saving PN Entries");
+            Console.WriteLine($"Saving {xmlDocuments.Count} Pn Entries");
+            foreach (var xmlDocument in xmlDocuments)
+            {
+                WritePNEntry(xmlDocument.Value, xmlDocument.Key);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"There was an error while trying to save PN entries: {e}");
+            Console.ResetColor();
+            logger.LogError($"There was an error while trying to save PN entries", e);
         }
     }
 
@@ -191,35 +258,43 @@ public class FileSaver
     /// <param name="path">The directory path where the XML files will be saved.</param>
     private void SaveBPEntries(List<UpdateDetail<BPDataEntry>> bpEntriesToUpdate, string path)
     {
-        //Whedn saving save as: BP NUmber + field name + what the change will be
-
-        logger?.Log("Saving BP Entries");
-        Console.WriteLine("Saving Bp Entries");
-        var filePath = Path.Combine(path, "BPEntriesToUpdate.txt");
-        var sb = new StringBuilder();
-
-        if (File.Exists(filePath))
+        try
         {
-            var text = File.ReadAllLines(filePath);
-            foreach (var line in text)
+            //Whedn saving save as: BP NUmber + field name + what the change will be
+
+            logger?.Log("Saving BP Entries");
+            Console.WriteLine("Saving Bp Entries");
+            var filePath = Path.Combine(path, "BPEntriesToUpdate.txt");
+            var sb = new StringBuilder();
+
+            if (File.Exists(filePath))
             {
-                sb.Append(line);
-                sb.Append("\n");
+                var text = File.ReadAllLines(filePath);
+                foreach (var line in text)
+                {
+                    sb.Append(line);
+                    sb.Append("\n");
+                }
             }
-        }
 
-        foreach (var bpEntries in bpEntriesToUpdate)
+            foreach (var bpEntries in bpEntriesToUpdate)
+            {
+                var bpText =
+                    $"BP #: {bpEntries.Entry.BPNumber}. Changed {bpEntries.FieldName} _from_ [{bpEntries.OldValue ?? "[BLANK]"}] _to_ [{bpEntries.NewValue}]. ";
+                sb.Append(bpText + "\n");
+
+                logger?.LogProcessingInfo($"Updated {bpText}");
+
+                // Sanitize file path by replacing invalid characters
+            }
+
+            WriteBPEntry(sb, filePath);
+        }
+        catch (Exception e)
         {
-            var bpText =
-                $"BP #: {bpEntries.Entry.BPNumber}. Changed {bpEntries.FieldName} _from_ [{bpEntries.OldValue ?? "[BLANK]"}] _to_ [{bpEntries.NewValue}]. ";
-            sb.Append(bpText + "\n");
-
-            logger?.LogProcessingInfo($"Updated {bpText}");
-
-            // Sanitize file path by replacing invalid characters
+            Console.WriteLine($"There was an error while trying to save BP entries: {e}");
+            logger.LogError($"There was an error while trying to save BP entries", e);
         }
-
-        WriteBPEntry(sb, filePath);
     }
 
     private void WriteBPEntry(StringBuilder finalTexts, string path)

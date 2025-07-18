@@ -13,6 +13,7 @@ public class BPtoPNCore
     private static int startYear = 1932;
     private static int endYear = DateTime.Now.Year - 1;
     private static int bpStartNumber = 1; // New: Default beginning number for BP data
+    private static string Version = "1.1.0";
 
     static int bpEndNumber = 9999; // New: Default finishing number for BP data
 
@@ -30,7 +31,7 @@ public class BPtoPNCore
             //If we have the git folder. Normally will error out before this if it cannot be found.
             //AS such we'll just let hte exceptions bubble up.
             var biblioPath = gitHandler.GitBiblioDirectoryCheck(DepthLevel);
-            var currentPath = Directory.GetCurrentDirectory();
+            var currentPath = Directory.GetParent(Directory.GetParent(biblioPath).FullName).FullName;
 
             logger?.Log("Creating BpEntry Gatherer");
             Console.WriteLine("Creating BPEntry Gatherer");
@@ -48,8 +49,8 @@ public class BPtoPNCore
             logger?.Log("Gathering XML entries");
             Console.WriteLine("XmlEntry Gatherer created, gathering XML entries.");
             var xmlEntries = XMLEntryGatherer.GatherEntries();
-
-            currentPath = Directory.GetCurrentDirectory();
+            logger?.Log($"Found: {xmlEntries.Count} entries.");
+            Console.WriteLine($"Found: {xmlEntries.Count} entries.");
 
             logger?.Log("Gathering BP entries.");
             Console.WriteLine("Gathered XMl Entries, gathering BP entries.");
@@ -343,6 +344,8 @@ public class BPtoPNCore
                 ValidateBpNumbers();
 
                 logger.Log("Parsing args completed.");
+                Console.WriteLine($"Running Data Compiler version: {Version}");
+                logger.Log($"Running Data Compiler version: {Version}");
                 Console.WriteLine($"Args parsed. Start Year: {startYear}, End Year: {endYear}.");
                 Console.WriteLine($"BP Start Number: {bpStartNumber}, BP End Number: {bpEndNumber}.");
                 logger.Log($"Start Year: {startYear}, End Year: {endYear}");
@@ -450,9 +453,6 @@ public class BPtoPNCore
 
     #endregion
 }
-
-
-
 
 //Make sure that the save routine to make sure its running evne if the data matcherUI doesn't launch
 //Test 2020-20 2020-30

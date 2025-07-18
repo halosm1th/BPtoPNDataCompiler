@@ -18,20 +18,19 @@ public class CRReviewParser
     private Logger logger { get; set; }
     private List<XMLDataEntry> PNEntries { get; set; }
 
-    public List<CRReviewData> ParseReviews(List<(BPDataEntry, XMLDataEntry)> CREntries, int lastPN)
+    public List<CRReviewData> ParseReviews(List<(BPDataEntry, XMLDataEntry)> CREntries, ref int lastPN)
     {
         logger.LogProcessingInfo($"Starting to parse {CREntries.Count} reviews.");
         var returnList = new List<CRReviewData>();
         try
         {
-            var currentPN = lastPN + 1;
             foreach (var entry in CREntries)
             {
-                var results = ParseEntry(entry, currentPN);
+                var results = ParseEntry(entry, ref lastPN);
                 logger.LogProcessingInfo(
-                    $"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
+                    $"finished processing entry {entry.Item1.CR}, returned: {results.Count} new reviews");
 
-                Console.WriteLine($"finished processing entry {entry.Item1.CR}, returned: {results.Count} reviews");
+                Console.WriteLine($"finished processing entry {entry.Item1.CR}, returned: {results.Count} new reviews");
                 returnList.AddRange(results);
             }
 
@@ -49,7 +48,7 @@ public class CRReviewParser
         return returnList;
     }
 
-    private List<CRReviewData> ParseEntry((BPDataEntry, XMLDataEntry) entryPath, int currentPN)
+    private List<CRReviewData> ParseEntry((BPDataEntry, XMLDataEntry) entryPath, ref int currentPN)
     {
         var CR = entryPath.Item1.CR;
         var pageRanges = GetPagesRangesfromCR(CR, entryPath.Item2.PNNumber);
@@ -59,7 +58,7 @@ public class CRReviewParser
 
         var entriesWithoutReviews = GetNewEntries(pageRanges, reviewEntries);
         var entriesNotInXML = GetNewEntries(entriesWithoutReviews, PNEntries);
-        var formattedNewEntries = CreateEntriesFromCR(entriesNotInXML, currentPN);
+        var formattedNewEntries = CreateEntriesFromCR(entriesNotInXML, ref currentPN);
 
         return formattedNewEntries;
         throw new NotImplementedException();
@@ -67,7 +66,7 @@ public class CRReviewParser
 
     private List<CRReviewData> CreateEntriesFromCR(
         List<(string year, string pageRange, string cr, string articleReviewed)> entriesNotInXml,
-        int nextNumb)
+        ref int nextNumb)
     {
         var results = new List<CRReviewData>();
         foreach (var entry in entriesNotInXml)
