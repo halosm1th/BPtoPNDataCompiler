@@ -540,6 +540,11 @@ public class FileSaver
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "nom";
@@ -550,10 +555,6 @@ public class FileSaver
             respAttr.Value = "#BP";
             newNameElement.Attributes.Append(respAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set name text
             newNameElement.InnerText = entry.Name ?? "[none]";
@@ -575,6 +576,11 @@ public class FileSaver
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "index";
@@ -585,10 +591,6 @@ public class FileSaver
             respAttr.Value = "#BP";
             newNameElement.Attributes.Append(respAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set name text
             newNameElement.InnerText = entry.Index ?? "[none]";
@@ -610,6 +612,11 @@ public class FileSaver
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "indexBis";
@@ -620,10 +627,6 @@ public class FileSaver
             respAttr.Value = "#BP";
             newNameElement.Attributes.Append(respAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set name text
             newNameElement.InnerText = entry.IndexBis ?? "[none]";
@@ -650,15 +653,16 @@ public class FileSaver
             subtypeAttr.Value = "titre";
             newNameElement.Attributes.Append(subtypeAttr);
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set resp attribute
             var respAttr = xmlDocument.CreateAttribute("resp");
             respAttr.Value = "#BP";
             newNameElement.Attributes.Append(respAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set name text
             newNameElement.InnerText = entry.Title ?? "[none]";
@@ -681,14 +685,15 @@ public class FileSaver
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
             // Set subtype attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
+            // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "publication";
             newNameElement.Attributes.Append(subtypeAttr);
 
-            // Set subtype attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set resp attribute
             var respAttr = xmlDocument.CreateAttribute("resp");
@@ -729,15 +734,16 @@ public class FileSaver
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "resume";
             newNameElement.Attributes.Append(subtypeAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set resp attribute
             var respAttr = xmlDocument.CreateAttribute("resp");
@@ -799,6 +805,11 @@ public class FileSaver
             // Create new seg element with TEI namespace 
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
+            // Set type attribute
+            var type = xmlDocument.CreateAttribute("type");
+            type.Value = "original";
+            newNameElement.Attributes.Append(type);
+            
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "cr";
@@ -809,10 +820,6 @@ public class FileSaver
             respAttr.Value = "#BP";
             newNameElement.Attributes.Append(respAttr);
 
-            // Set type attribute
-            var type = xmlDocument.CreateAttribute("type");
-            type.Value = "original";
-            newNameElement.Attributes.Append(type);
 
             // Set name text
             newNameElement.InnerText = entry.CR ?? "[none]";
