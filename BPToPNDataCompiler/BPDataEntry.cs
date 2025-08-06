@@ -135,9 +135,9 @@ public class BPDataEntry
         value = value?.Replace("&quot;", "\"");
         value = value?.Replace("&#34;", "\"");
         value = value?.Replace("&#039;", "'");
-        value = value?.Replace(" & ", "&amp;");
-        value = value?.Replace("<", "&lt;");
-        value = value?.Replace(">", "&gt;");
+        value = value?.Replace(" & ", " &amp; ");
+        value = value?.Replace("<", " &lt; ");
+        value = value?.Replace(">", " &gt; ");
         if (Logger != null)
         {
             //logger.LogProcessingInfo($"Replaced text resulted in: {value}");
