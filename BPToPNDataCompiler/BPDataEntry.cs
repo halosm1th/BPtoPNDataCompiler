@@ -135,7 +135,8 @@ public class BPDataEntry
         value = value?.Replace("&quot;", "\"");
         value = value?.Replace("&#34;", "\"");
         value = value?.Replace("&#039;", "'");
-        value = value?.Replace(" & ", "&amp;");
+        if(value != null && value.Contains("&") && !value.Contains("&amp;"))
+            value = value?.Replace(" & ", " &amp; ");
         value = value?.Replace("<", "&lt;");
         value = value?.Replace(">", "&gt;");
         if (Logger != null)
