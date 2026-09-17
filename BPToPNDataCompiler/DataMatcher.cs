@@ -44,6 +44,13 @@ namespace BPtoPNDataCompiler
             BasePath = basePath;
             fileSaver = new FileSaver(BasePath, logger);
             parser = new CRReviewParser(logger, xmlEntries, basePath);
+
+            // Index XML entries by BPNumber once up front so exact-match lookups (used per BP entry,
+            // sometimes more than once) are O(1) instead of a fresh linear scan of every XML entry each time.
+            XmlEntriesByBpNumber = xmlEntries
+                .Where(x => x.HasBPNum)
+                .GroupBy(x => x.BPNumber!)
+                .ToDictionary(g => g.Key, g => g.ToList());
         }
 
         private string BasePath { get; }
@@ -72,6 +79,7 @@ namespace BPtoPNDataCompiler
 
         private List<XMLDataEntry> XmlEntries { get; set; }
         private List<BPDataEntry> BpEntries { get; set; }
+        private Dictionary<string, List<XMLDataEntry>> XmlEntriesByBpNumber { get; set; }
 
         /// <summary>
         /// Initiates the entry matching process.
@@ -90,8 +98,10 @@ namespace BPtoPNDataCompiler
             {
                 Console.Write($"Trying entry: {entry.Title}. ");
                 logger?.LogProcessingInfo($"Trying entry: {entry.Title}.");
-                // Check if any weak match or exact BPNumber match exists in XML entries
-                if (XmlEntries.Any(x => x.WeakMatch(entry) || x.BPNumber == entry.BPNumber))
+                // Check the O(1) BPNumber index first; only fall back to the expensive per-entry
+                // WeakMatch scan across every XML entry when there's no exact BPNumber hit.
+                var hasExactBpMatch = entry.HasBPNum && XmlEntriesByBpNumber.ContainsKey(entry.BPNumber!);
+                if (hasExactBpMatch || XmlEntries.Any(x => x.WeakMatch(entry)))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Found potential match.\n");
@@ -136,13 +146,12 @@ namespace BPtoPNDataCompiler
 
             logger?.LogProcessingInfo(
                 $"Checking if any XML entries have a BPNumber which exactly matches this entries bp number ({entry.BPNumber}).");
-            // Collect all XML entries that have the same BPNumber
-            if (XmlEntries.Any(x => x.BPNumber == entry.BPNumber))
+            // Collect all XML entries that have the same BPNumber (O(1) lookup via the prebuilt index,
+            // instead of two separate linear scans of every XML entry).
+            if (entry.HasBPNum && XmlEntriesByBpNumber.TryGetValue(entry.BPNumber!, out var entriesWithMatchingBPNum))
             {
-                logger?.LogProcessingInfo("Gathering all xml entries with the same BPNumber as the current entry.");
-                var entriesWithMatchingBPNum = XmlEntries.Where(x => x.BPNumber == entry.BPNumber);
                 logger?.LogProcessingInfo(
-                    $"Gathered {entriesWithMatchingBPNum.Count()} entries that share a BPNumber with {entry.BPNumber}.");
+                    $"Gathered {entriesWithMatchingBPNum.Count} entries that share a BPNumber with {entry.BPNumber}.");
                 matchingEntries.AddRange(entriesWithMatchingBPNum);
             }
 
@@ -338,6 +347,7 @@ namespace BPtoPNDataCompiler
                     SharedEntriesToLog, updatedCrEntries, parser);
 
                 BpEntriesToUpdate = new List<UpdateDetail<BPDataEntry>>();
+                PnEntriesToUpdate = new List<UpdateDetail<XMLDataEntry>>();
                 NewXmlEntriesToAdd = new List<BPDataEntry>();
                 SharedEntriesToLog = new List<UpdateDetail<BPDataEntry>>();
                 CREntriesToUpdate = new List<(BPDataEntry, XMLDataEntry)>();

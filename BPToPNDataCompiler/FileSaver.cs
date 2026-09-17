@@ -94,8 +94,10 @@ public class FileSaver
             Console.WriteLine($"Saving minorDeviations to {minorDeviationPath}");
             logger?.LogProcessingInfo($"Saving minorDeviations to {minorDeviationPath}");
 
-            if (File.Exists(minorDeviationPath)) minorDeviationPath = minorDeviationPath.Replace(".xml", " (2).xml");
-            File.WriteAllText(minorDeviationPath, sb.ToString());
+            // Append only the newly-recorded deviations from this batch instead of rewriting the whole
+            // file: the previous "rename if it exists" check looked for ".xml" in a ".txt" path, so it
+            // never fired, and every save silently overwrote (and lost) every prior batch's entries.
+            File.AppendAllText(minorDeviationPath, sb.ToString());
         }
         catch (Exception e)
         {
@@ -267,16 +269,6 @@ public class FileSaver
             var filePath = Path.Combine(path, "BPEntriesToUpdate.txt");
             var sb = new StringBuilder();
 
-            if (File.Exists(filePath))
-            {
-                var text = File.ReadAllLines(filePath);
-                foreach (var line in text)
-                {
-                    sb.Append(line);
-                    sb.Append("\n");
-                }
-            }
-
             foreach (var bpEntries in bpEntriesToUpdate)
             {
                 var bpText =
@@ -301,14 +293,10 @@ public class FileSaver
     {
         try
         {
-            /**** if (File.Exists(path))
-             {
-                 var pth = path.Replace("BPEntriesToUpdate.txt", "");
-                 int count = Directory.GetFiles(pth).Count(x => x.Contains(path));
-                 count++;
-                 path = path.Replace(".txt", $" ({count}).txt");
-             }*/
-            File.WriteAllText(path, finalTexts.ToString());
+            // Append just this batch's new lines instead of reading the whole (ever-growing) file back
+            // in and rewriting it every save - that read-all/rewrite-all pattern made each save slower
+            // than the last over a long run.
+            File.AppendAllText(path, finalTexts.ToString());
         }
         catch (Exception e)
         {
@@ -360,6 +348,7 @@ public class FileSaver
             switch (entry.FieldName.ToLower())
             {
                 case "bpnumber":
+                case "bpnum":
                     fixedEntry.BPNumber = entry.NewValue;
                     break;
                 case "cr":
@@ -384,11 +373,14 @@ public class FileSaver
                     fixedEntry.Resume = entry.NewValue;
                     fixedEntry.Note = entry.NewValue;
                     break;
-                case "sbSeg":
+                case "sbandseg":
                     fixedEntry.sbSeg = entry.NewValue;
                     break;
                 case "title":
                     fixedEntry.Title = entry.NewValue;
+                    break;
+                case "annee":
+                    fixedEntry.Annee = entry.NewValue;
                     break;
             }
 
@@ -544,7 +536,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "nom";
@@ -580,7 +572,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "index";
@@ -616,7 +608,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "indexBis";
@@ -657,7 +649,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set resp attribute
             var respAttr = xmlDocument.CreateAttribute("resp");
             respAttr.Value = "#BP";
@@ -688,7 +680,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "publication";
@@ -738,7 +730,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "resume";
@@ -767,12 +759,12 @@ public class FileSaver
         }
         else if (sbandSeg == null && entry.HasSbSeg)
         {
-            // Create new seg element with TEI namespace 
+            // Create new seg element with TEI namespace
             var newNameElement = xmlDocument.CreateElement("seg", "http://www.tei-c.org/ns/1.0");
 
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
-            subtypeAttr.Value = "resume";
+            subtypeAttr.Value = "sbSeg";
             newNameElement.Attributes.Append(subtypeAttr);
 
             // Set resp attribute
@@ -809,7 +801,7 @@ public class FileSaver
             var type = xmlDocument.CreateAttribute("type");
             type.Value = "original";
             newNameElement.Attributes.Append(type);
-            
+
             // Set subtype attribute
             var subtypeAttr = xmlDocument.CreateAttribute("subtype");
             subtypeAttr.Value = "cr";

@@ -95,26 +95,18 @@ public class BPtoPNCore
     {
         var directory = Directory.GetCurrentDirectory();
         var sourcePath = Path.Combine(directory, saveLocation);
-        var fileName = Path.GetFileName(saveLocation);
-        int count = 0;
 
-        if (Directory.GetFiles(directory).Any(x => x.Contains($"{fileName}")))
+        // Find the first available zip file name, checking numbered variants ("(2)", "(3)", ...)
+        // one at a time rather than guessing a count, so we never collide with an existing file.
+        var zipPath = Path.Combine(directory, $"{saveLocation}.zip");
+        var count = 1;
+        while (File.Exists(zipPath))
         {
-            count = Directory.GetFiles(directory).Count(x => x.Contains($"{fileName}")) + 1;
+            count++;
+            zipPath = Path.Combine(directory, $"{saveLocation} ({count}).zip");
         }
-
-        var countText = count > 0 ? $" ({count})" : "";
-
-        var zipPath = Path.Combine(directory, $"{saveLocation}{countText}.zip");
 
         Console.WriteLine($"Zipping files from {sourcePath} to {zipPath}");
-
-        // Make sure the target zip file doesn't already exist
-        if (File.Exists(zipPath))
-        {
-            //TODO confirm if we should delete
-            //File.Delete(zipPath);
-        }
 
         // Wait a moment to ensure all file operations are complete
         Thread.Sleep(1000);
@@ -127,14 +119,6 @@ public class BPtoPNCore
                 // Ensure all file streams are closed by forcing a GC collect
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-
-                if (File.Exists(zipPath))
-                {
-                    var pth = Directory.GetParent(sourcePath).FullName;
-                    int cnt = Directory.GetFiles(pth).Count(x => x.Contains(saveLocation + ".zip"));
-                    cnt++;
-                    zipPath = zipPath.Replace(".zip", $" ({cnt}).zip");
-                }
 
                 // Create the zip file
                 ZipFile.CreateFromDirectory(

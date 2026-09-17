@@ -1,1939 +1,2318 @@
-﻿Title (abbreviated),Number
-AA,1
-AAA,2
-AAEC,3
-AALig,4
-AAN,5
-AAntHung,6
-AAP,7
-AAPat,8
-AAS,9
-AASOR,10
-AbhBerl,11
-AbhMainz,12
-AbhMünch,13
-ACD,14
-ACF,15
-AClass AClas,16
-ActaArch,17
-ActaArchHung,18
-ActaHyp,19
-ActaOrHung,20
-AEHEG,21
-AeR,22
-Aevum Aevum(ant),23
-AFC,24
-AFig,25
-AFLC,26
-AG,27
-AGPh,28
-AH,29
-AHB,30
-AHDE,31
-AHDO,32
-AHE,33
-AHES,34
-AHR,35
-AION(filol),36
-AJA,37
-AJAH,38
-AJN,39
-AJP,40
-AJSL,41
-AKG,42
-AltO,43
-AM,44
-AnalBoll,45
-AnalRom,46
-AnatSt,47
-AncEg,48
-AncNarr,49
-AncPhil,50
-AncSoc,51
-AncW,52
-Annales (HSS),53
-AnnArchStorAnt,54
-AnnBari,55
-AnnEconSocCiv,56
-AnnNap,57
-AnnParis,58
-AnnPerugia,59
-AnnPhilHist,60
-AnnPisa AnnPisa ser. II,61
-AnnSE,62
-AnnTriest,63
-ANSMN,64
-AntCl,65
-AntJ,66
-AntK,67
-AntTard,68
-AntW,69
-AnzAW,70
-AnzWien,71
-AO,72
-AOF,73
-APapyrol,74
-APAW,75
-AquilNost,76
-ArchCl,77
-ArchDelt,78
-ArchEph,79
-ArchErt,80
-ArchEspArq AEA,81
-ArchKorrBl,82
-ArchPF,83
-ArchRW,84
-ARF,85
-ARG,86
-ASAE,87
-ASAtene,88
-ASR,89
-AThR,90
-AttiCAntCl,91
-AttiFir,92
-AttiMGrecia,93
-AttiPal,94
-AttiPontAcc,95
-AttiTor,96
-AttiVen,97
-AuA,98
-AUMLA,99
-AUS,100
-AVM,101
-BAB,102
-BACE,103
-BAClLg,104
-BACPS,105
-BAEC,106
-BAntFr,107
-BAPC,108
-BASOR,109
-BASP,110
-BAssBudé,111
-BAT,112
-BCH,113
-BClevMus,114
-BdA,115
-BECh,116
-BerlMus,117
-BerlNumZ,118
-BFAC,119
-BFAM,120
-BFC,121
-BFS,122
-BHM,123
-BIABulg,124
-BiblArch,125
-BiblH&R,126
-BibO,127
-BICS,128
-BIDR,129
-BIE,130
-BIFAO,131
-BIHBelge,132
-BiZ,133
-BJb,134
-BLund,135
-BMF,136
-BMFA,137
-BMMA,138
-BMQ,139
-BMusBrux,140
-BMusHongr,141
-BMusUM,142
-BPEC,143
-BPW,144
-BRL,145
-BrookMusQ,146
-BSA,147
-BSAA,148
-BSRAA,149
-BSFN,150
-BSL,151
-BSR,152
-BullRoum,153
-BWG,154
-ByzJ,155
-BZ,156
-C&W,157
-CAAH,158
-CahArch,159
-CahEtAnc,160
-CArchJ,161
-CB,162
-CCAB,163
-CCatt,164
-CCG,165
-CCO,166
-CFC,167
-CFC(G),168
-CFC(L),169
-CGITA,170
-ChHist,171
-CHJ,172
-CHM,173
-ChrEg,174
-CJ,175
-ClAnt,176
-ClMed,177
-CML,178
-ConnHell,179
-CP,180
-CQ,181
-CR,182
-CRIPEL,183
-CronErcol,184
-CW,185
-DA,186
-DHA,187
-DialArch,188
-DLZ,189
-DOP,190
-EB,191
-EchCl,192
-EClás,193
-EE,194
-EEAth,195
-EgR,196
-EHHD,197
-EHR,198
-EL,199
-EpetByz,200
-EpSt,201
-EranJb,202
-ErIsr,203
-ET,204
-EtCelt,205
-EtCl,206
-EThL,207
-EtPap,208
-EtTrav,209
-Études,210
-EVO,211
-EW,212
-ExcPhilol,213
-FlorIlib,214
-FuB,215
-FuF,216
-GaR,217
-GArb,218
-GBA,219
-GeogrAnt,220
-GFA,221
-GGA,222
-GIF,223
-GJ,224
-GLP,225
-GM,226
-GrazBeitr,227
-GRBS,228
-H&T,229
-HebrUCA,230
-HG,231
-HispAnt,232
-HJ,233
-HLB,234
-HSCP,235
-HSMed,236
-HThR,237
-HZ,238
-ICS,239
-IEJ,240
-IGForsch,241
-IH,242
-IJb,243
-IJCT,244
-IJNA,245
-ILN,246
-InvLuc,247
-IstMitt,248
-JA,249
-JAC,250
-JAnthArch,251
-JAOS,252
-JARCE,253
-JAS,254
-JAW,255
-JBerlMus,256
-JBernHistMus,257
-JBL,258
-JCS,259
-JdI,260
-JEA,261
-JECS,262
-JEH,263
-JEOL,264
-JESHO,265
-JFA,266
-JHI,267
-,268
-JIES,269
-JJurP,270
-JMA,271
-JMainz,272
-JMünch,273
-JNES,274
-JÖBG,275
-JQR,276
-JRA,277
-JRel,278
-JRGZM,279
-JRMES,280
-JRS,281
-JSav,282
-JSJ,283
-JThS,284
-JWalt,285
-JWarb,286
-JWG,287
-KK,288
-KölnJB,289
-KVG,290
-LCM,291
-LF,292
-LibSt,293
-LICS,294
-LIMAM,295
-MA,296
-MAntFr,297
-MBAH,298
-MCl,299
-MCr,300
-MCV,301
-MD,302
-MDIK,303
-MedHum,304
-MeditArch,305
-MediterrAnt,306
-MedRen,307
-MedSec,308
-MÉFR,309
-MÉFRA,310
-MemLinc,311
-MemNap,312
-MGR,313
-MHR,314
-MiChA,315
-MIO,316
-MÖIG,317
-MonPiot,318
-MSR,319
-MStudStor,320
-MüJb,321
-MusHelv,322
-NAkG,323
-NAnt,324
-NC,325
-NCirc,326
-NECJ,327
-NHJ,328
-NJAB,329
-NJbb,330
-NJW,331
-NL,332
-NouvClio,333
-NRS,334
-NRTh,335
-NTS,336
-NumAntCl,337
-NZ,338
-OC,339
-OCP,340
-ÖJh,341
-OJA,342
-OLP,343
-OLZ,344
-OMRL,345
-OpArch,346
-OpAth,347
-OpRom,348
-OS,349
-OSAPh,350
-P&I,351
-PACA,352
-PastPres,353
-PCA,354
-PCPS,355
-PEFA,356
-PEFQ,357
-PhilosAnt,358
-PhilWoch,359
-PhS,360
-PLCS,361
-PP,362
-PQ,363
-Prakt,364
-PraktAkAth,365
-PRIA,366
-ProcBritAc,367
-ProcPhilAs,368
-ProcPhilSoc,369
-PSN,370
-QAL,371
-QC,372
-QCSAM,373
-QDAP,374
-QS,375
-QSAE,376
-QUCC,377
-RA,378
-RACrist,379
-RArts,380
-RBibl,381
-RBN,382
-RBPhil,383
-RCCM,384
-RD,385
-RdA,386
-RDAC,387
-REA,388
-REByz,389
-REC,390
-RecSciRel,391
-RecTh,392
-REG,393
-REg,394
-REJ,395
-REL,396
-RendBol,397
-RendIstLomb,398
-RendLinc,399
-RendNap,400
-RendPontAcc,401
-RFHIP,402
-RHD,403
-RHE,404
-Rhetorica,405
-RHist,406
-RhM,407
-RHPh,408
-RHPhR,409
-RHR,410
-RHSE,411
-RHT,412
-RID,413
-RIDA,414
-RIGI,415
-RIN,416
-RISG,417
-RivBibl,418
-RivFil,419
-RivIstArch,420
-RivStorAnt,421
-RivStorIt,422
-RM,423
-RMM,424
-RN,425
-RömQSchr,426
-RPhA,427
-RPhil,428
-RPL,429
-RR,430
-RS,431
-RSB,432
-RSCr,433
-RSDI,434
-RSF,435
-RSO,436
-RSPh,437
-RThPh,438
-RUB,439
-S&C,440
-SaalbJb,441
-SBBerl,442
-SBF,443
-SBFP,444
-SBHeid,445
-SBMünch,446
-SBWien,447
-SCathol,448
-ScCatt,449
-SchwMbll,450
-SCI,451
-SDHI,452
-SemRom,453
-SEP,454
-SicGymn,455
-SMEA,456
-SMSR,457
-SNR,458
-SP,459
-SPAW,460
-SPFB (klas),461
-StClas,462
-STh,463
-StIt,464
-StMisc,465
-StPap,466
-StRom,467
-StudUrb (Ser. B),468
-SyllClass,469
-SymbOslo,470
-TAPA,471
-TAPS,472
-TG,473
-ThB,474
-ThJ,475
-ThLZ,476
-ThQ,477
-ThRev,478
-ThS,479
-ThZ,480
-TravMém,481
-TRG,482
-U&F,483
-UgaritF,484
-VDI,485
-VerbDom,486
-VigChr,487
-VSG,488
-WB,489
-WG,490
-WHB,491
-WorldArch,492
-WS,493
-WürzJbb,494
-WZBerlin,495
-WZHalle,496
-WZKM,497
-WZLeipzig,498
-YCS,499
-ZAC,500
-ZÄS,501
-ZATW,502
-ZBB,503
-ZDMG,504
-ZDPV,505
-ZivaAnt,506
-ZKG,507
-ZKTh,508
-ZNTW,509
-ZÖstG,510
-ZPE,511
-ZPhF,512
-ZSav,513
-ZVRW,514
-ZVS,515
-ZWTh,516
-CRAI,617
-RIL,751
-Varia Aeg.,894
-Aberdeen University Review,900
-Acme,901
-Acta Byzantina Fennica N.S.,902
-Acta Ethnographica Academiae Scientiarum Hungaricae,903
-Acta Hyperborea,904
-Acta Juridica Academiae Scientiarum Hungaricae,905
-Acta Musicologica,906
-Acta Orientalia,907
-Acta Philologica Aenipontana,908
-"Acta Universitatis Latviensis, Filol. un Filos. Fakultates [Riga], ser. IV",909
-Actes du VIIIe Congrès international des sciences historiques. Section II,910
-Adamantius,911
-Aegyptus,912
-Aegytus,913
-Aevum(ant) N.S.,914
-Africana Bulletin,915
-Agon,916
-Ägypten in,917
-Ägypten und Levante,918
-Akademie-Journal,919
-Akroterion,920
-Al Qanoun Wal Iqtisad,921
-Al Quanoun wal Iqtisad,922
-Alba Regia,923
-Alexandrie entre deux,924
-"Alexandrie, le dernier",925
-"Alexandrie, lumière du",926
-Alfinge,927
-"Alif. Journal of Comparative Poetics [American University in Cairo, Department of English and Comparative Literature]",928
-Almanach Akademie Wien,929
-Almanach der Österreichischen Akademie der Wissenschaften,930
-Almanach der Österreichischen Akademie der Wissenschaften in Wien,931
-Altertum,932
-Alumni. Revue du Cercle des Alumni [Bruxelles],933
-Alumni. Revue du Cercle des Alumni de la Fondation Universitaire (Bruxelles),934
-Ambrosius,935
-American Anthropologist,936
-American Mathematical Monthly,937
-American Scholar,938
-American Sociological Review,939
-American University Law Review,940
-Amour de l'Art,941
-Ampurias,942
-Anabases. Traditions et réception de l'Antiquité,943
-Anabases. Traditions et réception de l'Antiquité. Revue de l'équipe de recherche E.R.A.S.M.E. - Université de Toulouse-Le Mirail,944
-Anagennesis,945
-Analecta Gregoriana,946
-Analecta. Publication annuelle de l'Institut d'études orientales de la Bibliothèque patriarcale d'Alexandrie,947
-"Analele Univ. Bucuresti, Ser. St. Soc.",948
-Analele Universitatii Bucuresti. Seria Stiinte Sociale-Juridice,949
-Analele Universitatii din Bucuresti. Seria Stiinte Sociale. Filologie,950
-Anali della scuola normale superiore di Pisa (ASNP),951
-Analytical Chemistry,952
-Anatolia Antiqua,953
-Anazetesis,954
-Ancient Civilizations from Scythia to Siberia,955
-Ancient Society [Macquarie University],956
-Ancient West & East,957
-Andalus,958
-Anemos,959
-Ankara Universitesi Hukuk Fakültesi Dergisi [Revue de la Faculté de Droit de l'Université d'Ankara],960
-Annales de la Faculté de Droit d'Istanbul,961
-Annales de la Faculté de Droit de l'Université de Bordeaux. Série juridique,962
-Annales de la Faculté de Droit et des Sciences économiques de Toulouse,963
-"Annales du Centre Universitaire Méditerranéen, Nice",964
-Annales Islamologiques,965
-"Annales Universitatis Saraviensis, Philosoph. Fakultät",966
-Annali del Liceo Classico 'Dettori' di Cagliari,967
-"Annali del Pontificio Istituto Superiore di Scienze e Lettere ""S. Chiara""",968
-"Annali dell'Istituto Superiore di Scienze e Lettere ""S. Chiara"" di Napoli",969
-Annali della Facoltà de Giurisprudenza dell'Università di Camerino,970
-Annali della Facoltà di Giurisprudenza dell'Università di Bari,971
-Annali della Facoltà di Giurisprudenza dell'Università di Bari N.S.,972
-Annali della Facoltà Giuridica (Università degli Studi di Camerino),973
-"Annali della R. Scuola Normale Superiore di Pisa, Ser. II",974
-Annali di Scienze religiose,975
-Annali di Scienze Religiose (Università Cattolica del Sacro Cuore),976
-Annali di storia del diritto,977
-"Annals of the Faculty of Arts, Ain Shams University",978
-"Annals of the Faculty of Arts, Ibrahim Pasha University [Ain Shams University, Cairo]",979
-Annotazioni numismatiche ser.,980
-Annuaire de l'École Pratique des Hautes Études. Section des Sciences historiques et philologiques,981
-Annuaire du Musée National de,982
-Annuario di diritto internazionale,983
-Anthropologischer Anzeiger,984
-Anthropozoologica,985
-Antichthon,986
-Antik Tanulmányok,987
-Antik tanulmányok - Studia antiqua,988
-Antik Tanulmányok (Studia Antiqua),989
-Antiquitas,990
-Antiquity,991
-Anuario de Estudios Filológicos [Universidad de Extremadura],992
-Anuarul Institutului de Studii Clasice (Univ. din Cluj),993
-Apeiron,994
-Apocrypha,995
-Aquila legionis. Cuadernos de estudios sobre el ejército romano,996
-Aram,997
-Arbor,998
-Archaeologia,999
-Archaeologia Maritima Mediterranea,1000
-"Archaeologiai. Ertesitö, s. III",1001
-Archaeology,1002
-Archaeonautica,1003
-Archaeozoologia,1004
-Archaeus,1005
-Archaiognosia,1006
-Archaiologia,1007
-Archaoelogy,1008
-Archeion,1009
-Archeion idiotikou dikaiou,1010
-Archeo,1011
-Archeografo Triestino,1012
-Archéologia,1014
-Archeologia Viva N.S.,1015
-Archéologie du Nil Moyen,1016
-Archiv für ägyptische Archäologie,1017
-Archiv für Geschichte des Buchwesens,1018
-Archiv für Liturgiewissenschaft,1019
-Archivio giuridico Filippo Serafini,1022
-Archiwum Filologiczne. XI,1023
-Archiwum Orientale Pragense,1024
-Archiwum towarzystwa naukowego we Lwowie,1025
-Arctos,1026
-Arctos N.S.,1027
-Arethusa,1028
-Argos,1029
-Ariadne,1030
-Arion,1031
-Art in America,1032
-Arte,1033
-Artibus Asiae,1034
-Arts et Métiers graphiques,1035
-Asiatische Studien,1036
-Aspetti dell'opinione pubblica nel,1037
-Athena,1038
-Athenaeum,1039
-Athenaeum N.S.,1040
-Atiqot,1041
-Atti Acc. Udine s. VI,1042
-Atti del IV Congresso nazionale di Studi Romani. II,1043
-"Atti dell'Accademia di Scienze, Lettere e Arti di Udine",1044
-Atti dell'Accademia Peloritana dei Pericolanti,1045
-"Atti della Società Italiana per il Progresso delle Scienze Riunite XXVI, vol. I",1046
-"Atti e memorie dell'Accademia nazionale di scienze, lettere ed arti di Modena ser.",1047
-Atti IV Congresso Internazionale di Archeologia Cristiana. II,1048
-Au fil de,1049
-Au royaume d'Osiris. Images et rites,1050
-Aufidus,1051
-Augustinianum,1052
-Aula Orientalis,1053
-Auriga,1054
-Aus der Welt,1055
-Australian Biblical Review,1056
-Balkan-Archiv N.F.,1057
-"Bancroftiana [The Bancroft Library, University of California, Berkeley]",1058
-Baptist Quarterly,1059
-Baroda State Museum Bulletin,1060
-Begegnung von Heidentum und Christentum,1061
-Beiträge zur Sudanforschung,1062
-Belfagor,1063
-Bergamum,1064
-Bericht des Historischen Vereins Bamberg,1065
-Berkshire Review,1066
-Berytus,1067
-Bibel und Kirche,1068
-Bible Review,1069
-Biblica,1070
-Bibliophil. Jahrb. f. Kathol. Geistesleben,1071
-Bibliotheca Sacra,1072
-Biblische Leitschrift N.F.,1073
-Biblische Notizen,1074
-Biblos,1075
-Bijdragen tot de geschiedenis,1076
-Bild- und Formensprache der spätantiken Kunst. Hugo Brandenburg zum,1077
-Biuletyn historii Sztuki i Kultury,1078
-Bogoslovska smotra,1079
-Bogoslovskie trudy,1080
-Boletín de la Asociación española de Egiptología,1081
-Boletín de la Asociación Española de Orientalistas,1083
-Boletín del Instituto de Derecho Comparado de México,1084
-Boletín del Instituto de Investigaciones Históricas,1085
-Boletín del Museo Arqueológico Nacional,1086
-Bollettino del Museo Civico di Padova,1087
-Bollettino del Reale Istituto di patologia del libro,1088
-Bollettino della Scuola di perfezionamento e di specializzazione in diritto del lavoro e della sicurezza sociale (Università di Trieste),1089
-Bollettino della Società Lett. Verona,1090
-Bollettino di Numismatica,1091
-"Bollettino Roncioniano [Prato, Biblioteca Roncioniana]",1092
-Boreas,1093
-Boston Museum Bulletin,1094
-Britannia,1095
-British Academy Review,1096
-British Journal for the History of Science,1097
-Buchbinderlehrling,1098
-Bull. Museen in Köln,1099
-"Bull. of the John Rylands Library, Manchester",1100
-Bulletin de l'Académie des Sciences de l'URSS,1101
-"Bulletin de l'Association des Amis de ""Sources chrétiennes""",1102
-Bulletin de la Société Archéologique d'Alexandrie,1104
-Bulletin de la Société d'Égyptologie de Genève,1106
-Bulletin de la Société Ernest Renan N.S.,1109
-Bulletin de la Société française d'Égyptologie,1110
-Bulletin de liaison de la Société des Amis de la Bibliothèque Salomon-Reinach N.S.,1112
-Bulletin des Musées et Monuments lyonnais,1113
-Bulletin du Centenaire. Supplément au BIFAO,1114
-Bulletin du Cercle d'Études numismatiques,1115
-Bulletin du Cercle des Alumni de la Fondation Universitaire,1116
-Bulletin International de l'Académie Yougoslave des Sciences et des Beaux-Arts de Zagreb,1117
-Bulletin of British Byzantine Studies,1118
-Bulletin of the Bezan Club,1120
-Bulletin of the Egyptological Seminar,1121
-"Bulletin of the Faculty of Arts, Farouk I University [Alexandria University]",1122
-Bulletin of the Israel Exploration Society,1123
-Bulletin of the Okayama Orient Museum,1124
-Bulletin of the Polish Institute of Arts and Sciences in America,1125
-BSOAS,1126
-Bulletin officiel de la Chambre syndicale du Commerce des papiers de France,1127
-Bulletin trimestriel de la Société française d'Égyptologie,1128
-Bulletin van de Vereeniging tot Bevordering der Kennis van de Antieke Beschaving,1129
-Bulletin. Wadsworth Atheneum,1130
-Buried History. Quarterly Journal of the Australian Institute of Archaeology,1131
-Buzantiaka,1132
-Buzantina,1133
-Byzantina,1134
-Byzantina Metabyzantina,1135
-Byzantina Neerlandica,1136
-Byzantine Studies / Études byzantines,1138
-Byzantinoslavica,1139
-Byzantion,1140
-Ca' de Sass,1141
-Cadmo [Lisboa],1142
-Caesarodunum,1143
-Cahiers d'Alexandrie,1144
-"Cahiers d'Alexandrie Série III, fasc.",1145
-Cahiers d'histoire égyptienne,1146
-Cahiers de Clio,1147
-Cahiers de Karnak,1148
-Cahiers de la céramique égyptienne,1149
-Cahiers de Mariemont,1150
-Cahiers du Centre d'études chypriotes,1151
-Capitolium,1152
-Cathedra,1153
-Catholic Biblical Quarterly,1154
-Célébration du bi-centenaire de la pierre,1155
-"Centaur, No. spécial d'hommage à la Grèce",1156
-Centaurus,1157
-Cercle lyonnais d'Égyptologie Victor Loret. Bulletin,1158
-Chiron,1159
-Christiana Albertina,1160
-"Christoph SCHÄUBLIN, Aus paganer und christlicher Antike. Ausgewählte Aufsätze zur Klassischen Philologie",1161
-Chronozones,1162
-Church Quarterly Review,1163
-Ciba-Rundschau,1164
-Circe,1165
-Classica (Brasil),1166
-Classical Studies,1167
-Classicum,1168
-Codicologica,1169
-Collectanea Christiana Orientalia [Córdoba],1170
-Communications du Musée National de l'Ermitage,1171
-Computing in the,1172
-Concordia Theological Monthly,1173
-Conservation of Wood in Painting and the Decorative Arts,1174
-Convivium,1175
-Corolla Londiniensis,1176
-Crises,1177
-Cristianismo y poder en,1178
-Critical Review of Books in Religion,1179
-Cuadernos de Historia primitiva,1180
-Cultura Biblica,1181
-Cultura Bíblica,1182
-Czasopismo prawno-historyczne,1183
-Czasopismo Prawno-Historyczne [Annales d'Histoire du Droit],1184
-Czasopismo prewno-historyczne,1185
-Dappim,1187
-Das Altertum,1188
-Das Giessener Fenster. Aktuelle Monatsschrift für Giessen und Mittelhessen,1189
-Das Gymnasium,1190
-Das Prophetische Wort,1191
-Dawna kultura,1192
-Dawna Sztuka,1193
-De Gids,1194
-Dejury a soucasnost,1195
-Deltion tès christianikès archaiologikès Hetaireias IV,1196
-Der Stenografielehrer,1197
-Deutsche höhere Schule,1198
-Deutsche Juristen Zeitung,1199
-Deutsche Münzblätter,1200
-Deutsche Textfunde in Nubien,1201
-Deutsches Jahrbuch der Musikwissenschaft,1202
-Deutsches Pfarrerblatt,1203
-Deutschlands Erneuerung,1204
-Dialog,1205
-Dialogos,1206
-Diatribae Fr. Lexa.,1207
-Didaskalikon (Athénée Royal de Liège. Centre de recherche et de documentation pour l'enseignement du grec) No.,1208
-Didaskalos,1209
-Die Antike,1210
-Die Bibel in der Welt. Jahrbuch des Verbandes der Evangelischen Bibelgesellschaften in Deutschland,1211
-Die Frau,1212
-Die Neue Rundschau,1213
-Die Sprache,1214
-Die Waage,1215
-Dike,1216
-Dike. Rivista di storia del diritto greco ed ellenistico,1217
-Diogène,1218
-Diogenes,1219
-Dioniso,1220
-Dioniso N.S.,1221
-Dionysius,1222
-"Dipartimento di Filologia, Linguistica e Tradizione classica ""Augusto Rostagni"". Quaderni",1223
-Discussions in Egyptology,1224
-Dodekanesiakon Archeion,1225
-Dodone,1226
-Donum Natalicium Albin,1227
-"Dossier: ""Afriques romaines, relectures et réflexions à l'école",1228
-Doxa,1229
-Durius,1230
-Ecclesiastical Review,1231
-École Pratique des Hautes Études - Section des Sciences historiques et philologiques. Livret-Annuaire,1232
-Egnatia,1233
-Egypt Travel Magazine,1234
-Egypt Travel Magazine [édition française],1235
-Égypte contemporaine,1236
-"Égypte, Afrique & Orient",1237
-Égyptes,1238
-Egyptian Archaeology,1239
-Égyptiens et Grecs: ports et voyages,1240
-Eikasmos,1241
-Einiges über Löhne und Preise im justinianischen Reich,1242
-Eirene,1243
-Eis mnemen G.P. Oikonomou.,1244
-El miliario extravagante,1245
-Elenchos,1246
-Emerita,1247
-Enchoria,1248
-Eos,1249
-Epeteris Laographikou Archeiou Akademias Athenon,1250
-Epeteris Leukadikon meleton,1251
-Ephemerides Liturgicae,1252
-Ephemerides mariologicae,1253
-Ephemeris Hellenon Nomikon,1254
-Ephemeris ton Hellenon Nomikon,1255
-Epigraphica,1256
-Epitheoresis Ergatikou Dikaiou,1257
-Epoca,1258
-Epos,1259
-Eranos,1260
-"Eras [School of Historical Studies, Monash University, Melbourne]",1261
-Erdkunde. Archiv für wissenschaftliche Geographie,1262
-Erfurter Münzblätter,1263
-Erytheia,1264
-"Espacio, Tiempo y Forma. Serie II. Historia Antigua [Universidad Nacional de Educación a Distancia]",1265
-"Essays in Philosophy [Humboldt State University, Arcata, California]",1266
-"Estudios humanísticos, Geografía, Historia, Arte (Universidad de León. Facultad de Filosofía y Letras)",1267
-Estudis Romànics,1268
-Études balkaniques,1269
-Eulimene,1270
-Eunomia,1271
-Eunomia (Prague),1273
-Evangel,1275
-Evangelical Quarterly,1276
-Evangelische Theologie,1277
-Expedition,1278
-Expedition (Philadelphia),1279
-Facta. A Journal of Roman Material Culture Studies,1280
-Faenza,1281
-Faventia,1282
-Filologia Neotestamentaria,1283
-Filomata,1284
-Filomata (Cracovie),1285
-Filomata fasc.,1286
-Filomocha No.,1287
-Filosofia,1288
-Folium,1289
-Fonaments. Prehistòria i Món. Antic als Països Catalans,1290
-Forschung in,1291
-Forschungen und Berichte,1292
-Fortunatae,1293
-France Franciscaine,1294
-France-Grèce,1295
-"Francisco R. ADRADOS, José Antonio BERENGUER, Eugenio R. LUJÁN y Juan RODRÍGUEZ SOMOLINOS, Veinte años de filología griega",1296
-"François Lasserre, Nouveaux chapitres de littérature grecque",1297
-Freiburger Universitätsblätter,1298
-From the Gustavianum Collections,1299
-From the Gustavianum Collections in Uppsala,1300
-Gaia. Revue interdisciplinaire sur la Grèce archaïque [Université Stendhal-Grenoble,1301
-Galenos. Rivista di filologia dei testi medici antichi,1302
-Gallia,1303
-Genava,1304
-Genava N.S.,1305
-Genus,1306
-George Town Law Journal,1307
-Gereformeerd theologisch Tijdschrift,1308
-Gerión,1309
-Germania,1310
-Germany and You,1311
-"Ginette LACAZE et Luc CAMINO, Mémoires de Suez. François Bissey et René Chabot-Morisseau à la découverte du désert oriental d'Égypte",1312
-Glastechn. Berichte,1313
-Glotta,1314
-Gnomon,1315
-Goden langs de Nijl. Religie,1316
-Gold Bulletin,1317
-"Gos. Ermitaz, Trudy otd. vostoka",1318
-Göttinger Miszellen,1319
-Grace Theological Journal,1320
-Graeco-Arabica,1321
-Graecolatina Pragensia,1322
-Grand Street,1323
-Grec et latin en,1324
-Gymnasium,1325
-Habis,1326
-Hadrien: vices et vertus,1327
-Hamdard medicus,1328
-Handelingen [van de] Koninklijke Zuid-Nederlandse Maatschappij voor Taal- en Letterkunde en Geschiedenis,1329
-Handes Amsorya,1330
-Harvard Divinity School Bulletin,1331
-Hathor,1332
-Heidelberger Jahrbücher,1333
-Helikon,1334
-Helios,1335
-Hellas,1336
-Hellenika,1337
-Helmantica,1338
-Henoch,1339
-Hermathena,1340
-Hermeneus,1341
-Hermes,1342
-Hesperia,1343
-Hessische Blätter für Volkskunde,1344
-Het Boek,1345
-Het Kind,1346
-Histoire et Mesure,1347
-Historia,1348
-"Historica [Vereniging voor Vrouwengeschiedenis, Brussel]",1349
-Historical Reflections / Réflexions historiques,1350
-History,1351
-History Today,1352
-Hochland,1353
-Hommage à Nazarena Valenza,1354
-Horizon,1355
-Horos,1356
-Humanidades (Universidad Pontificia de Comillas),1357
-Humanitas,1358
-Humanitas (Brescia) N.S.,1359
-Humanitas (Coimbra),1360
-Hyperboreus,1361
-I canali della propaganda nel,1362
-Iatrika Chronika,1363
-Ibérica,1364
-Iconographie classique et identités régionales. Paris,1365
-Il Foro Italiano,1366
-Il Giornale dell'Università (Firenze),1367
-Il Ponte,1368
-Ilu,1369
-Ilu. Revista de ciencias de las religiones,1370
-Imagination,1371
-Imago Aegypti,1372
-Imago Mundi,1373
-In memoriam E.V. Marmorale.,1374
-Incontri triestini di Filologia classica,1375
-Index,1376
-Investigación y Progreso,1377
-Irish Jurist N.S.,1378
-Irish Theological Quarterly,1379
-Isis,1380
-Israel Law Review,1381
-Israel Museum Journal,1382
-Istoriko-Astronomitcheskie Issledovanija Akademii Nauk SSSR,1383
-Istros,1384
-Iura,1386
-Iuris Antiqui Historia. An International Journal of Ancient Law,1387
-Izvestija Akademii Nauk SSSR. Serija literatury i jazyka,1388
-Izvestija Gosudarstvennoj Akademii Istorii Material'noj kultury fasc.,1389
-J. Roy. Astron. Soc. Can.,1390
-Jahrb. d. Österr. Byzantin. Ges.,1393
-Jahrbuch der Einbandkunst,1397
-Jahrbuch der Hafenbautechnischen Gesellschaft,1398
-Jahrbuch des Museums für Kunst und Gewerbe Hamburg,1399
-Janus,1400
-"Jean BINGEN, Pages d'épigraphie grecque: Attique - Égypte",1401
-"Jean BINGEN, Pages d'épigraphie grecque. II. Égypte",1402
-Jewish Social Studies,1403
-Journ. Fac. of Archaeol.,1404
-Journal de Pharmacie de Belgique N.S.,1405
-Journal de Psychologie normale et pathologique,1406
-Journal médical de Strasbourg,1407
-Journal of Ancient Civilizations,1408
-Journal of Classical Studies,1409
-Graeco-Latina Brunensia,1410
-Journal of Economic and Business History,1411
-Journal of Greco-Roman Christianity and Judaism,1412
-Journal of Human Evolution,1413
-Journal of Jewish Studies,1414
-Journal of Northwest Semitic Languages,1415
-Journal of Oriental and African Studies,1416
-Journal of the Ancient Chronology Forum,1417
-Journal of the Manchester Egyptian and Oriental Society,1418
-Journal of the Society for the Study of Egyptian Antiquities,1419
-Journal of the Transactions of the Victoria Institute,1420
-Juridical Review,1421
-Juristische Blätter,1422
-Jus N.S.,1423
-Kadmos,1424
-Kairos,1425
-Kairos N.F.,1426
-Karthago,1427
-Kemet,1428
-Kêmi,1429
-Kentron,1430
-Kernos,1431
-Klearchos,1432
-Kleio,1433
-Kleronomia,1434
-Klio,1435
-Klio N.F.,1436
-Kodai,1437
-Koinonia,1438
-Kokalos,1439
-Kölner Beiträge zur Sportwissenschaft,1440
-Koptologische Studien in der DDR. WZ Halle,1441
-Kretologia,1443
-Kriterion,1444
-Ktèma,1445
-Kush,1446
-Kwartalnik Historyczny,1447
-Kyklos,1448
-Kypriakai Spoudai,1449
-L'Égypte du Delta: les capitales,1451
-L'étude de l'histoire du droit en Belgique et aux Pays-Bas,1452
-L'originalité de l'Égypte dans le,1453
-L'vivs'kij derzavnij universitet imeni Ivan Franka. Pitanija klasicnoi filologii,1455
-L'vivs'kij derzavnij Universitet Pitanija klasicnoj filologii,1456
-La,1457
-"La ""démocratisation de la culture"" dans",1458
-La Conservazione delle Carte antiche,1459
-La critica d'arte (Firenze),1460
-La femme dans,1461
-"La Feuille Blanche (Bulletin de l'Association des Amis du papier, des arts et des industries graphiques français) No.",1462
-La fonction de juger. Égypte ancienne et,1463
-La Lettre de Pallas,1464
-La Lettre du Collège de France,1465
-La médecine dans,1466
-La Papirologia in,1467
-La Parola del Passato,1468
-La Pensée,1469
-La Revue de la BNU [Bibliothèque nationale et universitaire de Strasbourg],1470
-La Revue du Caire,1471
-La Revue du Notariat,1472
-La Zagaglia,1473
-Labeo,1474
-Lalies,1475
-Lampas,1476
-Language,1477
-Laographia,1478
-Late Antiquity Art in,1479
-Later Greek,1480
-Lateranum N.S.,1481
-Latinitas,1482
-Latomus,1483
-Laverna,1484
-Le Monde copte,1485
-Le monde de la Bible,1486
-Le Vie d'Italia e del Mondo,1488
-Les,1489
-Les Dossiers d'Archéologie,1490
-Les Musées de Genève (Bulletin mensuel des Musées et Collections de la Ville de Genève),1491
-Les mystères de,1492
-Les Nouveaux Cahiers,1493
-Les voies romaines autour de la,1494
-Lettres d'Humanité,1495
-Lexis,1496
-Library Hi-Tech Consecutive,1497
-Libri,1498
-Libyca,1499
-Lingua Aegyptia,1500
-Livre du Centenaire de l'I.F.A.O.,1501
-Livret de la IVe Section de l'École pratique des Hautes Études,1502
-Livret-annuaire de l'École Pratique des Hautes Études. Section des Sciences historiques et philologiques,1503
-Lucentum,1504
-Luchnos,1505
-Ludica. Annali di Storia e Civiltà del Gioco,1506
-Ludus Magistralis,1507
-Lustrum,1508
-Machriq,1509
-Macne Akademiia Nauk Gruzinskoi SSR [Bulletin de l'Académie des Sciences de la RSS Géorgienne. Série Littérature et Langue],1510
-MÆnh,1511
-Magyarok,1512
-Maia,1513
-Maia N.S.,1514
-Mais N.S.,1515
-Makedonika,1516
-Maltechnik. Restauro,1517
-Man N.S.,1518
-Man. Journal of the Royal Anthropological Institute,1519
-Marianum,1520
-Mariner's Mirror,1521
-"Marmora. International Journal for Archaeology, History and Archaeometry of Marbles and Stones",1522
-"Marsyas (A Publication by the Students of the Institute of Fine Arts, New York University)",1523
-Maske und Kothurn,1524
-Materialy Archeologiczne,1525
-Matianum,1526
-Meander,1527
-Meddelelser fra Ny Carlsberg Glyptotek,1528
-"Mededelingen van de koninklijke Nederlandse Academie van Wetenschappen, Afdeling Letterkunde N.R., XIX",1530
-Mediterraneus,1531
-Memnonia,1532
-Mémoires de l'Académie internationale de Droit comparé,1533
-"Mémoires de la Société Nationale des Antiquaires de France, 8e série",1534
-Mémoires. Bulletin de la Société francophone d'Histoire de l'Ophtalmologie,1535
-Memoirs of the American Academy of Arts and Sciences,1536
-Méroé,1538
-Meroitic Newsletter,1539
-Messana,1540
-"Metallo e scrittura. Sinergia di due poteri. Roma, Università ""La Sapienza"", Dipartimento di Scienze storiche, archeologiche e antropologiche dell'Antichità",1541
-Méthexis,1542
-Mètis,1543
-Michigan Alumnus Quarterly Review,1547
-Millennium. Jahrbuch zu Kultur und Geschichte des ersten Jahrtausends n.Chr.,1550
-Minerva,1551
-Minima Epigraphica et papyrologica,1552
-Miscelânea em honra da Doutora Maria Helena da Rocha Pereira.,1553
-Miscellanea Academica Berolinensia (Ges. Abhand. zur Feier d.,1554
-Miscellanea Biblica,1555
-Miscellanea G.,1557
-Miscellanea Gregoriana. Raccolta di scritti pubblicata nel I centenario dalla fondazione del Pontificio Museo Egizio,1558
-Mistica Rosa. Rivista bimestrale per gli alunni ed ex alunni dei Fratelli Maristi (Roma),1559
-Mitteilungen DAV,1560
-Mitteilungen der Archäologischen Gesellschaft Graz,1561
-Mitteilungen der Sudanarchäologischen Gesellschaft zu Berlin e.V.,1563
-Mitteilungen des Oberhessischen Geschichtsvereins,1564
-Mitteilungen für Anthropologie und Religionsgeschichte,1565
-Mizraim,1567
-Mneme Georges A. Petropoulos,1568
-Mnemosyne,1569
-"Mnesmosyne, 3. ser.",1570
-Mnemosyne 4e s. Mnemosyne IV° S.,1571
-Mnemosyne 4e s. Mnemosyne IV° S.,1571
-Mnemosyne 4a s.,1572
-Modern Language Notes,1573
-Mousaion,1574
-Mouseion (Canada),1575
-Mouseion ser. III,1576
-Münch. Theolog. Zeitschrift,1578
-Muse,1579
-Muséon,1580
-Musica e storia,1581
-Musiva et Sectilia,1582
-Muthos. Rivista di storia delle religioni [Università degli Studi di Palermo],1583
-Myrtia,1584
-Nachrichten der Giessener Hochschulgesellschaft,1585
-Nag Hammadi Studies,1586
-Narody Azii i Afriki,1587
-Naturwissenschaften,1588
-Nauka Polska,1589
-"Nauka Polska, jej Potrzeby, Organizacja i Rozwoj [La science polonaise. Ses besoins, son organisation et ses progrès]",1590
-Navires et commerces de la,1591
-Nea Hestia,1592
-Nederl. Kath. Stemmen,1593
-Nederlands Theologisch Tijdschrift,1594
-Neon Athenaion,1595
-Neophilologus,1596
-Neotestamentica,1597
-Neptunia,1598
-Neue Deutsche Hefte,1599
-Neue Rundschau,1600
-Nieuw Tijdschrift van de Vrije Universiteit Brussel,1601
-Nikephoros,1602
-Nilus,1603
-North Carolina Museum of Art,1605
-Not. Chiostro Monastero maggiore,1606
-Notizie dal Chiostro del Monastero Maggiore. Rassegna di Studi del Civico Museo Archeologico e del Civico Gabinetto Numismatico di Milano,1608
-Nottingham Classical Literature Studies,1609
-Nova Tellus,1610
-Nubica,1611
-Nubica et Aethiopica [antérieurement: Nubica],1612
-Numen,1613
-Numisma,1614
-Numismatica,1615
-Numismatics International,1616
-Numizmaticar,1617
-Nuova Antologia,1618
-Nuovo Digesto Italiano,1619
-Oberammergauer Vorträge (Gräfelfing vor München: Arbeitsgemeinschaft der Verlagshersteller),1620
-Ocnus,1621
-Oikumene,1622
-Omaggio a,1623
-Omnibus,1624
-Onoma,1625
-Opus,1626
-Orbis,1627
-Ord och bild,1628
-Oriens,1629
-Oriens Antiquus,1630
-Orient,1631
-Orient [The Society for Near Eastern Studies in Japan],1632
-Orient-Press [Roma],1633
-Orientalia,1634
-Orientalia N.S.,1635
-Orientalia Suecana,1636
-Orientamenti culturali,1637
-Orpheus,1638
-Orpheus N.S.,1639
-Osiris,1640
-Österreichische Lehrerzeitung,1641
-Österreichische Zeitschrift für öffentliches Recht,1642
-Ostraka,1643
-Paideia,1644
-"Palaeologia (Osaka, Japon)",1645
-Palaestra Latina,1646
-Palamedes,1647
-Palenstinskij Sbornik,1648
-Palestinskij Sbornik,1649
-Palestinskij Sbornik v y Pusk,1650
-Palestra del Clero,1651
-Pallas,1652
-Pan,1653
-Panstwo i Prawo,1654
-Pantheon,1655
-Papiro e mondo antico,1656
-Papyri,1657
-Papyrologica,1658
-Parnassos,1659
-Parole di Vita,1660
-Parousia,1661
-Patavium,1662
-Pegaso,1663
-Pharmazie,1664
-Philologum,1665
-Philologus,1666
-Philologus N.F.,1667
-Phoenix,1669
-Phronesis,1671
-Physis,1672
-Poetica,1674
-Polemon,1675
-Polifemo,1676
-Polis,1677
-Polis. Studi interdisciplinari sul mondo antico [Università degli Studi Mediterranea di Reggio Calabria],1678
-Polska Akademia Nauk. Sprawozdania z prac naukowych wydzialu nauk spolecznych,1680
-Pompeiana. Biblioteca della Parola del Passato,1681
-Population (Paris),1682
-Pour la Science,1683
-Prace historyczne,1684
-Prace i Materialy Muzeum Archeologicznego i Etnograficznego w Lodzi. Seria numizmatyczna i konserwatorska,1685
-Prace Komisji Historii Sztuki,1686
-Pragmateiai tes Akademias Athenon,1687
-Právné-historické studie,1688
-Pravoslavnyy Palestinskiy sbornik,1690
-Pravoslavyj Palestinskij Sbornik,1691
-Préfaces,1692
-Princeton University Library Chronicle,1693
-Pro Arte,1694
-Problemui Istorii dokapitalistichestkikh Obshchestv,1695
-Problemy,1696
-Proceed. of the American Philosophical Society,1697
-Proceedings of the American Academy for Jewish Research,1698
-Proceedings of the Royal Society of Historical Studies,1699
-Programma zasedanij i tezisy dokladov konferencii po problemam anticnosti. Moskva,1700
-Prolegomena,1701
-Prometheus,1702
-Prominenten kijken om. Achttien rechtsgeleerden uit de Lage Landen over,1703
-Prospettiva,1704
-Protokolle zur Bibel,1705
-Prudentia,1706
-Przeglad biblijny,1707
-Przeglad Humanistyczny,1709
-Przeglad Kulturalny,1710
-Publications of the Observatory of the University of Michigan,1711
-Pyrenae,1712
-Qadmoniot,1713
-"Quaderni del Dipartimento di Filologia, Linguistica e Tradizione classica",1715
-Quaderni del Liceo Capece,1716
-Quaderni di Acme,1717
-Quaderni ticinesi di numismatica e antichità classiche,1718
-Quaderno,1719
-Quarterly Review of Literature,1720
-Rabels Zeitschrift für ausländisches und internationales Privatrecht,1721
-Raccolta di scritti dedicati a Orsolina Montevecchi.,1722
-Ramus,1723
-Rass. Soc. Afr. Ital.,1724
-Réalités ophtalmologiques,1725
-Record of the Art Museum Princeton University,1726
-Recueil d'études dédiées à,1727
-Relationes Budvicenses,1728
-Religion in Life,1729
-Renaissance,1730
-"Rendiconti dell'Istituto Lombardo, Cl. di lettere",1731
-Research and Progress,1732
-Restaurator,1733
-Restauratorenblätter,1734
-Rev. gen. de legislación y jurisprudencia,1735
-Revista Catalana de Teologia,1736
-Revista crítica de derecho immobiliario Nos,1737
-Revista del Instituto de Historia Antigua Orient.,1738
-Revue archéologique du Centre,1739
-Revue d'Alsace,1741
-Revue de l'histoire juive en Égypte,1742
-Revue de la Banque,1743
-Revue de la Bibliothèque Nationale,1744
-Revue de la Société Ernest Renan n.s.,1745
-"Revue de Philologie, 3e série",1746
-Revue des ...tudes Augustiniennes,1747
-Revue des Conférences françaises en Orient,1748
-Revue des études juives. Historia judaica,1749
-Revue des sciences économiques (Liège),1750
-Revue des sciences religieuses,1751
-Revue du Nord,1752
-Revue européenne des sciences sociales et Cahiers Vilfredo Pareto,1753
-Revue historique de Bordeaux et du département de la Gironde,1754
-Revue internationale de Pédiatrie,1755
-Revue Médicale de Liège,1756
-Revue Roumaine d'Égyptologie,1757
-Revue thomiste,1758
-Revue. Informatique et statistique dans les sciences humaines,1759
-Ricerche di Egittologia e di Antichità Copte,1760
-Rivista di Bizantinistica,1761
-Rivista di diritto agrario,1762
-Rivista di diritto privato,1763
-Rivista di Merceologia,1764
-Rivista italiana per le Scienze giuridiche ser. III,1766
-Rivista trim. di diritto e proced. civile,1767
-Rivisti di Diritto Agrario,1768
-Rocznik Muzeum Narodowego,1769
-Rocznik Muzeum Narodowego w Warszawie,1770
-Rocznik Muzeum Narodowego w Warszawie [Annuaire du Musée National de Varsovie],1771
-Roczniki Humanistyczne (Lublin),1772
-Roma,1773
-Romance Philology,1774
-Romanistik in Geschichte und Gegenwart,1775
-Romanitas,1776
-Römisches Glas des,1777
-Römisches Porträt. Wege zur Erforschung eines gesellschaftlichen Phänomens. Wissenschaftliche Konferenz,1778
-Rotunda,1779
-Ruch Biblijny i Liturgiczny (Cracovie),1781
-Rudiae,1782
-Rudolfinum. Jahrbuch des Landesmuseums Kärnten,1783
-Saeculum,1784
-Sahara,1785
-Sal Terrae (Santander),1786
-Samtichen,1787
-Samtidem,1788
-San. Journal of the Society for Ancient Numismatics,1789
-Sandalion,1790
-Sarapis,1791
-"Savigny-Zeitschrift, Röm. Abt.",1792
-Sbornik Gosud. Ermitaz. Skul'ptura v muzee,1793
-Schol(i)a,1794
-Scholia,1795
-Schweizer Beitr. z. allg. Gesch.,1796
-Schweizer Beiträge zur Allgemeinen Geschichte,1797
-Schweizer Münzblätter,1798
-Science and Society,1799
-"Science and Technology for Cultural Heritage. Journal of the ""Comitato Nazionale per la Scienza e la Tecnologia dei Beni Culturali"", CNR",1800
-Science et Esprit,1801
-Scientia,1802
-Scientific American,1803
-Scientific Monthly,1804
-Scienza e Tecnica,1805
-"Scienze dell'Antichità. Storia, archeologia, antropologia [Università degli Studi di Roma ""La Sapienza""]",1806
-Scienze e Tecnica,1807
-Scolastik,1808
-Scriba,1809
-Scriptorium,1810
-Scritti in onore di Lombardo Ferrini pubblicati in occasione della sua Beatificazione. I,1811
-Scuda Cattolica,1812
-Sefarad,1813
-Segno e Testo,1814
-Segno e Testo. International Journal of Manuscripts and Text Transmission [Università degli Studi di Cassino],1815
-Seiyoshigaku [Studies in Western History],1816
-Semeia,1817
-Seminar,1818
-Seminar. An Annual Extraordinary Number of the Jurist,1820
-Seminarium Kondakovianum,1821
-Semitica,1822
-"Septuagint and Cognate Studies (Missoula, Mont.)",1823
-Serapis,1824
-Palaeohispanica,1825
-"Sibrium. Centro di Studi Preistorici ed Archeologici, Varese",1826
-Sicilia antiqua,1827
-Siegener Hochschulblätter,1828
-Sileno,1829
-Smithsonian,1830
-Society of Biblical Literature. Seminar Papers Series.,1831
-Soobscenija gosudarstvennogo Ermitaza [Communications du Musée d'État de l'Ermitage],1832
-Speculum,1833
-Spektrum,1834
-Spiegel der Forschung. Justus-Liebig-Universität Giessen,1835
-Spiegel Historiael,1836
-Spomenika Profesoru,1837
-Sprache,1838
-Sprawozdania Polsk. Akad. Um.,1839
-Sprawozdania Polskiej Akademii Umiejetnosci,1840
-Sprawozdania Poznanskiego Towarzystwa Przyjaciót Nauk,1842
-Sprawozdania Wroclawskiego Towarzystwa Nauk,1843
-Sprawozdania z czynnosci i poseidzen Polskiej Akad. Umiej,1844
-Sprawozdania z Prac Naukowych Wydzialu Nauk Spolecznych,1845
-Stadion,1846
-Stasinos. Deltio tou Sundesmou Hellen Philol. Kuprou (Leucosia),1847
-Stlt N.S.,1848
-Storia dell'Arte,1849
-Studi di Egittologia e di Antichità puniche,1850
-Studi e Ricerche sull'Oriente cristiano,1851
-Studi Economici-giuridici della Reale Università di Cagliari,1852
-Studi epigrafici e linguistici sul Vicino Oriente,1853
-Studi Senesi,1855
-Studi Trentini di Scienze storiche,1856
-Studi vari,1857
-Studia Aegyptiaca,1858
-Studia Antiqua,1859
-Studia Archeologiczne,1860
-Studia Archeologiczne. Uniwersytet Warszawski. Instytut archeologii,1861
-Studia Ghisleriana. Ser. I. Studi giuridici,1862
-Studia Hellenistica,1863
-Studia philologica Valentina,1864
-Studien,1865
-Studien zur Altägyptischen Kultur,1866
-Studies in Conservation,1867
-Studii Teologice (Bucarest),1868
-Studium Generale (Porto),1869
-Stultifera Navis,1870
-Subseciva Groningana. Studies in Roman and Byzantine Law,1871
-Sudan & Nubia,1872
-Sudan Texts Bulletin,1873
-Sungraphe,1874
-Suomen Museo,1875
-"Supplément au Dictionnaire de la Bible de F. Vigouroux, fasc.",1876
-Symb. Osl.,1877
-Symbolae Arminio de Gerkan sexagenario,1878
-Symbolae Hrozny.,1879
-Symbolae Raphaeli Taubenschlag,1880
-Symbolae Raphaeli Taubenschlag dedicatae.,1881
-Synthesis (La Plata),1882
-Syria,1883
-Syro-Egypt,1884
-Sztandar Mlodych,1885
-Talanta,1886
-Technical Association of Man-Made Fiber Paper,1887
-Technical Studies in the Field of the Fine Arts,1888
-"Technologia. Quarterly Review devoted to Historical and Social Studies in Science, Technology and Industry",1889
-Temas bíblicos,1890
-Temis. Revista de ciencia y técnica jurídicas,1891
-Tempo Nuovo,1892
-Text. Transactions of the Society for Textual Scholarship,1893
-Textile History,1894
-Textile Museum Journal,1895
-Textilforum,1896
-Thalès,1897
-The Anvil,1898
-The Arbitration Journal. A Quarterly of the American Arbitration Association,1899
-The Artefact,1900
-The Bible Translator,1901
-The Brooklyn Museum Annual,1902
-The Cambridge Journal,1903
-The Canadian Journal of Economics and Political Science,1904
-The Catholic Biblical Quarterly,1905
-The Celator,1906
-The Church Quarterly Review,1907
-The Economic History Review,1908
-The Egyptian Bulletin,1909
-The Hibbert Journal,1911
-The Indian Archives,1912
-The Journal of Hellenic Studies,1913
-The Journal of Jewish Studies,1914
-The Journal of the Society for the Study of Egyptian Antiquities,1915
-The Jurist,1916
-The Kyoto Journal of Ancient History,1917
-The Library,1918
-The Library Quarterly,1919
-The Link,1920
-"The Listener, May",1921
-The Maynooth Review,1922
-The Michigan Quarterly Review,1923
-The Polish Review,1924
-The Polish Review (New York),1925
-The Princeton Seminary Bulletin,1926
-The Qumran Chronicle,1927
-The Review of the Polish Academy of Sciences,1928
-The University of Leeds Review,1929
-The University of Toronto Quarterly,1930
-Thetis,1932
-Thetis. Mannheimer Beiträge zur Klassischen Archäologie und Geschichte Griechenlands und Zyperns,1933
-Thought. A Quarterly of the Sciences and Letters,1934
-Tijdschrift voor Theologie,1935
-"Tod, Bestattung und Jenseits in",1936
-Topoi,1937
-Trabajos de Egiptología. Papers on Ancient Egypt,1938
-Traditio,1939
-Transactions Bibliograph. Society,1940
-Transactions of the Connecticut Academy of Arts and Sciences,1941
-Transeuphratène,1942
-Trends in Classics,1943
-Trierer Beiträge,1944
-Trierer Theologische Zeitschrift,1945
-Trudy Tiflisskogo gosudarstvennogo universiteta,1946
-Tulane Law Review,1947
-Turun Historiallisen Yhdistyksen julkaisuja,1948
-Tyche,1949
-Tydskrif vir wetenskap en kuns N.R.,1950
-Tyndale Bulletin,1951
-Ucenye zapiski Gor'kovskogo Gosudarstvennogo Universiteta. Serija,1952
-Ucenye zapiski Jaroslavskogo gosudarstvennogo ped. Instituta fasc.,1953
-Uitzicht,1954
-Unijournal. Zeitschrift der Universität Trier. Themenheft.,1955
-Universitas,1956
-Université Libre de Bruxelles. Faculté de Droit. Travaux et Conférences,1957
-University of California Publications in Classical Philology,1958
-University of California Publications in Semitic Philology X,1959
-University of Toronto Quarterly,1960
-Universum,1961
-Varia Aegyptologica,1962
-Vedute sull'Egitto antico. Annuario,1963
-Veleia,1964
-Verbatim,1965
-Vereniging van Vrienden Allard Pierson Museum Amsterdam. Mededelingenblad,1966
-Vergleich und Analogieschluss in,1967
-Veritas (Pôrto Alegre),1968
-Vichiana,1969
-Vichiana N.S.,1970
-Vistas in Astronomy,1972
-Vita e Pensiero N.S.,1973
-Vivre et Penser,1974
-Vizantijskij Vremennik,1975
-Volume offert au Professeur Justin,1976
-Volumen Homenaje al Rev. P.D. Benito,1977
-Vspomogatel'nye istoriceskie discipliny,1978
-Wetenschappelijke Tijdingen,1980
-Wiadomosci Numizmatyczne,1982
-Wiadomosci Numizmatyczne - Polish Numismatic News,1983
-Widnokregi No.,1984
-Wiedza i zycie,1985
-"William M. CALDER III et Jaap MANSFELD (Entretiens préparés et présidés par), Hermann Diels",1986
-Wissenschaftliche Annalen,1987
-Wissenschaftliche Konferenz,1988
-Xenia Antiqua,1989
-Yale Review,1990
-Year Book of the American Philosophical Society,1991
-Zagadnienia rodzajów literackich,1992
-"Zbornik radova Vizantološkog instituta [Recueil des travaux de l’Institut d’études byzantines, Belgrade]",1993
-"Zeitschr. f, Geschichtswiss.",1994
-Zeitschrift für altorientalische und biblische Rechtsgeschichte,1995
-Zeitschrift für mathematischen und naturwissenschaftlichen Unterricht,1997
-Zeitschrift für Neues Testament,1998
-Zeitschrift für Semitistik,1999
-Zeitschrift von Schweizerischen Recht,2000
-Zeitwende,2001
-Zentralblatt für Psychotherapie und ihre Grenzgebiete,2002
-"Zeszyty naukowe Uniwersytetu Wroclawskiego Seria A, Nr.",2003
-Zetesis,2004
-Zion,2005
-Zycie szkoly wyzszej,2006
-Il Diritto marittimo,2007
-The Picus,2008
-Acta Poloniae historica,2009
-Agostino Soldati PP,2010
-American Journal of Comparative Law,2011
-Anabases,2012
-Analecta Malacitana (Málaga),2013
-Analecta Sacra Tarraconensia,2014
-Ancient Society. Resources for Teachers,2015
-Andrews University Seminary Studies,2016
-Annali della Fondazione italiana per la storia amministrativa,2017
-Archivo teológico Granadino,2022
-Bernard Boyaval REA,2023
-Bulletin de l'Association des Classiques de l'Université de Liège,2024
-Bulletin des Bibliothèques de France. Bulletin de documentation bibliographique,2026
-Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja',2027
-Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja' 3a ser.,2028
-Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja' 3e s.,2029
-Bullettino dell'Istituto di Diritto Romano,2030
-Bullettino dell'Istituto di Diritto Romano 3e s.,2031
-Bullettino dell'Istituto di Diritto Romano 3a s.,2032
-Cahiers d'Histoire,2033
-Classical Weekly,2034
-Collationes (Gand),2035
-Columbia Law Review,2036
-Confrontations (Tournai),2037
-Die Welt des Orients,2038
-Eiskasmos,2039
-Ellenika,2040
-Erasmus,2041
-Euphrosyne N.S.,2045
-Euphrosyne,2046
-Exemplaria Classica,2047
-Forum der Letteren,2048
-Galesianum,2049
-Graecolatina et Orientalia,2050
-Gregorianum,2051
-Hellenica,2052
-Historische Literatur,2053
-International Journal of African Historical Studies,2054
-Jewish Studies Quarterly,2055
-Journal of Australasian Universities Language and Literature Association,2056
-Journal of Semitic Studies,2057
-Kirjath Sepher,2058
-Kratylos,2059
-Laudate,2061
-Libraries & Culture,2062
-Litterae Caelestes,2063
-Medioevo greco,2064
-Minima Epigraphica et Papyrologica,2066
-Mouseion,2067
-Museum,2069
-Nieuwe Theologische Studiën,2070
-Ordia prima,2071
-Paedagogica Historica. International Journal of the History of Education,2072
-Papyrologica Lupiensia,2073
-Philologia (Sofia),2074
-Platôn,2075
-Primum legere,2077
-Przeglad Historyczny,2078
-Religio,2079
-Rendiconti dell'Istituto Lombardo. Parte Generale e Atti Ufficiali,2080
-Rhetoric Society Quarterly,2081
-Revista Española de teologia,2082
-Revolutionary History,2083
-Revue Bénédictine,2084
-Revue d'ascétique et de mystique,2085
-Rivista di Egittologia e di Antichità Copte,2088
-Salesianum,2090
-Scholastik,2092
-Signs,2093
-Sobornost,2094
-Studi medievali,2095
-Studi medievali 3a s.,2096
-Studia historica. Historia antigua [Universidad de Salamanca],2097
-Südost-Forschungen,2098
-Svensk teologisk kvartal Skrift,2099
-The Classical Weekly,2100
-The Irish Jurist N.S.,2101
-Theologia,2102
-Vetera Christianorum,2103
-Zeitschrift für Religions- und Geistesgeschichte,2106
-ARAM,2107
-BollClass N.S.,2110
-Bulletin de la Société d'Archéologie Copte,2111
-Bulletin de la Société d'Études historiques et géographiques de l'Isthme de Suez,2112
-Bulletin de la Société Royale de Géographie d'Égypte,2113
-Dacia N.S.,2116
-Eunomia (Ephemeridis Listy Filologické Supplementum),2117
-ONOMA,2120
-TAPHA,2123
-Main Titulo,2124
-Atti della Accademia Roveretana degli Agiati,2125
-Bollettino della Badia greca di Grottaferrata,2127
-Bulletin de la Société Neuchâteloise de Géographie,2128
-Das Antiquariat,2129
-Didactica Classica Gandensia,2130
-Hephaistos,2131
-Journal of Ancient Egyptian Interconnections,2132
-Journal of Biosocial Science,2133
-Journal of Late Antiquity,2134
-Meroitica,2135
-Philologia antiqua,2136
-Phoibos,2137
-Pro Memorie. Bijdragen tot de rechtsgeschiedenis der Nederlanden,2138
-Revue de l'Occident Musulman et de la Méditerranée,2139
-Revue de Qumran,2140
-Riggisberger Berichte,2141
-Roczniki Teologiczno-Kanoniczne,2142
-Rocznyk Muzeum Narodorvego w Warszawie,2143
-Schweizerisches Archiv für Volkskunde,2144
-Scripta Hierosolymitana,2145
-Slovenska Akademija znanosti in umetnosti. Razred za filoloske in literarne vede. Razprave,2146
-Studi tardoantichi,2147
-Studies in Ancient Art and Civilization,2148
-Théologie historique,2149
-Zboenik Pravnog Fakulteta u Zagrebu,2150
-Μήνη,2151
-Νέα Ῥώμη. Rivista di ricerche bizantinistiche,2152
-Acta facultatis politico-iuridicae universitatis scientiarum Budapestinensis de Rolando Eötvös nominatae,2153
-Acta Universitatis Lodziensis. Folio Iuridica,2154
-Annali di Storia delle Università Italiane,2155
-Annali di Storia moderna e contemporanea,2156
-Ateliers,2157
-Berichte und Arbeiten aus der Universitätsbibliothek Giessen,2158
-Bibliotheksforum Bayern,2159
-Droit et Cultures. Revue semestrielle d'anthropologie et d'histoire,2160
-Eretz-Israel,2161
-Historical Social Research,2162
-Literary & Linguistic Computing,2164
-The Oriental Institute of the University of Chicago. Studies in Ancient Oriental Civilization,2165
-Dictynna,2168
-British Museum Studies in Ancient Egypt and Sudan,2169
-Japan Studies in Classical Antiquity,2170
-Lucida Intervalla,2171
-Aestimatio,2172
-Mediterranean Archaeology and Archaeometry,2173
-Revue des études tardo-antiques,2174
-Lanx,2175
-Ηπειρωτικά Γράμματα,2176
-Journal of Indian Ocean Archaeology,2177
-ENiM,2178
-Dresdner Numismatische Hefte,2179
-The Classical and Medieval Numismatic Society Journal,2180
-Fundamina. A Journal of Legal History [Pretoria],2181
-Quaderni della Soprintendenza Archeologica del Piemonte,2182
-Mètis N.S.,2183
-Aitia,2184
-Ágora,2186
-aMun. Magazin für die Freunde der Ägyptischen Museen,2188
-Byzantion Nea Hellás,2189
-CentoPagine,2190
-Disciplina,2191
-Eruditio Antiqua,2192
-Faculty of Tourism and Hotels Magazine,2193
-Geomorphology,2194
-História Revista,2195
-Historiká. Studi di storia greca e romana,2196
-"Il Maurolico. Giornale di storia, scienze, lettere e arti",2197
-Iura Orientalia,2198
-Journal of Ancient Near Eastern Religions,2199
-Journal of the Canadian Society for Coptic Studies / Journal de la société canadienne pour les études coptes,2200
-Mare Nostrum. Estudos sobre o Mediterrâneo Antigo,2201
-Méditerranée. Revue géographique des pays méditerranéens,2202
-MOSAIKjournal,2203
-Notícia Bibliográfica e Histórica,2204
-"Oracula. Revista de Estudos de Apocalíptica, Misticismo e Fenômenos Visionarios",2205
-Revista de História,2206
-Revista do Museu de Arqueologia e Etnologia,2207
-Scripta,2208
-Semitica et Classica,2210
-Studia Antiqua et Archaeologica,2211
-Studia Liturgica,2212
-Revista de Estudos Filosóficos e Históricos da Antiguidade,2213
-Journal of Egyptian History,2215
-Early Christianity,2216
-eTopoi. Journal for Ancient Studies. Special Volume.,2217
-AeR N.S.,2218
-ZAL,2219
-Dionysus ex machina,2220
-El Futuro del Pasado,2221
-PalArch's Journal of Archaeology of Egypt / Egyptology,2222
-ExClass,2223
-Alétheia,2224
-Eugesta. Revue sur le genre dans l'Antiquité,2225
-Roman Legal Tradition,2226
-Studia Iuridica,2227
-U Schyłku Starożytności. Studia Źródłoznawcze,2228
-Past Imperfect,2229
-Mainake,2230
-Materia Giudaica,2231
-Tetradio,2232
-Vegetation History and Archaeobotany,2233
-Revista de Estudios Históricos-Juridicos,2234
-Histos,2235
-Radiocarbon,2236
-Conserveries matérielles. Revue transdisciplinaire de jeunes chercheurs,2237
-Aigis,2238
-"AJA, Online Book Reviews",2240
-AHB Online Reviews,2241
-AnnIsl,2242
-Annuaire de l'École Pratique des Hautes Études. Section des Sciences religieuses,2243
-ArchPF. Beiheft,2244
-BEFAR,2245
-Bollettino di Archeologia On Line,2246
-BAR International Series,2247
-BCH. Supplément,2248
-BAssBude,2249
-Bulletin of the History of Archaeology,2252
-Byzantinische Forschungen,2253
-CENiM,2254
-"Cahiers ""Mondes anciens""",2255
-Camenae,2256
-Camenulae,2257
-Classical Studies (Kyoto),2258
-Classics@: An Online Journal,2259
-Dacia,2260
-Didaskalia,2261
-Digressus,2262
-Dossiers d'Archéologie,2263
-ECA,2264
-EClas,2265
-Etudes,2266
-Ferrovissime,2267
-Goettinger Miszellen,2268
-Histara,2269
-Historia Religionum,2270
-Historika ?,2271
-Ítaca,2273
-JMuench,2274
-JANER?,2275
-Kyphi,2276
-Levant,2277
-Littera Antiqua,2278
-M.P.E.R.,2279
-Mitteilungen der Sudanarchaeologischen Gesellschaft zu Berlin e.V. (Der antike Sudan),2280
-ὅρμος,2281
-Plekos,2282
-Plêthos,2283
-Polish Archaeology in the Mediterranean,2284
-Pomoerium,2285
-Res Antiquae,2286
-Revue des études militaires anciennes,2287
-RoemQSchr,2288
-SBMuench,2289
-SAOC,2291
-Vergilius,2292
-Bryn Mawr Classical Review,2293
-«Abhandl. Königl. Preuss. Akad. Wiss.» philos.-hist. Kl.,2294
-Jahrbücher für classische Philologie,2295
-Studi filologici e storici,2296
-Bulletin de l'Académie Impériale des Sciences de St. Pétersbourg,2297
-Classici e Neolatini,2298
-Giornale degli Scavi di Pompei,2299
-Il Pensiero,2300
-Lexicon Philosophicum,2301
-Museo italiano di antichità classiche,2302
-Museum Philologum Londiniense,2303
-Nachrichten von der Gesellschaft der Wissenschaften zu Göttingen,2304
-Studi Classici e Orientali,2305
-Журнал Министерства народного просвещения (Žurnal Ministerstva narodnogo prosveščenija),2306
-The Law Quarterly Review,2307
-RD,2308
-Seminarios Complutenses de derecho romano,2309
-Rotulus,2310
-Transactions of the Royal Irish Academy,2311
-Electrum,2312
-Eleutheria,2313
-Journal of the Royal Asiatic Society,2314
-Religious Studies Review,2315
-Sehepunkte,2316
-Early Medieval Europe,2317
-Proceedings of the Society of Biblical Archaeology,2318
-Scripta Biblica et Orientalia,2319
-Cistercian Studies Quarterly,2320
-Coptica,2321
-Critical Sociology,2322
-Der Islam,2323
-Dotawo. A Journal of Nubian Studies,2324
-Eastern Christian Art,2325
-Ekklesiastikos Pharos,2326
-Electryone,2327
-Incontri di filologia classica,2328
-Informes y trabajos,2329
-International Journal of Paleopathology,2330
-Islamic Law and Society,2331
-Israel Numismatic Research,2332
-Journal of Agrarian Change,2333
-Journal of Ancient History,2334
-Journal of Ancient Indian History,2335
-Médiévales,2336
-Mediterranean Language Review,2337
-Mnemon,2338
-Nowy Filomata,2339
-Olba,2340
-Przegląd Religioznawczy,2341
-Revista Alétheia,2342
-Revista Numismática Hécate,2343
-Revue historique de Dunkerque et du littoral,2344
-Rivista di diritto ellenico,2345
-Studia Orientalia Electronica,2346
-Światowit. Annual of the Institute of Archaeology of the University of Warsaw,2347
-"Truppendienst. Zeitschrift für Ausbildung, Führung und Einsatz im Österreichischen Bundesheer",2348
-Papyrotheke. Rivista online di Papirologie dell'Università di Parma,2349
-Romanitas. Revista de Estudos Grecolatinos,2350
-Antiguo Oriente. Cuadernos del Centro de Estudios de Historia del Antiguo Oriente,2351
-Arabica,2352
-Archaeological Review from Cambridge,2353
-Archai. Revista sobre as origens do pensamento ocidental,2354
-Architecture and Modern Information Technologies,2355
-Arkeoloji Dergisi,2356
-Cahiers Caribéens d'Égyptologie,2357
-Gephyra. Journal for the Ancient History and Cultures of the Eastern Mediterranean,2358
-Greek and Roman Musical Studies,2359
-"Systasis. E-journal of the Association of Classical Philologists ""Antika""",2360
-Anabasis. Studia Classica et Orientalia,2361
-CHS Research Bulletin,2362
-BABELAO,2363
-Archimède. Archéologie et histoire ancienne,2364
-Biblica et Patristica Thoruniensia,2365
-Atti del Sodalizio Glottologico Milanese,2366
-Annuaire de la Société Française de Numismatique et d'Archéologie,2367
-Musica Disciplina,2368
-Archiv für Bibliographie,2369
-Archivum Mentis,2370
-Polygraphia,2371
-Sciamus,2372
-Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften zu Berlin,2373
-Pylon,2374
-Epigraphica Anatolica,2376
-Manuscripta,2377
-Cuneiform Digital Library Bulletin,2378
-Baghdader Mitteilungen,2379
-Oxoniensia,2380
-Journal of Raman Spectroscopy,2381
-Manuscript Cultures,2382
-Archaeological and Anthropological Sciences,2383
-Gazette du livre médiéval,2384
-Heritage Science,2385
-Chemické listy,2386
-Ulster Journal of Archaeology,2387
-Droit et Cultures. Revue internationale interdisciplinaire,2388
-Journal of Greek Linguistics,2389
-Journal of the General Union of Arab Archaeologists,2390
-Amtliche Berichte aus den Königlichen Kunstsammlungen,2391
-IWNW,2392
-Classical Papers,2393
-Eastern Theological Journal,2394
-Vjesnik Arheološkog muzeja u Zagrebu,2395
-Archivio Glottologico Italiano,2396
-ISAW Papers,2397
-Египет и сопредельные страны / Egypt and Neighbouring Countries,2398
-Laografia / Λαογραφία : Δελτίον τῆς Ἑλληνικῆς Λαογραφικῆς Ἑταιρείας,2399
-Philosophical Perspectives,2400
-Historical Research,2401
-Philosophical Papyri,2402
-Göttingischer gelehrte Anzeigen,2403
-Mediaeval Studies,2404
-Forum Archaeologiae - Zeitschrift für klassische Archäologie,2405
-History of Philosophy &amp; Logical Analysis,2406
-Bollettino di Studi Latini,2407
-Recueil de travaux relatifs à la philologie et à l'archéologie égyptiennes et assyriennes,2408
-Revue de l'Égypte ancienne,2409
-Revue égyptologique,2410
-Studî della Scuola Papirologica,2411
-Études de papyrologie,2412
-Bulletin of the United States Bureau of Plant Industry,2414
+﻿1,Archäologischer Anzeiger,AA
+2,"""Archaiologika Analekta ex Athenon""",AAA
+3,Annuario dell'Accademia etrusca di Cortona,AAEC
+4,Atti dell'Accademia Ligure di Scienze e Lettere,AALig
+5,"Atti della Accademia di Scienze morali e politiche della Società nazionale di Scienze, Lettere ed Arti di Napoli",AAN
+6,Acta Antiqua Academiae Scientiarum Hungaricae,AAntHung
+7,"Atti dell'Accademia Pontaniana, Napoli",AAP
+8,"Atti e Memorie dell'Accademia Patavina di Scienze, Lettere ed Arti. Classe di Scienze morali, Lettere ed Arti",AAPat
+9,Annales archéologiques de Syrie,AAS
+10,Annual of the American Schools of Oriental Research,AASOR
+11,"Abhandlungen der Deutschen Akademie der Wissenschaften zu Berlin. Kl. für Sprachen, Literatur und Kunst",AbhBerl
+12,Abhandlungen der Akademie der Wissenschaften in Mainz. Geistes- und sozialwiss. Kl.,AbhMainz
+13,Abhandlungen der Bayerischen Akademie der Wissenschaften. Phil.-hist. Kl.,AbhMünch
+14,Acta classica Universitatis Scientiarum Debrecensis,ACD
+15,Annuaire du Collège de France,ACF
+16,Acta Classica,AClass AClas
+17,"Acta Archaeologica, Copenhague",ActaArch
+18,Acta Archaeologica Academiae Hungaricae,ActaArchHung
+19,Acta Hyperborea. Danish Studies in Classical Archaeology,ActaHyp
+20,Acta Orientalia Academiae Scientarium Hungaricae,ActaOrHung
+21,Annales de l'École des Hautes Études de Gand,AEHEG
+22,Atene e Roma,AeR
+23,Aevum antiquum,Aevum Aevum(ant)
+24,Anales de Filología Clásica,AFC
+25,Arti Figurative,AFig
+26,"Annali della Facoltà di Lettere, Filosofia e Magistero dell'Università di Cagliari",AFLC
+27,Archivio Giuridico,AG
+28,Archiv für Geschichte der Philosophie,AGPh
+29,Ancient History,AH
+30,Ancient History Bulletin,AHB
+31,Anuario de historia del derecho español,AHDE
+32,Archives d'Histoire du Droit oriental,AHDO
+33,Annales d'histoire économique et sociale,AHE
+34,Archive for History of Exact Sciences,AHES
+35,American Historical Review,AHR
+36,Annali dell'Istituto Universitario Orientale di Napoli. Dipartimento di Studi del mondo classico e del Mediterraneo antico. Sezione linguistica,AION(filol)
+37,American Journal of Archaeology,AJA
+38,American Journal of Ancient History,AJAH
+39,American Journal of Numismatics,AJN
+40,American Journal of Philology,AJP
+41,American Journal of Semitic Languages and Literatures,AJSL
+42,Archiv für Kulturgeschichte,AKG
+43,Der alte Orient,AltO
+44,Mitteilungen des Deutschen Archäologischen Instituts. Athenische Abteilung,AM
+45,Analecta Bollandiana,AnalBoll
+46,Analecta Romana Instituti Danici,AnalRom
+47,Anatolian Studies,AnatSt
+48,Ancient Egypt,AncEg
+49,Ancient Narrative,AncNarr
+50,Ancient Philosophy,AncPhil
+51,Ancient Society,AncSoc
+52,Ancient World,AncW
+53,"Annales (Histoire, Sciences sociales)",Annales (HSS)
+54,Annali dell'Istituto Universitario Orientale di Napoli. Seminario di studi del mondo classico. Sezione di archeologia e storia antica,AnnArchStorAnt
+55,Annali della Facoltà di Lettere e Filosofia di Bari,AnnBari
+56,"Annales (Économie, Sociétés, Civilisations)",AnnEconSocCiv
+57,Annali della Facoltà di Lettere e Filosofia della Università di Napoli,AnnNap
+58,Annales de l'Université de Paris,AnnParis
+59,Annali della Facoltà di Lettere e Filosofia dell'Università di Perugia,AnnPerugia
+60,Annuaire de l'Institut de Philologie et d'Histoire Orientales [Bruxelles],AnnPhilHist
+61,Annali della Scuola Superiore di Pisa. Cl. di Lettere e Filosofia,AnnPisa AnnPisa ser. II
+62,Annali di storia dell'esegesi,AnnSE
+63,Annali Triestini,AnnTriest
+64,The American Numismatic Society Museum Notes,ANSMN
+65,L'Antiquité classique,AntCl
+66,Antiquaries Journal,AntJ
+67,Antike Kunst,AntK
+68,Antiquité tardive,AntTard
+69,Antike Welt,AntW
+70,Anzeiger für die Altertumswissenschaften,AnzAW
+71,Anzeiger der Österrischen Akademie der Wissenschaften in Wien. Phil.-hist. Kl.,AnzWien
+72,Archiv Orientalni,AO
+73,Archiv für Orientfosrchung,AOF
+74,Analecta Papyrologica,APapyrol
+75,Abhandlungen der Preussischen Akademie der Wissenschaften,APAW
+76,Aquileia Nostra,AquilNost
+77,Archeologia classica,ArchCl
+78,"""Archaiologikon Deltion""",ArchDelt
+79,"""Archaiologike ephemeris""",ArchEph
+80,Archaeological Ertesitö,ArchErt
+81,Archivo Español de Arqueología,ArchEspArq AEA
+82,Archäologisches Korrespondenzblatt,ArchKorrBl
+83,Archiv für Papyrusforschung und verwandte Gebiete,ArchPF
+84,Archiv für Religionswissenschaft,ArchRW
+85,Appunti romani di filologia,ARF
+86,Archiv für Religionsgeschichte,ARG
+87,Annales du Service des antiquités d'Égypte,ASAE
+88,Annuario della Scuola archeologica di Atene e delle Missioni italiane in Oriente,ASAtene
+89,Annali di scienze religiose,ASR
+90,Anglican Theological Review,AThR
+91,Atti del Centro ricerche e documentazione sull'antichità classica,AttiCAntCl
+92,Atti e Memorie dell'Accademia Toscana La Colombaria,AttiFir
+93,Atti e Memorie della Società Magna Grecia,AttiMGrecia
+94,"Atti dell'Accademia di Scienze, Lettere e Arti di Palermo",AttiPal
+95,Atti della Pontificia Accademia Romana di Archeologia,AttiPontAcc
+96,"Atti della Accademia delle Scienze di Torino. Cl. di Scienze morali, storiche e filologiche",AttiTor
+97,"Atti dell'Istituto Veneto di Scienze, Lettere ed Arto. Cl. di scienze morali e lettere",AttiVen
+98,Antike und Abendland,AuA
+99,Journal of the Australasian Universities Language and Literature Association,AUMLA
+100,Annales Universitatis Saraviensis. Philosophische Fakultät,AUS
+101,Atti e Memorie dell'Accademia Virgiliana di Mantova,AVM
+102,Bulletin de la Classe des Lettres de l'Académie Royale de Belgique,BAB
+103,Bulletin of the Australian Centre for Egyptology,BACE
+104,Bulletin semestriel de l'Association des Classiques de l'Université de Liège,BAClLg
+105,"Bulletin of the Center of Papyrological Studies, Ain-Shams University",BACPS
+106,Bulletin de l'Association des Amis des églises et de l'art coptes,BAEC
+107,Bulletin de la Société nationale des Antiquaires de France,BAntFr
+108,Bulletin de l'Académie Polonaise des Sciences et des Lettres de Cracovie,BAPC
+109,Bulletin of the American Schools of Oriental Research,BASOR
+110,Bulletin of the American Society of Papyrologists,BASP
+111,Bulletin de l'Association Guillaume Budé,BAssBudé
+112,"Boletín arqueológico, Tarragona",BAT
+113,Bulletin de correspondance hellénique,BCH
+114,Bulletin of the Cleveland Museum of Art,BClevMus
+115,Bollettino d'Arte del Ministero della Pubblica Istruzione,BdA
+116,Bibliothèque de l'École des Chartes,BECh
+117,"Berliner Museen, Berichte",BerlMus
+118,Berliner Numismatische Zeitschrift,BerlNumZ
+119,"Bulletin of the Faculty of Arts (University of Egypt, Fouad I University, Cairo University)",BFAC
+120,Bulletin of the Fogg Art Museum,BFAM
+121,Bollettino di Filologia Classica,BFC
+122,Bulletin de la Faculté des Lettres de Strasbourg,BFS
+123,Bulletin of the History of Medicine,BHM
+124,Bulletin de l'Institut archéologique bulgare,BIABulg
+125,Biblical Archaeologist,BiblArch
+126,Bibliothèque d'Humanisme et de Renaissance,BiblH&amp;R
+127,Bibliotheca Orientalis,BibO
+128,Bulletin of the Institute of Classical Studies [London],BICS
+129,Bollettino dell'Istituto di Diritto romano,BIDR
+130,Bulletin de l'Institut d'Égypte,BIE
+131,Bulletin de l'Institut français d'Archéologie orientale,BIFAO
+132,Bulletin de l'Institut historique belge de Rome,BIHBelge
+133,Biblische Zeitschrift,BiZ
+134,Bonner Jahrbücher des Rheinischen Landesmuseums in Bonn und des Vereins von Altertumsfreunden im Rheinlande,BJb
+135,Bulletin de la Société royale de Lettres de Lund,BLund
+136,Bulletin des Musées de France,BMF
+137,"Bulletin of the Museum of Fine Arts, Boston",BMFA
+138,Bulletin of the Metropolitan Museum of Art,BMMA
+139,British Museum Quarterly,BMQ
+140,Bulletin des Musées Royaux d'Art et d'Histoire,BMusBrux
+141,Bulletin du Musée hongrois des Beaux-Arts,BMusHongr
+142,Bulletin of the Museums of Art and Archaeology of the University of Michigan,BMusUM
+143,Bollettino del Comitato per la preparazione dell'Edizione Nazionale dei Classici Greci e Latini,BPEC
+144,Berliner Philologische Wochenschrift,BPW
+145,Bulletin of the John Rylands Library,BRL
+146,Brooklyn Museum Quarterly,BrookMusQ
+147,Annual of the British School at Athens,BSA
+148,Bulletin de la Société d'Archéologie d'Alexandrie,BSAA
+149,Bulletin de la Société Royale d'Archéologie d'Alexandrie,BSRAA
+150,Bulletin de la Société française de Numismatique,BSFN
+151,Bulletin de la Société de Linguistique de Paris,BSL
+152,Papers of the British School in Rome,BSR
+153,Bullerin de la section historique de l'Académie Roumaine,BullRoum
+154,Berichte zu Wissenschaftsgeschichte,BWG
+155,Byzantinisch-neugriechische Jahrbücher,ByzJ
+156,Byzantinische Zeitschrift,BZ
+157,Christentum und Wissenschaft,C&amp;W
+158,"Cahiers alsaciens d'Archéologie, d'Art et d'Histoire",CAAH
+159,Cahiers Archéologiques,CahArch
+160,Cahiers des Études anciennes,CahEtAnc
+161,Cambridge Archaeological Journal,CArchJ
+162,Classical Bulletin,CB
+163,Corsi di cultura sull'arte ravennate e bizantina,CCAB
+164,Civiltà Cattolica,CCatt
+165,Cahiers du Centre Gustave-Glotz,CCG
+166,Collectanea Christiana Orientalia,CCO
+167,Cuadernos de Filología clásica,CFC
+168,Cuadernos de Filología clásica. Estudios griegos e indoeuropeos,CFC(G)
+169,Cuadernos de Filología clásica. Estudios latinos,CFC(L)
+170,"Cahiers du GITA, Montpellier",CGITA
+171,Church History,ChHist
+172,Cambridge Historical Journal,CHJ
+173,Cahiers d'Histoire Mondiale,CHM
+174,Chronique d'Égypte,ChrEg
+175,Classical Journal,CJ
+176,Classical Antiquity,ClAnt
+177,Classica et Mediaevalia,ClMed
+178,Classical and Modern Literature,CML
+179,Connaissance de l'Hellénisme [Luchnos],ConnHell
+180,Classical Philology,CP
+181,Classical Quarterly,CQ
+182,Classical Review,CR
+183,Cahiers de Recherches de l'Institut de Papyrologie et d'Égyptologie de Lille,CRIPEL
+184,Cronache Ercolanesi,CronErcol
+185,"Classical Weekly, puis Classical World",CW
+186,Dissertation Abstracts,DA
+187,Dialogues d'histoire ancienne,DHA
+188,Dialoghi di archeologia,DialArch
+189,Deutsche Literaturzeitung,DLZ
+190,Dumbarton Oak Papers,DOP
+191,Estudios bíblicos,EB
+192,Échos du monde classique / Classical Views,EchCl
+193,Estudios Clásicos,EClás
+194,Estudios Eclesiásticos,EE
+195,Epistemonike Epeteris tes philosophikes Scholes tou Panepistemiou Athenon,EEAth
+196,Egyptian Religion,EgR
+197,Epeteris tou Kentrou ereunes tes Historias tou Hellenikou Dikaiou,EHHD
+198,English Historical Review,EHR
+199,"Études de Lettres (Bulletin de la Société des Études de Lettres, Lausanne)",EL
+200,Epeteris Hetaireias Buzantinon Spoudon,EpetByz
+201,Epigraphische Studien,EpSt
+202,Eranos-Jahrbuch,EranJb
+203,Eretz Israel,ErIsr
+204,Expository Times,ET
+205,Études celtiques,EtCelt
+206,Les Études Classiques,EtCl
+207,Ephemerides Theologicae Lovanienses,EThL
+208,Études de Papyrologie,EtPap
+209,Études et Travaux (Studia i Prace). Travaux du Centre d'archéologie méditerranéenne de l'Académie Polonaise des Sciences,EtTrav
+210,Études. Revue catholique d'intérêt général,Études
+211,Egitto e vicino Oriente,EVO
+212,East and West,EW
+213,"Excerpta Philologica, Universidad de Cádiz",ExcPhilol
+214,Florentia Iliberritana,FlorIlib
+215,"Forschungen und Berichte [Staatliche Museen, Berlin]",FuB
+216,Forschungen und Fortschritte,FuF
+217,Greece and Rome,GaR
+218,Geistige Arbeit,GArb
+219,Gazette des beaux-arts,GBA
+220,Geographia Antiqua,GeogrAnt
+221,Göttinger Forum für Altertumswissenschaft,GFA
+222,Göttingische Gelehrte Anzeiger,GGA
+223,Giornale Italiano di Filologia,GIF
+224,Geographical Journal,GJ
+225,Acta Universitatis Carolinae. Graecolatina Pragensia,GLP
+226,Giornale di Metafisica,GM
+227,Grazer Beiträge,GrazBeitr
+228,"Greek, Roman and Byzantine Studies",GRBS
+229,History and Theory,H&amp;T
+230,Hebrew Union College Annual,HebrUCA
+231,Humanistisches Gymnasium,HG
+232,Hispania antiqua,HispAnt
+233,Historisches Jahrbuch,HJ
+234,Harvard Library Bulletin,HLB
+235,Harvard Studies in Classical Philology,HSCP
+236,Histoire des sciences médicales,HSMed
+237,Harvard Theological Review,HThR
+238,Historische Zeitschrift,HZ
+239,Illinois Classical Studies,ICS
+240,Israel Exploration Journal,IEJ
+241,Indogermanische Forschungen,IGForsch
+242,L'information historique,IH
+243,Indogermanisches Jahrbuch,IJb
+244,International Journal of Classical Tradition,IJCT
+245,International Journal of Nautical Archaeology and Underwater Exploration,IJNA
+246,Illustrated London News,ILN
+247,Invigilata lucernis,InvLuc
+248,Istanbuler Mitteilungen,IstMitt
+249,Journal Asiatique,JA
+250,Jahrbuch für Antike und Christentum,JAC
+251,Journal of Anthropological Archaeology,JAnthArch
+252,Journal of the American Oriental Society,JAOS
+253,Journal of the American Research Center in Egypt,JARCE
+254,Journal of Archaeological Science,JAS
+255,Jahresbericht über die Fortschritte der Altertumswissenschaft,JAW
+256,Jahrbuch der Berliner Museen,JBerlMus
+257,Jahrbuch des Bernischen Historischen Museums,JBernHistMus
+258,Journal of Biblical Literature,JBL
+259,"Journal of Classical Studies, Kyoto",JCS
+260,Jahrbuch des Deutschen Archäologischen Instituts,JdI
+261,Journal of Egyptian Archaeology,JEA
+262,Journal of Early Christian Studies,JECS
+263,Journal of Ecclesiastical History,JEH
+264,"Jaarbericht van het vooraziatisch-egyptisch genoostschap ""Ex Oriente Lux""",JEOL
+265,Journal of the economic and social History of the Orient,JESHO
+266,Journal of Field Archaeology,JFA
+267,Journal of the History of Ideas,JHI
+268,Journal of Hellenic Studies,
+269,Journal of Indo-European Studies,JIES
+270,Journal of Juristic Papyrology,JJurP
+271,Journal of Mediterranean Archaeology,JMA
+272,Jahrbuch der Akademie der Wissenschaftenund der Literatur in Mainz,JMainz
+273,Jahrbuch. Bayerische Akademie der Wissenschaften (München),JMünch
+274,Journal of Near Eastern Studies,JNES
+275,Jahrbuch der Österreichischen Byzantinistik,JÖBG
+276,Jewish Quarterly Review,JQR
+277,Journal of Roman Archaeology,JRA
+278,Journal of Religion,JRel
+279,Jahrbuch des römisch-germanischen Zentralmuseums,JRGZM
+280,Journal of Roman Military Equipment Studies,JRMES
+281,Journal of Roman Studies,JRS
+282,Journal des Savants,JSav
+283,Journal for the Study of Judaism,JSJ
+284,Journal of Theological Studies,JThS
+285,Journal of the Walters Art Gallery,JWalt
+286,Journal of the Warburg and Courtauld Institutes,JWarb
+287,Jahrbuch für Wirtschaftsgeschichte,JWG
+288,Kwartalnik Klasyczny,KK
+289,Kölner Jahrbuch für Vor- und Frühgeschichte,KölnJB
+290,Kritische Vierteljahresschriften für Gesetzgebung und Rechtswissenschaft,KVG
+291,Liverpool Classical Monthly,LCM
+292,Listy Filologické,LF
+293,Libyan Studies,LibSt
+294,Leeds International Classical Studies,LICS
+295,Lettre d'informations: médecine antique et médiévale,LIMAM
+296,Le Moyen Age,MA
+297,Mémoires de la Société nationale des Antiquaires de France,MAntFr
+298,Münstersche [puis: Marburger] Beiträge zur antiken Handelsgeschichte,MBAH
+299,Il Mondo classico,MCl
+300,Museum Criticum,MCr
+301,Mélanges de la Casa de Velázquez,MCV
+302,Materiali e discussioni per l'analisi dei testi classici,MD
+303,Mitteilungen des Deutschen Archäologischen Instituts. Abteilung Kairo,MDIK
+304,Mediaevalia et Humanistica,MedHum
+305,Mediterranean Archaeology,MeditArch
+306,"Mediterraneo antico: economie, società, culture",MediterrAnt
+307,Mediaeval and Renaissance Studies,MedRen
+308,Medicina nei Secoli. Arte e Scienza,MedSec
+309,Mélanges d'archéologie et d'histoire des Écoles françaises d'Athènes et de Rome (de l'École française de Rome),MÉFR
+310,"Mélanges de l'École française de Rome, Antiquité",MÉFRA
+311,"Memorie della cl. di scienze morali, storiche e filologiche dell'Accademia dei Lincei",MemLinc
+312,"Memorie dell'Accademia di archeologia, lettere e belle arti di Napoli",MemNap
+313,Miscellanea greca e romana,MGR
+314,Mediterranean Historical Review,MHR
+315,Mitteilungen zur christlichen Archäologie,MiChA
+316,Mitteilungen des Instituts für Orientforschung,MIO
+317,Mitteilungen des Österreichischen Instituts für Geschichtsforschung,MÖIG
+318,Monuments et Mémoires publiées par l'Académie des Inscriptions et Belles-Lettres [Fondation Piot],MonPiot
+319,Mélanges de Science Religieuse,MSR
+320,Miscellanea di studi storici,MStudStor
+321,Münchner Jahrbuch der Bildenden Kunst,MüJb
+322,Museum Helveticum,MusHelv
+323,Nachrichten der Akademie der Wissenschaften in Göttingen. Phil.-hist. Klasse,NAkG
+324,"Nuova antologia di scienze, lettere ed arti",NAnt
+325,Numismatic Chronicle,NC
+326,Numismatic Circular,NCirc
+327,New England Classical Journal,NECJ
+328,Neue Heidelberger Jahrbücher,NHJ
+329,Neue Jahrbücher für antike und deutsche Bildung,NJAB
+330,Neue Jahrbücher für das klassische Altertum,NJbb
+331,Neue Jahrbücher für Wissenschaft und Jugendbildung,NJW
+332,Numismatic Literature,NL
+333,La Nouvelle Clio,NouvClio
+334,Nuova Rivista Storica,NRS
+335,Nouvelle Revue Théologique,NRTh
+336,New Testament Studies,NTS
+337,Numismatica e Antichità classiche. Quaderni Ticinesi,NumAntCl
+338,Numismatische Zeitschrift,NZ
+339,Oriens Christianus,OC
+340,Orientalia Christiana Periodica,OCP
+341,Jahreshefte des Österreichischen Archäologischen Instituts,ÖJh
+342,Oxford Journal of Archaeology,OJA
+343,Orientalia Lovaniensia Periodica,OLP
+344,Orientalische Literaturzeitung,OLZ
+345,Oudheidkundige Mededelingen uit het Rijksmuseum van Oudheiden te Leiden,OMRL
+346,Opuscula archaeologica [Institutum Regni Sueciae],OpArch
+347,Opuscula Atheniensia [Acta Instituti Regni Sueciae],OpAth
+348,Opuscula Romana [Acta Instituti Regni Sueciae],OpRom
+349,Ostkirchliche Studien,OS
+350,Oxford Studies in Ancient Philosophy,OSAPh
+351,Le Parole e le Idee,P&amp;I
+352,Proceedings of the African Classical Association,PACA
+353,Past and Present,PastPres
+354,"Proceedings of the Classical Association, London",PCA
+355,Proceedings of the Cambridge Philological Society,PCPS
+356,Palestine Exploration Fund Annual,PEFA
+357,Palestine Exploration Fund Quarterly Statement,PEFQ
+358,"Philosophie antique: problèmes, renaissances, usages",PhilosAnt
+359,Philologische Wochenschrift,PhilWoch
+360,Philologische Studiën,PhS
+361,Proceedings of the London Classical Society,PLCS
+362,Parola del passato,PP
+363,Philological Quarterly,PQ
+364,"""Praktika tes en Athenais Archaiologikes Hetaireias""",Prakt
+365,"""Praktika tes Akademias Athenon""",PraktAkAth
+366,Proceedings of the Royal Irish Academy,PRIA
+367,Proceedings of the British Academy,ProcBritAc
+368,Proceedings of the American Philological Association,ProcPhilAs
+369,Proceedings of the American Philosophical Society,ProcPhilSoc
+370,Petronian Society Newsletter,PSN
+371,Quaderni di archeologia della Libia,QAL
+372,Quaderni catanesi di studi classici e medievali,QC
+373,Quaderni catanesi di studi antichi e medievali,QCSAM
+374,Quarterly of the Department of Antiquities in Palestine,QDAP
+375,Quaderni di storia,QS
+376,Quaderni di storia antica ed epigrafia,QSAE
+377,Quaderni urbinati di cultura classica,QUCC
+378,Revue archéologique,RA
+379,Rivista di Archeologia Cristiana,RACrist
+380,Revue des Arts,RArts
+381,Revue Biblique,RBibl
+382,Revue belge de Numismatique et de Sigillographie,RBN
+383,Revue belge de philologie et d'histoire,RBPhil
+384,Rivista di cultura classica e medioevale,RCCM
+385,Revue historique de droit français et étranger,RD
+386,Rivista di Archeologia,RdA
+387,"Report of the Department of Antiquities, Cyprus",RDAC
+388,Revue des études anciennes,REA
+389,Revue des Études Byzantines,REByz
+390,Revista de estudios Clásicos,REC
+391,Recherches de science religieuse,RecSciRel
+392,Recherches de théologie ancienne et médiévale,RecTh
+393,Revue des études grecques,REG
+394,Revue d'Égyptologie,REg
+395,Revue des études juives,REJ
+396,Revue des études latines,REL
+397,Rendiconti dell'Accademia delle Scienze dell'Istituto di Bologna. Cl. di scienze morali,RendBol
+398,"Rendiconti dell'Istituto Lombardo. Cl. di lettere, scienze morali e storiche",RendIstLomb
+399,"Rendiconti della classe di scienze morali, storiche e filologiche dell'Accademia dei Lincei",RendLinc
+400,"Rendiconti dell'Accademia di Archeologia, Lettere e Belle Arti di Napoli",RendNap
+401,Rendiconti della Pontifica Accademia di Archeologia,RendPontAcc
+402,Revue française d'histoire des idées politiques,RFHIP
+403,Revue d'histoire du droit,RHD
+404,Revue d'histoire ecclésiastique,RHE
+405,Rhetorica,Rhetorica
+406,Revue Historique,RHist
+407,Rheinisches Museum für Philologie,RhM
+408,Revue d'Histoire de la Philosophie,RHPh
+409,Revue d'histoire et de philosophie religieuses,RHPhR
+410,Revue de l'histoire des religions,RHR
+411,Revue historique du Sud-Est européen,RHSE
+412,Revue d'histoire des textes,RHT
+413,Rivista Italiana del Dramma,RID
+414,Revue Internationale des Droits de l'Antiquité,RIDA
+415,Rivista Indo-Greca-Italica,RIGI
+416,Rivista Italiana di Numismatica e Scienze affini,RIN
+417,Rivista italiana per le scienze giuridiche,RISG
+418,Rivista Biblica,RivBibl
+419,Rivista di filologia e d'istruzione classica,RivFil
+420,Rivista dell'Istituto Nazionale di Archeologia e Storia dell'Arte,RivIstArch
+421,Rivista storica dell'Antichità,RivStorAnt
+422,Rivista Storica Italiana,RivStorIt
+423,Mitteilungen des Deutschen Archäologischen Instituts. Römische Abteilung,RM
+424,Revue de Métaphysique et de Morale,RMM
+425,Revue Numismatique,RN
+426,Römische Quartalschrift für christliche Altertumskunde und für Kirchengeschichte,RömQSchr
+427,Revue de philosophie ancienne,RPhA
+428,"Revue de philologie, de littérature et d'histoire anciennes",RPhil
+429,Res Publica Litterarum,RPL
+430,Review of Religion,RR
+431,Revue de synthèse,RS
+432,Ricerche storico-bibliche,RSB
+433,Rivista di Storia del Cristianesimo,RSCr
+434,Rivista di Storia del Diritto italiano,RSDI
+435,Rivista di storia della filosofia,RSF
+436,Rivista degli studi orientali,RSO
+437,Revue des Sciences philosophiques et théologiques,RSPh
+438,Revue de théologie et de philosophie,RThPh
+439,Revue de l'Université de Bruxelles,RUB
+440,Scrittura e Civiltà,S&amp;C
+441,Saalburg-Jahrbuch,SaalbJb
+442,Sitzungsberichte der Deutschen Akademie der Wissenschaften zu Berlin,SBBerl
+443,Studii Biblici Franciscani Liber annuus,SBF
+444,Sbornik Pracé Filosofické Fakulty Brnenské University,SBFP
+445,Sitzungsberichte der Heidelberger Akademie der Wissenschaften. Phil.-hist. Kl.,SBHeid
+446,Sitzungsberichte der Bayerischen Akademie der Wissenschaften. Phil.-hist. Kl.,SBMünch
+447,Sitzungsberichte der Österreichischen Akademie der Wissenschaften in Wien. Phil.-hist. Kl.,SBWien
+448,Studia Catholica,SCathol
+449,Scuola Cattolica,ScCatt
+450,"Schweizer Münzblätter, Gazette Numismatique Suisse",SchwMbll
+451,Scripta Classica Israelica,SCI
+452,Studia et Documenta Historiae et Iuris,SDHI
+453,Seminari romani di cultura greca,SemRom
+454,Studi di Egittologia e di Papirologia,SEP
+455,Siculorum Gymnasium,SicGymn
+456,Studi micenei ed egeo-anatolici,SMEA
+457,Studi e materiali di storia delle religioni,SMSR
+458,Schweizerische Numismatische Rundschau / Revue Suisse de Numismatique,SNR
+459,Suisse primitive,SP
+460,Sitzungsberichte der Preussischen Akademie der Wissenschaften,SPAW
+461,Sbornik praci Filosoficke Fakulty Brnenske Univerzity (Studia minora Facultatis Philosophiae Universitatis Brunensis). Rada klasicka (Series classica),SPFB (klas)
+462,Studii Clasice,StClas
+463,"Studia Theologica, Lund",STh
+464,Studi italiani di filologia classica,StIt
+465,Studi Miscellanei. Seminario di archeologia e storia dell'arte greca e romana dell'Università di Roma,StMisc
+466,Studia Papyrologica. Revista española de papirología,StPap
+467,Studi Romani,StRom
+468,"Studi urbinati di storia, filosofia e letteratura",StudUrb (Ser. B)
+469,Syllecta Classica,SyllClass
+470,Symbolae Osloenses,SymbOslo
+471,Transactions and Proceedings of the American Philological Association,TAPA
+472,Transactions of the American Philosophical Society,TAPS
+473,Tijdschrift voor Geschiedenis,TG
+474,Theologische Blätter,ThB
+475,Theologische Jahrbücher,ThJ
+476,Theologische Literaturzeitung,ThLZ
+477,Theologische Quartalsschrift,ThQ
+478,Theologische Revue,ThRev
+479,Theological Studies,ThS
+480,Theologische Zeitschrift,ThZ
+481,Travaux et Mémoires. Centre de Recherches d'histoire et de civilisation byzantines [Paris],TravMém
+482,Tijdschrift voor Rechtsgeschiedenis,TRG
+483,Aus Unterricht und Forschung,U&amp;F
+484,Ugarit-Forschungen,UgaritF
+485,Vestnik Drevnii Istorii,VDI
+486,Verbum Domini,VerbDom
+487,Vigiliae christianae,VigChr
+488,Vierteljahresschrift für Sozial- und Wirtschaftsgeschichte,VSG
+489,Wiener Blätter für die Freunde der Antike,WB
+490,Die Welt als Geschichte,WG
+491,Wiener Humanistische Blätter,WHB
+492,World Archaeology,WorldArch
+493,Wiener Studien,WS
+494,Würzburger Jahrbücher für die Altertumswissenschaft,WürzJbb
+495,Wissenschaftliche Zeitschrift der Humboldt-Universität Berlin. Gesellschafts- und sprachwissenschaftliche Reihe,WZBerlin
+496,Wissenschaftliche Zeitschrift der Martin-Muther-Universität Halle-Wittenberg. Gesellschafts- und sprachwissenschaftliche Reihe,WZHalle
+497,Wiener Zeitschrift für die Kunde des Morgenlandes,WZKM
+498,Wissenschaftliche Zeitschrift der Karl-Marx-Universität Leipzig. Gesellschafts- und sprachwissenschaftliche Reihe,WZLeipzig
+499,Yale Classical Studies,YCS
+500,Zeitschrift für antikes Christentum,ZAC
+501,Zeitschrift für ägyptische Sprache und Altertumskunde,ZÄS
+502,Zeitschrift für die Alttestamentliche WIssenschaft,ZATW
+503,Zentralblatt für Bibliothekswesen,ZBB
+504,Zeitschrift der Deutschen Morgenländischen Gesellschaft,ZDMG
+505,Zeitschrift des Deutschen Palästina-Vereins,ZDPV
+506,Ziva Antika,ZivaAnt
+507,Zeitschrift für Kirchengeschichte,ZKG
+508,Zeitschrift für Katholische Theologie,ZKTh
+509,Zeitschrift für die neutestamentliche Wissenschaft,ZNTW
+510,Zeitschrift für die österreichischen Gymnasien,ZÖstG
+511,Zeitschrift fur Papyrologie und Epigraphik,ZPE
+512,Zeitschrift für philosophische Forschung,ZPhF
+513,Zeitschrift der Savigny-Stiftung fur Rechtsgeschichte (Romanistische Abteilung),ZSav
+514,Zeitschrift für vergleichende Rechtswissenschaft,ZVRW
+515,Zeitschrift für vergleichende Sprachforschung,ZVS
+516,Zeitschrift für wissenschaftliche Theologie,ZWTh
+517,,A&amp;A
+518,,AAAd
+519,,AAP N.S.
+520,,AAPel
+521,,AArchSlov
+522,,AD
+523,,ADAJ
+524,,ADSV
+525,,AEA
+526,,"AEHE, IVe sect."
+528,,AeR s. III
+529,,AeR ser. III
+530,,AFB
+531,,AFGG
+532,,AFLC N.S.
+533,,AFLM
+534,,AFLS
+535,,AfO
+536,,AIHS
+537,,AIIN
+538,,AIIS
+539,,AJAH N.S.
+540,,AJPh
+541,,ALGP
+542,,ALOS
+543,,AnnArchStorAnt N.S.
+544,,"AnnPisa S. II AnnPisa, ser. II AnnPisa Serie II"
+545,,AnnPisa ser. III AnnPisa 3a s.
+546,,AnnPisa ser. IV
+547,,AnnPisa ser. V
+548,,AnnSE20
+549,,AnnTriest Ser. IV
+550,,ANRW I
+551,,ANRW II
+552,,ANRW
+553,,AntAfr
+554,,ANTW
+555,,AquiNost
+556,,ARCE Newsletter
+557,,ArchLiturgWiss
+558,,ArchPol
+559,,ASAtene N.S.
+560,,ASE
+561,,ASGP
+562,,ASP
+563,,ASSO
+564,,AST
+565,,AttiPal Ser. IV
+566,,AttiTor. Supplemento al Vol.
+567,,AU
+568,,AUB. Sectio classica
+569,,AUB. Sectio historica
+570,,AUB. Sectio Iuridica
+571,,AugAge
+572,,AUMLA No.
+573,,AUP
+574,,AVM N.S.
+575,,AW
+576,,B&amp;W
+577,,BA
+578,,BAB 6e s.
+579,,BAB 5e s.
+580,,BABesch
+581,,BAL
+582,,BALB
+583,,BAPI
+584,,BChr
+585,,BCPE
+586,,BES
+587,,BIAO
+588,,BIDR N.S.
+589,,BIEH
+590,,BIFG
+591,,BiZ N.F.
+592,,BMonMusPont
+593,,BN
+594,,BollClass n.s.
+595,,BollClass
+596,,BPEC N.S.
+597,,BQR
+598,,BSC
+599,,BSPh
+600,,BSR N.S.
+601,,BSRAA VIII
+602,,BullCom
+603,,ByzF
+604,,C&amp;M
+605,,C&amp;S
+606,,CaM
+607,,CCC
+608,,CL
+609,,ClPh
+610,,ClRh
+611,,CodMan
+612,,CoinH
+613,,CP N.S.
+614,,CPh
+615,,CQ N.S.
+616,Classical Review New Series,CR N.S.
+617,Comptes rendus des séances de l’Académie,CRAI
+618,,CrSt
+619,,CSCA
+620,,CSSH
+621,,E&amp;Th
+622,,EA
+623,,EAZ
+624,,EES Newsletter
+625,Epistemonike Epeteris Philosophikes Scholes Panepistemiou Thessalonikes,EEThess
+626,,ENIM
+627,,ETF(hist)
+628,,FMR. Mensile di Franco Maria Ricci
+629,,FZPhTh
+630,,GaR N.S.
+631,,GArb3
+632,,GB
+633,,GettyMusJ
+634,,GFF
+635,,GFRF
+636,,GIF N.S.
+637,,GM N.S.
+638,,GWU
+639,,HAGB
+640,,HASB
+641,,HM
+642,,HPLS
+643,,HPTh
+644,,HR
+645,,HSF
+646,,HT
+647,,HTR
+648,,IF
+649,,IIC Nederland. Mededelingenblad
+650,,IJb N.S.
+651,,IL
+652,,ILing
+653,,INJ
+654,,IPH Yearbook of Paper History
+655,,JfNG
+656,,JGS
+657,,JHAW
+658,,JHPh
+659,,JMFA
+660,,JNG
+661,,JÖByz
+662,,JOEAI
+663,,JQR N.S.
+664,,JRH
+665,,JSNT
+666,,JThR
+667,,JThS N.S.
+668,,JVEG
+669,,KGB
+670,,KölnJb
+671,,L'Enfant No.
+672,,L'Ethnographie N.S.
+673,,L'Histoire
+674,,L'Oriente Cristiano e l'Unità della Chiesa
+675,,L'Origenismo: apologie e polemiche intorno a Origene. Roma
+676,,L'Origenismo: apologie e polemiche intorno a Origene. XIV Incontro di studiosi dell'antichità cristiana. Roma
+677,,LF N.S.
+678,,LibStud
+679,,LN
+680,,MAAR
+681,,MAT
+682,,MC
+683,,MCom
+684,,MCV N.S.
+685,,MDAI(M)
+686,,MDAV
+687,,MedKob
+688,,MedMusB
+689,,MedSoc
+690,,MEFR
+691,,MEFRA
+692,,MémAcInscr
+693,,MemLinc s. VIII
+694,,MemLinc Ser. VIII
+695,,MH
+696,,MIL
+697,,MPhL
+698,,MSS
+699,,MT
+701,,MusPat
+702,,N&amp;C
+703,,NARCE
+704,,NBA - Nürnberger Blätter zur Archäologie
+705,,ND
+706,,NE
+707,,NRCyprus
+708,,NT
+709,,NThS
+710,,NumChron
+711,,OA
+712,,OMRO
+713,,PACA No.
+714,,PastPres No.
+715,,PCA (London)
+716,,PCPhS
+717,,PhilClass
+718,,QC No.
+719,,QCSAM N.S.
+720,,QCTC
+721,,QFC
+722,,QIFG
+723,,QIFL
+724,,QTLCG
+725,,QTTA
+726,,QuadFoggia
+727,,RA sér.
+728,,RA 6e s.
+729,,RALouvain
+730,,RdE
+731,,REAC
+732,,REAug
+733,Recherches de Papyrologie,RecPap
+734,,RendIstLomb ser. II
+735,,RendIstLomb ser. III
+736,,RendLinc s. IX
+737,,RendLinc s. VI
+738,,RendLinc s. VIII
+739,,RendLinc. Appendice: Necrologi di soci defunti nel decennio dicembre
+740,,RET
+741,,RFil
+742,,RH
+743,,RHES
+744,,RhM N. F.
+745,,RhM N.F.
+746,,RhM N.S.
+747,,RHPh N.S.
+748,,RHT n.s.
+749,,RIDA 3e s.
+750,,RifFil N.S.
+751,Rendiconti Istituto Lombardo,RIL
+752,,RISG III
+753,,RivBiblIt
+754,,RivFil N.S.
+755,,RivFil 3a s.
+756,,RivIstArch N.S.
+757,,RivIstArch S. III
+758,,RivStAnt
+759,,RLouvre
+760,,RN VIe s.
+761,,RPhil 3e sér.
+762,,RQ
+763,,RSC
+764,,RSCI
+765,,RSR
+766,,RStOr
+767,,SAM Review [SAMPhN]
+768,,SAMPhN
+769,,SBL Seminar Papers Series
+770,,SCent
+771,,SCO
+772,,SicGymn N.S.
+773,,SITES. Journal of Studies for Integrated Text Science
+774,,SO
+775,,SPFB E
+776,,"SPFB, Rada archeologicko-Klassická"
+777,,SPFB. Série E: Archéologie et langues classiques
+778,,SPh
+779,,SPhP
+780,,SSEA Journal
+781,,SSL
+782,,SSR
+783,,StädelJb N.F.
+784,,StClass
+785,,STh VIII
+786,,STh XII
+787,,StIt N.S.
+788,,StudClas
+789,,StudMon
+790,,StudPat
+791,,StudRom
+792,,StudUrb N.S.
+793,,StudUrb
+794,,SZ
+795,,T&amp;P
+796,,TAPhA
+797,,"TAPS N.S., Vol. XXXII, Part II"
+798,,TC: A Journal of Biblical Textual Criticism
+799,,TelAviv
+800,,TravMem
+801,,VBS-Informatie
+802,,VetChr
+803,,VLU
+804,,VopIst
+805,,VT
+806,,VUB-Magazine
+807,,WHB (hgg. vom Verein der Freunde des humanistischen Gymnasiums)
+808,,WO
+809,,WS N.F.
+810,,WürzJbb N.F.
+811,,WZJena
+812,,WZRostock
+813,,YLG
+814,,ZATW N.F.
+815,,ZDMG N.F.
+816,,ZJKF
+817,,ZNT
+818,,ZRG
+819,,ZRGG
+820,,ZRPh
+821,,ZSav K.A.
+822,,"ZSav, Kanonistische Abteilung XLIV"
+823,,A&amp;R N.S.
+824,,A&amp;R
+825,,AArchHung
+826,,AC
+828,,AG 6e s.
+829,,AnTard
+830,,Anz. f. d. Alt. Wiss.
+831,,AnzAw
+832,,ArchJ
+833,,B&amp;O
+834,,BAssBudé N.S.
+835,,BAssBudé 4e s.
+836,,BBF
+837,,BCO
+838,,BFC N.S.
+839,,BFLS
+840,,BiblOr
+841,,BiBO
+842,,BLE
+843,,BMCRev
+844,,BonnJbb
+845,,BSAC
+846,,BSEAA
+847,,BZ N.F.
+848,,CH
+849,,Clio
+850,,CR. N.S. C.R. N.S.
+851,,DLZ N.F.
+852,,DLZ.
+853,,Dt. Archiv
+854,,EMC
+855,,G&amp;R
+856,,GCA
+857,,Ibid.
+858,,Internat. History Review
+859,,JHA
+860,,JR
+861,,JSS
+862,,JTRS N.S.
+863,,L&amp;G
+864,,MedSec N.S.
+865,,NLatJb
+866,,NNB
+867,,Nouv. revue théolog.
+868,,ParPass
+869,,R Phil
+870,,R Phil 3e s.
+871,,RBen
+872,,RBib
+873,,RBPh
+874,,RD 4e s.
+875,,Rechthist. Journal
+876,,RecSR
+877,,Reg
+878,,RevHist
+879,,RFil N.S.
+880,,RHS
+881,,RivFC
+882,,Rivfil
+885,,RPL N.S.
+886,,RSA
+887,,RSLR
+888,,RThL
+889,,RThPH
+890,,SDHA
+891,,TLZ
+892,,TRLZ
+893,,TZ
+894,Varia Aegyptiaca,Varia Aeg.
+895,,VP
+896,,Zeitschr. f. vgl. Rechtswiss. Zeitschrift für vergl. Rechtswiss.
+897,,Zsav
+898,,ZSSRA
+899,,ZWG
+900,Aberdeen University Review,
+901,Acme,
+902,Acta Byzantina Fennica N.S.,
+903,Acta Ethnographica Academiae Scientiarum Hungaricae,
+904,Acta Hyperborea,
+905,Acta Juridica Academiae Scientiarum Hungaricae,
+906,Acta Musicologica,
+907,Acta Orientalia,
+908,Acta Philologica Aenipontana,
+909,"Acta Universitatis Latviensis, Filol. un Filos. Fakultates [Riga], ser. IV",
+910,Actes du VIIIe Congrès international des sciences historiques. Section II,
+911,Adamantius,
+912,Aegyptus,
+913,Aegytus,
+914,Aevum(ant) N.S.,
+915,Africana Bulletin,
+916,Agon,
+917,Ägypten in,
+918,Ägypten und Levante,
+919,Akademie-Journal,
+920,Akroterion,
+921,Al Qanoun Wal Iqtisad,
+922,Al Quanoun wal Iqtisad,
+923,Alba Regia,
+924,Alexandrie entre deux,
+925,"Alexandrie, le dernier",
+926,"Alexandrie, lumière du",
+927,Alfinge,
+928,"Alif. Journal of Comparative Poetics [American University in Cairo, Department of English and Comparative Literature]",
+929,Almanach Akademie Wien,
+930,Almanach der Österreichischen Akademie der Wissenschaften,
+931,Almanach der Österreichischen Akademie der Wissenschaften in Wien,
+932,Altertum,
+933,Alumni. Revue du Cercle des Alumni [Bruxelles],
+934,Alumni. Revue du Cercle des Alumni de la Fondation Universitaire (Bruxelles),
+935,Ambrosius,
+936,American Anthropologist,
+937,American Mathematical Monthly,
+938,American Scholar,
+939,American Sociological Review,
+940,American University Law Review,
+941,Amour de l'Art,
+942,Ampurias,
+943,Anabases. Traditions et réception de l'Antiquité,
+944,Anabases. Traditions et réception de l'Antiquité. Revue de l'équipe de recherche E.R.A.S.M.E. - Université de Toulouse-Le Mirail,
+945,Anagennesis,
+946,Analecta Gregoriana,
+947,Analecta. Publication annuelle de l'Institut d'études orientales de la Bibliothèque patriarcale d'Alexandrie,
+948,"Analele Univ. Bucuresti, Ser. St. Soc.",
+949,Analele Universitatii Bucuresti. Seria Stiinte Sociale-Juridice,
+950,Analele Universitatii din Bucuresti. Seria Stiinte Sociale. Filologie,
+951,Anali della scuola normale superiore di Pisa (ASNP),
+952,Analytical Chemistry,
+953,Anatolia Antiqua,
+954,Anazetesis,
+955,Ancient Civilizations from Scythia to Siberia,
+956,Ancient Society [Macquarie University],
+957,Ancient West &amp; East,
+958,Andalus,
+959,Anemos,
+960,Ankara Universitesi Hukuk Fakültesi Dergisi [Revue de la Faculté de Droit de l'Université d'Ankara],
+961,Annales de la Faculté de Droit d'Istanbul,
+962,Annales de la Faculté de Droit de l'Université de Bordeaux. Série juridique,
+963,Annales de la Faculté de Droit et des Sciences économiques de Toulouse,
+964,"Annales du Centre Universitaire Méditerranéen, Nice",
+965,Annales Islamologiques,
+966,"Annales Universitatis Saraviensis, Philosoph. Fakultät",
+967,Annali del Liceo Classico 'Dettori' di Cagliari,
+968,"Annali del Pontificio Istituto Superiore di Scienze e Lettere ""S. Chiara""",
+969,"Annali dell'Istituto Superiore di Scienze e Lettere ""S. Chiara"" di Napoli",
+970,Annali della Facoltà de Giurisprudenza dell'Università di Camerino,
+971,Annali della Facoltà di Giurisprudenza dell'Università di Bari,
+972,Annali della Facoltà di Giurisprudenza dell'Università di Bari N.S.,
+973,Annali della Facoltà Giuridica (Università degli Studi di Camerino),
+974,"Annali della R. Scuola Normale Superiore di Pisa, Ser. II",
+975,Annali di Scienze religiose,
+976,Annali di Scienze Religiose (Università Cattolica del Sacro Cuore),
+977,Annali di storia del diritto,
+978,"Annals of the Faculty of Arts, Ain Shams University",
+979,"Annals of the Faculty of Arts, Ibrahim Pasha University [Ain Shams University, Cairo]",
+980,Annotazioni numismatiche ser.,
+981,Annuaire de l'École Pratique des Hautes Études. Section des Sciences historiques et philologiques,
+982,Annuaire du Musée National de,
+983,Annuario di diritto internazionale,
+984,Anthropologischer Anzeiger,
+985,Anthropozoologica,
+986,Antichthon,
+987,Antik Tanulmányok,
+988,Antik tanulmányok - Studia antiqua,
+989,Antik Tanulmányok (Studia Antiqua),
+990,Antiquitas,
+991,Antiquity,
+992,Anuario de Estudios Filológicos [Universidad de Extremadura],
+993,Anuarul Institutului de Studii Clasice (Univ. din Cluj),
+994,Apeiron,
+995,Apocrypha,
+996,Aquila legionis. Cuadernos de estudios sobre el ejército romano,
+997,Aram,
+998,Arbor,
+999,Archaeologia,
+1000,Archaeologia Maritima Mediterranea,
+1001,"Archaeologiai. Ertesitö, s. III",
+1002,Archaeology,
+1003,Archaeonautica,
+1004,Archaeozoologia,
+1005,Archaeus,
+1006,Archaiognosia,
+1007,Archaiologia,
+1008,Archaoelogy,
+1009,Archeion,
+1010,Archeion idiotikou dikaiou,
+1011,Archeo,
+1012,Archeografo Triestino,
+1014,Archéologia,
+1015,Archeologia Viva N.S.,
+1016,Archéologie du Nil Moyen,
+1017,Archiv für ägyptische Archäologie,
+1018,Archiv für Geschichte des Buchwesens,
+1019,Archiv für Liturgiewissenschaft,
+1022,Archivio giuridico Filippo Serafini,
+1023,Archiwum Filologiczne. XI,
+1024,Archiwum Orientale Pragense,
+1025,Archiwum towarzystwa naukowego we Lwowie,
+1026,Arctos,
+1027,Arctos N.S.,
+1028,Arethusa,
+1029,Argos,
+1030,Ariadne,
+1031,Arion,
+1032,Art in America,
+1033,Arte,
+1034,Artibus Asiae,
+1035,Arts et Métiers graphiques,
+1036,Asiatische Studien,
+1037,Aspetti dell'opinione pubblica nel,
+1038,Athena,
+1039,Athenaeum,
+1040,Athenaeum N.S.,
+1041,Atiqot,
+1042,Atti Acc. Udine s. VI,
+1043,Atti del IV Congresso nazionale di Studi Romani. II,
+1044,"Atti dell'Accademia di Scienze, Lettere e Arti di Udine",
+1045,Atti dell'Accademia Peloritana dei Pericolanti,
+1046,"Atti della Società Italiana per il Progresso delle Scienze Riunite XXVI, vol. I",
+1047,"Atti e memorie dell'Accademia nazionale di scienze, lettere ed arti di Modena ser.",
+1048,Atti IV Congresso Internazionale di Archeologia Cristiana. II,
+1049,Au fil de,
+1050,Au royaume d'Osiris. Images et rites,
+1051,Aufidus,
+1052,Augustinianum,
+1053,Aula Orientalis,
+1054,Auriga,
+1055,Aus der Welt,
+1056,Australian Biblical Review,
+1057,Balkan-Archiv N.F.,
+1058,"Bancroftiana [The Bancroft Library, University of California, Berkeley]",
+1059,Baptist Quarterly,
+1060,Baroda State Museum Bulletin,
+1061,Begegnung von Heidentum und Christentum,
+1062,Beiträge zur Sudanforschung,
+1063,Belfagor,
+1064,Bergamum,
+1065,Bericht des Historischen Vereins Bamberg,
+1066,Berkshire Review,
+1067,Berytus,
+1068,Bibel und Kirche,
+1069,Bible Review,
+1070,Biblica,
+1071,Bibliophil. Jahrb. f. Kathol. Geistesleben,
+1072,Bibliotheca Sacra,
+1073,Biblische Leitschrift N.F.,
+1074,Biblische Notizen,
+1075,Biblos,
+1076,Bijdragen tot de geschiedenis,
+1077,Bild- und Formensprache der spätantiken Kunst. Hugo Brandenburg zum,
+1078,Biuletyn historii Sztuki i Kultury,
+1079,Bogoslovska smotra,
+1080,Bogoslovskie trudy,
+1081,Boletín de la Asociación española de Egiptología,
+1083,Boletín de la Asociación Española de Orientalistas,
+1084,Boletín del Instituto de Derecho Comparado de México,
+1085,Boletín del Instituto de Investigaciones Históricas,
+1086,Boletín del Museo Arqueológico Nacional,
+1087,Bollettino del Museo Civico di Padova,
+1088,Bollettino del Reale Istituto di patologia del libro,
+1089,Bollettino della Scuola di perfezionamento e di specializzazione in diritto del lavoro e della sicurezza sociale (Università di Trieste),
+1090,Bollettino della Società Lett. Verona,
+1091,Bollettino di Numismatica,
+1092,"Bollettino Roncioniano [Prato, Biblioteca Roncioniana]",
+1093,Boreas,
+1094,Boston Museum Bulletin,
+1095,Britannia,
+1096,British Academy Review,
+1097,British Journal for the History of Science,
+1098,Buchbinderlehrling,
+1099,Bull. Museen in Köln,
+1100,"Bull. of the John Rylands Library, Manchester",
+1101,Bulletin de l'Académie des Sciences de l'URSS,
+1102,"Bulletin de l'Association des Amis de ""Sources chrétiennes""",
+1104,Bulletin de la Société Archéologique d'Alexandrie,
+1106,Bulletin de la Société d'Égyptologie de Genève,
+1109,Bulletin de la Société Ernest Renan N.S.,
+1110,Bulletin de la Société française d'Égyptologie,
+1112,Bulletin de liaison de la Société des Amis de la Bibliothèque Salomon-Reinach N.S.,
+1113,Bulletin des Musées et Monuments lyonnais,
+1114,Bulletin du Centenaire. Supplément au BIFAO,
+1115,Bulletin du Cercle d'Études numismatiques,
+1116,Bulletin du Cercle des Alumni de la Fondation Universitaire,
+1117,Bulletin International de l'Académie Yougoslave des Sciences et des Beaux-Arts de Zagreb,
+1118,Bulletin of British Byzantine Studies,
+1120,Bulletin of the Bezan Club,
+1121,Bulletin of the Egyptological Seminar,
+1122,"Bulletin of the Faculty of Arts, Farouk I University [Alexandria University]",
+1123,Bulletin of the Israel Exploration Society,
+1124,Bulletin of the Okayama Orient Museum,
+1125,Bulletin of the Polish Institute of Arts and Sciences in America,
+1126,Bulletin of the School of Oriental and African Studies,BSOAS
+1127,Bulletin officiel de la Chambre syndicale du Commerce des papiers de France,
+1128,Bulletin trimestriel de la Société française d'Égyptologie,
+1129,Bulletin van de Vereeniging tot Bevordering der Kennis van de Antieke Beschaving,
+1130,Bulletin. Wadsworth Atheneum,
+1131,Buried History. Quarterly Journal of the Australian Institute of Archaeology,
+1132,Buzantiaka,
+1133,Buzantina,
+1134,Byzantina,
+1135,Byzantina Metabyzantina,
+1136,Byzantina Neerlandica,
+1138,Byzantine Studies / Études byzantines,
+1139,Byzantinoslavica,
+1140,Byzantion,
+1141,Ca' de Sass,
+1142,Cadmo [Lisboa],
+1143,Caesarodunum,
+1144,Cahiers d'Alexandrie,
+1145,"Cahiers d'Alexandrie Série III, fasc.",
+1146,Cahiers d'histoire égyptienne,
+1147,Cahiers de Clio,
+1148,Cahiers de Karnak,
+1149,Cahiers de la céramique égyptienne,
+1150,Cahiers de Mariemont,
+1151,Cahiers du Centre d'études chypriotes,
+1152,Capitolium,
+1153,Cathedra,
+1154,Catholic Biblical Quarterly,
+1155,Célébration du bi-centenaire de la pierre,
+1156,"Centaur, No. spécial d'hommage à la Grèce",
+1157,Centaurus,
+1158,Cercle lyonnais d'Égyptologie Victor Loret. Bulletin,
+1159,Chiron,
+1160,Christiana Albertina,
+1161,"Christoph SCHÄUBLIN, Aus paganer und christlicher Antike. Ausgewählte Aufsätze zur Klassischen Philologie",
+1162,Chronozones,
+1163,Church Quarterly Review,
+1164,Ciba-Rundschau,
+1165,Circe,
+1166,Classica (Brasil),
+1167,Classical Studies,
+1168,Classicum,
+1169,Codicologica,
+1170,Collectanea Christiana Orientalia [Córdoba],
+1171,Communications du Musée National de l'Ermitage,
+1172,Computing in the,
+1173,Concordia Theological Monthly,
+1174,Conservation of Wood in Painting and the Decorative Arts,
+1175,Convivium,
+1176,Corolla Londiniensis,
+1177,Crises,
+1178,Cristianismo y poder en,
+1179,Critical Review of Books in Religion,
+1180,Cuadernos de Historia primitiva,
+1181,Cultura Biblica,
+1182,Cultura Bíblica,
+1183,Czasopismo prawno-historyczne,
+1184,Czasopismo Prawno-Historyczne [Annales d'Histoire du Droit],
+1185,Czasopismo prewno-historyczne,
+1187,Dappim,
+1188,Das Altertum,
+1189,Das Giessener Fenster. Aktuelle Monatsschrift für Giessen und Mittelhessen,
+1190,Das Gymnasium,
+1191,Das Prophetische Wort,
+1192,Dawna kultura,
+1193,Dawna Sztuka,
+1194,De Gids,
+1195,Dejury a soucasnost,
+1196,Deltion tès christianikès archaiologikès Hetaireias IV,
+1197,Der Stenografielehrer,
+1198,Deutsche höhere Schule,
+1199,Deutsche Juristen Zeitung,
+1200,Deutsche Münzblätter,
+1201,Deutsche Textfunde in Nubien,
+1202,Deutsches Jahrbuch der Musikwissenschaft,
+1203,Deutsches Pfarrerblatt,
+1204,Deutschlands Erneuerung,
+1205,Dialog,
+1206,Dialogos,
+1207,Diatribae Fr. Lexa.,
+1208,Didaskalikon (Athénée Royal de Liège. Centre de recherche et de documentation pour l'enseignement du grec) No.,
+1209,Didaskalos,
+1210,Die Antike,
+1211,Die Bibel in der Welt. Jahrbuch des Verbandes der Evangelischen Bibelgesellschaften in Deutschland,
+1212,Die Frau,
+1213,Die Neue Rundschau,
+1214,Die Sprache,
+1215,Die Waage,
+1216,Dike,
+1217,Dike. Rivista di storia del diritto greco ed ellenistico,
+1218,Diogène,
+1219,Diogenes,
+1220,Dioniso,
+1221,Dioniso N.S.,
+1222,Dionysius,
+1223,"Dipartimento di Filologia, Linguistica e Tradizione classica ""Augusto Rostagni"". Quaderni",
+1224,Discussions in Egyptology,
+1225,Dodekanesiakon Archeion,
+1226,Dodone,
+1227,Donum Natalicium Albin,
+1228,"Dossier: ""Afriques romaines, relectures et réflexions à l'école",
+1229,Doxa,
+1230,Durius,
+1231,Ecclesiastical Review,
+1232,École Pratique des Hautes Études - Section des Sciences historiques et philologiques. Livret-Annuaire,
+1233,Egnatia,
+1234,Egypt Travel Magazine,
+1235,Egypt Travel Magazine [édition française],
+1236,Égypte contemporaine,
+1237,"Égypte, Afrique &amp; Orient",
+1238,Égyptes,
+1239,Egyptian Archaeology,
+1240,Égyptiens et Grecs: ports et voyages,
+1241,Eikasmos,
+1242,Einiges über Löhne und Preise im justinianischen Reich,
+1243,Eirene,
+1244,Eis mnemen G.P. Oikonomou.,
+1245,El miliario extravagante,
+1246,Elenchos,
+1247,Emerita,
+1248,Enchoria,
+1249,Eos,
+1250,Epeteris Laographikou Archeiou Akademias Athenon,
+1251,Epeteris Leukadikon meleton,
+1252,Ephemerides Liturgicae,
+1253,Ephemerides mariologicae,
+1254,Ephemeris Hellenon Nomikon,
+1255,Ephemeris ton Hellenon Nomikon,
+1256,Epigraphica,
+1257,Epitheoresis Ergatikou Dikaiou,
+1258,Epoca,
+1259,Epos,
+1260,Eranos,
+1261,"Eras [School of Historical Studies, Monash University, Melbourne]",
+1262,Erdkunde. Archiv für wissenschaftliche Geographie,
+1263,Erfurter Münzblätter,
+1264,Erytheia,
+1265,"Espacio, Tiempo y Forma. Serie II. Historia Antigua [Universidad Nacional de Educación a Distancia]",
+1266,"Essays in Philosophy [Humboldt State University, Arcata, California]",
+1267,"Estudios humanísticos, Geografía, Historia, Arte (Universidad de León. Facultad de Filosofía y Letras)",
+1268,Estudis Romànics,
+1269,Études balkaniques,
+1270,Eulimene,
+1271,Eunomia,
+1273,Eunomia (Prague),
+1275,Evangel,
+1276,Evangelical Quarterly,
+1277,Evangelische Theologie,
+1278,Expedition,
+1279,Expedition (Philadelphia),
+1280,Facta. A Journal of Roman Material Culture Studies,
+1281,Faenza,
+1282,Faventia,
+1283,Filologia Neotestamentaria,
+1284,Filomata,
+1285,Filomata (Cracovie),
+1286,Filomata fasc.,
+1287,Filomocha No.,
+1288,Filosofia,
+1289,Folium,
+1290,Fonaments. Prehistòria i Món. Antic als Països Catalans,
+1291,Forschung in,
+1292,Forschungen und Berichte,
+1293,Fortunatae,
+1294,France Franciscaine,
+1295,France-Grèce,
+1296,"Francisco R. ADRADOS, José Antonio BERENGUER, Eugenio R. LUJÁN y Juan RODRÍGUEZ SOMOLINOS, Veinte años de filología griega",
+1297,"François Lasserre, Nouveaux chapitres de littérature grecque",
+1298,Freiburger Universitätsblätter,
+1299,From the Gustavianum Collections,
+1300,From the Gustavianum Collections in Uppsala,
+1301,Gaia. Revue interdisciplinaire sur la Grèce archaïque [Université Stendhal-Grenoble,
+1302,Galenos. Rivista di filologia dei testi medici antichi,
+1303,Gallia,
+1304,Genava,
+1305,Genava N.S.,
+1306,Genus,
+1307,George Town Law Journal,
+1308,Gereformeerd theologisch Tijdschrift,
+1309,Gerión,
+1310,Germania,
+1311,Germany and You,
+1312,"Ginette LACAZE et Luc CAMINO, Mémoires de Suez. François Bissey et René Chabot-Morisseau à la découverte du désert oriental d'Égypte",
+1313,Glastechn. Berichte,
+1314,Glotta,
+1315,Gnomon,
+1316,Goden langs de Nijl. Religie,
+1317,Gold Bulletin,
+1318,"Gos. Ermitaz, Trudy otd. vostoka",
+1319,Göttinger Miszellen,
+1320,Grace Theological Journal,
+1321,Graeco-Arabica,
+1322,Graecolatina Pragensia,
+1323,Grand Street,
+1324,Grec et latin en,
+1325,Gymnasium,
+1326,Habis,
+1327,Hadrien: vices et vertus,
+1328,Hamdard medicus,
+1329,Handelingen [van de] Koninklijke Zuid-Nederlandse Maatschappij voor Taal- en Letterkunde en Geschiedenis,
+1330,Handes Amsorya,
+1331,Harvard Divinity School Bulletin,
+1332,Hathor,
+1333,Heidelberger Jahrbücher,
+1334,Helikon,
+1335,Helios,
+1336,Hellas,
+1337,Hellenika,
+1338,Helmantica,
+1339,Henoch,
+1340,Hermathena,
+1341,Hermeneus,
+1342,Hermes,
+1343,Hesperia,
+1344,Hessische Blätter für Volkskunde,
+1345,Het Boek,
+1346,Het Kind,
+1347,Histoire et Mesure,
+1348,Historia,
+1349,"Historica [Vereniging voor Vrouwengeschiedenis, Brussel]",
+1350,Historical Reflections / Réflexions historiques,
+1351,History,
+1352,History Today,
+1353,Hochland,
+1354,Hommage à Nazarena Valenza,
+1355,Horizon,
+1356,Horos,
+1357,Humanidades (Universidad Pontificia de Comillas),
+1358,Humanitas,
+1359,Humanitas (Brescia) N.S.,
+1360,Humanitas (Coimbra),
+1361,Hyperboreus,
+1362,I canali della propaganda nel,
+1363,Iatrika Chronika,
+1364,Ibérica,
+1365,Iconographie classique et identités régionales. Paris,
+1366,Il Foro Italiano,
+1367,Il Giornale dell'Università (Firenze),
+1368,Il Ponte,
+1369,Ilu,
+1370,Ilu. Revista de ciencias de las religiones,
+1371,Imagination,
+1372,Imago Aegypti,
+1373,Imago Mundi,
+1374,In memoriam E.V. Marmorale.,
+1375,Incontri triestini di Filologia classica,
+1376,Index,
+1377,Investigación y Progreso,
+1378,Irish Jurist N.S.,
+1379,Irish Theological Quarterly,
+1380,Isis,
+1381,Israel Law Review,
+1382,Israel Museum Journal,
+1383,Istoriko-Astronomitcheskie Issledovanija Akademii Nauk SSSR,
+1384,Istros,
+1386,Iura,
+1387,Iuris Antiqui Historia. An International Journal of Ancient Law,
+1388,Izvestija Akademii Nauk SSSR. Serija literatury i jazyka,
+1389,Izvestija Gosudarstvennoj Akademii Istorii Material'noj kultury fasc.,
+1390,J. Roy. Astron. Soc. Can.,
+1393,Jahrb. d. Österr. Byzantin. Ges.,
+1397,Jahrbuch der Einbandkunst,
+1398,Jahrbuch der Hafenbautechnischen Gesellschaft,
+1399,Jahrbuch des Museums für Kunst und Gewerbe Hamburg,
+1400,Janus,
+1401,"Jean BINGEN, Pages d'épigraphie grecque: Attique - Égypte",
+1402,"Jean BINGEN, Pages d'épigraphie grecque. II. Égypte",
+1403,Jewish Social Studies,
+1404,Journ. Fac. of Archaeol.,
+1405,Journal de Pharmacie de Belgique N.S.,
+1406,Journal de Psychologie normale et pathologique,
+1407,Journal médical de Strasbourg,
+1408,Journal of Ancient Civilizations,
+1409,Journal of Classical Studies,
+1410,Journal of Coptic Studies,JCoptS
+1411,Journal of Economic and Business History,
+1412,Journal of Greco-Roman Christianity and Judaism,
+1413,Journal of Human Evolution,
+1414,Journal of Jewish Studies,
+1415,Journal of Northwest Semitic Languages,
+1416,Journal of Oriental and African Studies,
+1417,Journal of the Ancient Chronology Forum,
+1418,Journal of the Manchester Egyptian and Oriental Society,
+1419,Journal of the Society for the Study of Egyptian Antiquities,
+1420,Journal of the Transactions of the Victoria Institute,
+1421,Juridical Review,
+1422,Juristische Blätter,
+1423,Jus N.S.,
+1424,Kadmos,
+1425,Kairos,
+1426,Kairos N.F.,
+1427,Karthago,
+1428,Kemet,
+1429,Kêmi,
+1430,Kentron,
+1431,Kernos,
+1432,Klearchos,
+1433,Kleio,
+1434,Kleronomia,
+1435,Klio,
+1436,Klio N.F.,
+1437,Kodai,
+1438,Koinonia,
+1439,Kokalos,
+1440,Kölner Beiträge zur Sportwissenschaft,
+1441,Koptologische Studien in der DDR. WZ Halle,
+1443,Kretologia,
+1444,Kriterion,
+1445,Ktèma,
+1446,Kush,
+1447,Kwartalnik Historyczny,
+1448,Kyklos,
+1449,Kypriakai Spoudai,
+1451,L'Égypte du Delta: les capitales,
+1452,L'étude de l'histoire du droit en Belgique et aux Pays-Bas,
+1453,L'originalité de l'Égypte dans le,
+1455,L'vivs'kij derzavnij universitet imeni Ivan Franka. Pitanija klasicnoi filologii,
+1456,L'vivs'kij derzavnij Universitet Pitanija klasicnoj filologii,
+1457,La,
+1458,"La ""démocratisation de la culture"" dans",
+1459,La Conservazione delle Carte antiche,
+1460,La critica d'arte (Firenze),
+1461,La femme dans,
+1462,"La Feuille Blanche (Bulletin de l'Association des Amis du papier, des arts et des industries graphiques français) No.",
+1463,La fonction de juger. Égypte ancienne et,
+1464,La Lettre de Pallas,
+1465,La Lettre du Collège de France,
+1466,La médecine dans,
+1467,La Papirologia in,
+1468,La Parola del Passato,
+1469,La Pensée,
+1470,La Revue de la BNU [Bibliothèque nationale et universitaire de Strasbourg],
+1471,La Revue du Caire,
+1472,La Revue du Notariat,
+1473,La Zagaglia,
+1474,Labeo,
+1475,Lalies,
+1476,Lampas,
+1477,Language,
+1478,Laographia,
+1479,Late Antiquity Art in,
+1480,Later Greek,
+1481,Lateranum N.S.,
+1482,Latinitas,
+1483,Latomus,
+1484,Laverna,
+1485,Le Monde copte,
+1486,Le monde de la Bible,
+1488,Le Vie d'Italia e del Mondo,
+1489,Les,
+1490,Les Dossiers d'Archéologie,
+1491,Les Musées de Genève (Bulletin mensuel des Musées et Collections de la Ville de Genève),
+1492,Les mystères de,
+1493,Les Nouveaux Cahiers,
+1494,Les voies romaines autour de la,
+1495,Lettres d'Humanité,
+1496,Lexis,
+1497,Library Hi-Tech Consecutive,
+1498,Libri,
+1499,Libyca,
+1500,Lingua Aegyptia,
+1501,Livre du Centenaire de l'I.F.A.O.,
+1502,Livret de la IVe Section de l'École pratique des Hautes Études,
+1503,Livret-annuaire de l'École Pratique des Hautes Études. Section des Sciences historiques et philologiques,
+1504,Lucentum,
+1505,Luchnos,
+1506,Ludica. Annali di Storia e Civiltà del Gioco,
+1507,Ludus Magistralis,
+1508,Lustrum,
+1509,Machriq,
+1510,Macne Akademiia Nauk Gruzinskoi SSR [Bulletin de l'Académie des Sciences de la RSS Géorgienne. Série Littérature et Langue],
+1511,MÆnh,
+1512,Magyarok,
+1513,Maia,
+1514,Maia N.S.,
+1516,Makedonika,
+1517,Maltechnik. Restauro,
+1518,Man N.S.,
+1519,Man. Journal of the Royal Anthropological Institute,
+1520,Marianum,
+1521,Mariner's Mirror,
+1522,"Marmora. International Journal for Archaeology, History and Archaeometry of Marbles and Stones",
+1523,"Marsyas (A Publication by the Students of the Institute of Fine Arts, New York University)",
+1524,Maske und Kothurn,
+1525,Materialy Archeologiczne,
+1526,Matianum,
+1527,Meander,
+1528,Meddelelser fra Ny Carlsberg Glyptotek,
+1530,"Mededelingen van de koninklijke Nederlandse Academie van Wetenschappen, Afdeling Letterkunde N.R., XIX",
+1531,Mediterraneus,
+1532,Memnonia,
+1533,Mémoires de l'Académie internationale de Droit comparé,
+1534,"Mémoires de la Société Nationale des Antiquaires de France, 8e série",
+1535,Mémoires. Bulletin de la Société francophone d'Histoire de l'Ophtalmologie,
+1536,Memoirs of the American Academy of Arts and Sciences,
+1538,Méroé,
+1539,Meroitic Newsletter,
+1540,Messana,
+1541,"Metallo e scrittura. Sinergia di due poteri. Roma, Università ""La Sapienza"", Dipartimento di Scienze storiche, archeologiche e antropologiche dell'Antichità",
+1542,Méthexis,
+1543,Mètis,
+1547,Michigan Alumnus Quarterly Review,
+1550,Millennium. Jahrbuch zu Kultur und Geschichte des ersten Jahrtausends n.Chr.,
+1551,Minerva,
+1552,Minima Epigraphica et papyrologica,
+1553,Miscelânea em honra da Doutora Maria Helena da Rocha Pereira.,
+1554,Miscellanea Academica Berolinensia (Ges. Abhand. zur Feier d.,
+1555,Miscellanea Biblica,
+1557,Miscellanea G.,
+1558,Miscellanea Gregoriana. Raccolta di scritti pubblicata nel I centenario dalla fondazione del Pontificio Museo Egizio,
+1559,Mistica Rosa. Rivista bimestrale per gli alunni ed ex alunni dei Fratelli Maristi (Roma),
+1560,Mitteilungen DAV,
+1561,Mitteilungen der Archäologischen Gesellschaft Graz,
+1563,Mitteilungen der Sudanarchäologischen Gesellschaft zu Berlin e.V.,
+1564,Mitteilungen des Oberhessischen Geschichtsvereins,
+1565,Mitteilungen für Anthropologie und Religionsgeschichte,
+1567,Mizraim,
+1568,Mneme Georges A. Petropoulos,
+1569,Mnemosyne,
+1570,"Mnesmosyne, 3. ser.",
+1571,Mnemosyne 4e s.,
+1572,Mnemosyne 4a s.,
+1573,Modern Language Notes,
+1574,Mousaion,
+1575,Mouseion (Canada),
+1576,Mouseion ser. III,
+1578,Münchener Theologische Zeitschrift,Münch. Theolog. Zeitschrift
+1579,Muse,
+1580,Muséon,
+1581,Musica e storia,
+1582,Musiva et Sectilia,
+1583,Muthos. Rivista di storia delle religioni [Università degli Studi di Palermo],
+1584,Myrtia,
+1585,Nachrichten der Giessener Hochschulgesellschaft,
+1586,Nag Hammadi Studies,
+1587,Narody Azii i Afriki,
+1588,Naturwissenschaften,
+1589,Nauka Polska,
+1590,"Nauka Polska, jej Potrzeby, Organizacja i Rozwoj [La science polonaise. Ses besoins, son organisation et ses progrès]",
+1591,Navires et commerces de la,
+1592,Nea Hestia,
+1593,Nederl. Kath. Stemmen,
+1594,Nederlands Theologisch Tijdschrift,
+1595,Neon Athenaion,
+1596,Neophilologus,
+1597,Neotestamentica,
+1598,Neptunia,
+1599,Neue Deutsche Hefte,
+1600,Neue Rundschau,
+1601,Nieuw Tijdschrift van de Vrije Universiteit Brussel,
+1602,Nikephoros,
+1603,Nilus. Societat Catalana d'Egiptologia,Nilus
+1605,North Carolina Museum of Art,
+1606,Not. Chiostro Monastero maggiore,
+1608,Notizie dal Chiostro del Monastero Maggiore. Rassegna di Studi del Civico Museo Archeologico e del Civico Gabinetto Numismatico di Milano,
+1609,Nottingham Classical Literature Studies,
+1610,Nova Tellus,
+1611,Nubica,
+1612,Nubica et Aethiopica [antérieurement: Nubica],
+1613,Numen,
+1614,Numisma,
+1615,Numismatica,
+1616,Numismatics International,
+1617,Numizmaticar,
+1618,Nuova Antologia,
+1619,Nuovo Digesto Italiano,
+1620,Oberammergauer Vorträge (Gräfelfing vor München: Arbeitsgemeinschaft der Verlagshersteller),
+1621,Ocnus,
+1622,Oikumene,
+1623,Omaggio a,
+1624,Omnibus,
+1625,Onoma,
+1626,Opus,
+1627,Orbis,
+1628,Ord och bild,
+1629,Oriens,
+1630,Oriens Antiquus,
+1631,Orient,
+1632,Orient [The Society for Near Eastern Studies in Japan],
+1633,Orient-Press [Roma],
+1634,Orientalia,
+1635,Orientalia N.S.,
+1636,Orientalia Suecana,
+1637,Orientamenti culturali,
+1638,Orpheus,
+1639,Orpheus N.S.,
+1640,Osiris,
+1641,Österreichische Lehrerzeitung,
+1642,Österreichische Zeitschrift für öffentliches Recht,
+1643,Ostraka,
+1644,Paideia,
+1645,"Palaeologia (Osaka, Japon)",
+1646,Palaestra Latina,
+1647,Palamedes,
+1648,Palenstinskij Sbornik,
+1649,Palestinskij Sbornik,
+1650,Palestinskij Sbornik v y Pusk,
+1651,Palestra del Clero,
+1652,Pallas,
+1653,Pan,
+1654,Panstwo i Prawo,
+1655,Pantheon,
+1656,Papiro e mondo antico,
+1657,Papyri,
+1658,Papyrologica,
+1659,Parnassos,
+1660,Parole di Vita,
+1661,Parousia,
+1662,Patavium,
+1663,Pegaso,
+1664,Pharmazie,
+1665,Philologum,
+1666,Philologus,
+1667,Philologus N.F.,
+1669,Phoenix,
+1671,Phronesis,
+1672,Physis,
+1674,Poetica,
+1675,Polemon,
+1676,Polifemo,
+1677,Polis,
+1678,Polis. Studi interdisciplinari sul mondo antico [Università degli Studi Mediterranea di Reggio Calabria],
+1680,Polska Akademia Nauk. Sprawozdania z prac naukowych wydzialu nauk spolecznych,
+1681,Pompeiana. Biblioteca della Parola del Passato,
+1682,Population (Paris),
+1683,Pour la Science,
+1684,Prace historyczne,
+1685,Prace i Materialy Muzeum Archeologicznego i Etnograficznego w Lodzi. Seria numizmatyczna i konserwatorska,
+1686,Prace Komisji Historii Sztuki,
+1687,Pragmateiai tes Akademias Athenon,
+1688,Právné-historické studie,
+1690,Pravoslavnyy Palestinskiy sbornik,
+1691,Pravoslavyj Palestinskij Sbornik,
+1692,Préfaces,
+1693,Princeton University Library Chronicle,
+1694,Pro Arte,
+1695,Problemui Istorii dokapitalistichestkikh Obshchestv,
+1696,Problemy,
+1697,Proceed. of the American Philosophical Society,
+1698,Proceedings of the American Academy for Jewish Research,
+1699,Proceedings of the Royal Society of Historical Studies,
+1700,Programma zasedanij i tezisy dokladov konferencii po problemam anticnosti. Moskva,
+1701,Prolegomena,
+1702,Prometheus,
+1703,Prominenten kijken om. Achttien rechtsgeleerden uit de Lage Landen over,
+1704,Prospettiva,
+1705,Protokolle zur Bibel,
+1706,Prudentia,
+1707,Przeglad biblijny,
+1709,Przeglad Humanistyczny,
+1710,Przeglad Kulturalny,
+1711,Publications of the Observatory of the University of Michigan,
+1712,Pyrenae,
+1713,Qadmoniot,
+1715,"Quaderni del Dipartimento di Filologia, Linguistica e Tradizione classica",
+1716,Quaderni del Liceo Capece,
+1717,Quaderni di Acme,
+1718,Quaderni ticinesi di numismatica e antichità classiche,
+1719,Quaderno,
+1720,Quarterly Review of Literature,
+1721,Rabels Zeitschrift für ausländisches und internationales Privatrecht,
+1722,Raccolta di scritti dedicati a Orsolina Montevecchi.,
+1723,Ramus,
+1724,Rass. Soc. Afr. Ital.,
+1725,Réalités ophtalmologiques,
+1726,Record of the Art Museum Princeton University,
+1727,Recueil d'études dédiées à,
+1728,Relationes Budvicenses,
+1729,Religion in Life,
+1730,Renaissance,
+1731,"Rendiconti dell'Istituto Lombardo, Cl. di lettere",
+1732,Research and Progress,
+1733,Restaurator,
+1734,Restauratorenblätter,
+1735,Rev. gen. de legislación y jurisprudencia,
+1736,Revista Catalana de Teologia,
+1737,Revista crítica de derecho immobiliario Nos,
+1738,Revista del Instituto de Historia Antigua Orient.,
+1739,Revue archéologique du Centre,
+1741,Revue d'Alsace,
+1742,Revue de l'histoire juive en Égypte,
+1743,Revue de la Banque,
+1744,Revue de la Bibliothèque Nationale,
+1745,Revue de la Société Ernest Renan n.s.,
+1746,"Revue de Philologie, 3e série",
+1747,Revue des ...tudes Augustiniennes,
+1748,Revue des Conférences françaises en Orient,
+1749,Revue des études juives. Historia judaica,
+1750,Revue des sciences économiques (Liège),
+1751,Revue des sciences religieuses,
+1752,Revue du Nord,
+1753,Revue européenne des sciences sociales et Cahiers Vilfredo Pareto,
+1754,Revue historique de Bordeaux et du département de la Gironde,
+1755,Revue internationale de Pédiatrie,
+1756,Revue Médicale de Liège,
+1757,Revue Roumaine d'Égyptologie,
+1758,Revue thomiste,
+1759,Revue. Informatique et statistique dans les sciences humaines,
+1760,Ricerche di Egittologia e di Antichità Copte,
+1761,Rivista di Bizantinistica,
+1762,Rivista di diritto agrario,
+1763,Rivista di diritto privato,
+1764,Rivista di Merceologia,
+1766,Rivista italiana per le Scienze giuridiche ser. III,
+1767,Rivista trim. di diritto e proced. civile,
+1768,Rivisti di Diritto Agrario,
+1769,Rocznik Muzeum Narodowego,
+1770,Rocznik Muzeum Narodowego w Warszawie,
+1771,Rocznik Muzeum Narodowego w Warszawie [Annuaire du Musée National de Varsovie],
+1772,Roczniki Humanistyczne (Lublin),
+1773,Roma,
+1774,Romance Philology,
+1775,Romanistik in Geschichte und Gegenwart,
+1776,Romanitas,
+1777,Römisches Glas des,
+1778,Römisches Porträt. Wege zur Erforschung eines gesellschaftlichen Phänomens. Wissenschaftliche Konferenz,
+1779,Rotunda,
+1781,Ruch Biblijny i Liturgiczny (Cracovie),
+1782,Rudiae,
+1783,Rudolfinum. Jahrbuch des Landesmuseums Kärnten,
+1784,Saeculum,
+1785,Sahara,
+1786,Sal Terrae (Santander),
+1787,Samtichen,
+1788,Samtidem,
+1789,San. Journal of the Society for Ancient Numismatics,
+1790,Sandalion,
+1791,Sarapis,
+1792,"Savigny-Zeitschrift, Röm. Abt.",
+1793,Sbornik Gosud. Ermitaz. Skul'ptura v muzee,
+1794,Schol(i)a,
+1795,Scholia,
+1796,Schweizer Beitr. z. allg. Gesch.,
+1797,Schweizer Beiträge zur Allgemeinen Geschichte,
+1798,Schweizer Münzblätter,
+1799,Science and Society,
+1800,"Science and Technology for Cultural Heritage. Journal of the ""Comitato Nazionale per la Scienza e la Tecnologia dei Beni Culturali"", CNR",
+1801,Science et Esprit,
+1802,Scientia,
+1803,Scientific American,
+1804,Scientific Monthly,
+1805,Scienza e Tecnica,
+1806,"Scienze dell'Antichità. Storia, archeologia, antropologia [Università degli Studi di Roma ""La Sapienza""]",
+1807,Scienze e Tecnica,
+1808,Scolastik,
+1809,Scriba,
+1810,Scriptorium,
+1811,Scritti in onore di Lombardo Ferrini pubblicati in occasione della sua Beatificazione. I,
+1812,Scuda Cattolica,
+1813,Sefarad,
+1814,Segno e Testo,
+1815,Segno e Testo. International Journal of Manuscripts and Text Transmission [Università degli Studi di Cassino],
+1816,Seiyoshigaku [Studies in Western History],
+1817,Semeia,
+1818,Seminar,
+1820,Seminar. An Annual Extraordinary Number of the Jurist,
+1821,Seminarium Kondakovianum,
+1822,Semitica,
+1823,"Septuagint and Cognate Studies (Missoula, Mont.)",
+1824,Serapis,
+1825,Palaeohispanica,
+1826,"Sibrium. Centro di Studi Preistorici ed Archeologici, Varese",
+1827,Sicilia antiqua,
+1828,Siegener Hochschulblätter,
+1829,Sileno,
+1830,Smithsonian,
+1831,Society of Biblical Literature. Seminar Papers Series.,
+1832,Soobscenija gosudarstvennogo Ermitaza [Communications du Musée d'État de l'Ermitage],
+1833,Speculum,
+1834,Spektrum,
+1835,Spiegel der Forschung. Justus-Liebig-Universität Giessen,
+1836,Spiegel Historiael,
+1837,Spomenika Profesoru,
+1838,Sprache,
+1839,Sprawozdania Polsk. Akad. Um.,
+1840,Sprawozdania Polskiej Akademii Umiejetnosci,
+1842,Sprawozdania Poznanskiego Towarzystwa Przyjaciót Nauk,
+1843,Sprawozdania Wroclawskiego Towarzystwa Nauk,
+1844,Sprawozdania z czynnosci i poseidzen Polskiej Akad. Umiej,
+1845,Sprawozdania z Prac Naukowych Wydzialu Nauk Spolecznych,
+1846,Stadion,
+1847,Stasinos. Deltio tou Sundesmou Hellen Philol. Kuprou (Leucosia),
+1848,Stlt N.S.,
+1849,Storia dell'Arte,
+1850,Studi di Egittologia e di Antichità puniche,
+1851,Studi e Ricerche sull'Oriente cristiano,
+1852,Studi Economici-giuridici della Reale Università di Cagliari,
+1853,Studi epigrafici e linguistici sul Vicino Oriente,
+1855,Studi Senesi,
+1856,Studi Trentini di Scienze storiche,
+1857,Studi vari,
+1858,Studia Aegyptiaca,
+1859,Studia Antiqua,
+1860,Studia Archeologiczne,
+1861,Studia Archeologiczne. Uniwersytet Warszawski. Instytut archeologii,
+1862,Studia Ghisleriana. Ser. I. Studi giuridici,
+1863,Studia Hellenistica,
+1864,Studia philologica Valentina,
+1865,Studien,
+1866,Studien zur Altägyptischen Kultur,
+1867,Studies in Conservation,
+1868,Studii Teologice (Bucarest),
+1869,Studium Generale (Porto),
+1870,Stultifera Navis,
+1871,Subseciva Groningana. Studies in Roman and Byzantine Law,
+1872,Sudan &amp; Nubia,
+1873,Sudan Texts Bulletin,
+1874,Sungraphe,
+1875,Suomen Museo,
+1876,"Supplément au Dictionnaire de la Bible de F. Vigouroux, fasc.",
+1877,Symb. Osl.,
+1878,Symbolae Arminio de Gerkan sexagenario,
+1879,Symbolae Hrozny.,
+1880,Symbolae Raphaeli Taubenschlag,
+1881,Symbolae Raphaeli Taubenschlag dedicatae.,
+1882,Synthesis (La Plata),
+1883,Syria,
+1884,Syro-Egypt,
+1885,Sztandar Mlodych,
+1886,Talanta,
+1887,Technical Association of Man-Made Fiber Paper,
+1888,Technical Studies in the Field of the Fine Arts,
+1889,"Technologia. Quarterly Review devoted to Historical and Social Studies in Science, Technology and Industry",
+1890,Temas bíblicos,
+1891,Temis. Revista de ciencia y técnica jurídicas,
+1892,Tempo Nuovo,
+1893,Text. Transactions of the Society for Textual Scholarship,
+1894,Textile History,
+1895,Textile Museum Journal,
+1896,Textilforum,
+1897,Thalès,
+1898,The Anvil,
+1899,The Arbitration Journal. A Quarterly of the American Arbitration Association,
+1900,The Artefact,
+1901,The Bible Translator,
+1902,The Brooklyn Museum Annual,
+1903,The Cambridge Journal,
+1904,The Canadian Journal of Economics and Political Science,
+1905,The Catholic Biblical Quarterly,
+1906,The Celator,
+1907,The Church Quarterly Review,
+1908,The Economic History Review,
+1909,The Egyptian Bulletin,
+1911,The Hibbert Journal,
+1912,The Indian Archives,
+1913,The Journal of Hellenic Studies,
+1914,The Journal of Jewish Studies,
+1915,The Journal of the Society for the Study of Egyptian Antiquities,
+1916,The Jurist,
+1917,The Kyoto Journal of Ancient History,
+1918,The Library,
+1919,The Library Quarterly,
+1920,The Link,
+1921,"The Listener, May",
+1922,The Maynooth Review,
+1923,The Michigan Quarterly Review,
+1924,The Polish Review,
+1925,The Polish Review (New York),
+1926,The Princeton Seminary Bulletin,
+1927,The Qumran Chronicle,
+1928,The Review of the Polish Academy of Sciences,
+1929,The University of Leeds Review,
+1930,The University of Toronto Quarterly,
+1932,Thetis,
+1933,Thetis. Mannheimer Beiträge zur Klassischen Archäologie und Geschichte Griechenlands und Zyperns,
+1934,Thought. A Quarterly of the Sciences and Letters,
+1935,Tijdschrift voor Theologie,
+1936,"Tod, Bestattung und Jenseits in",
+1937,Topoi,
+1938,Trabajos de Egiptología. Papers on Ancient Egypt,
+1939,Traditio,
+1940,Transactions Bibliograph. Society,
+1941,Transactions of the Connecticut Academy of Arts and Sciences,
+1942,Transeuphratène,
+1943,Trends in Classics,
+1944,Trierer Beiträge,
+1945,Trierer Theologische Zeitschrift,
+1946,Trudy Tiflisskogo gosudarstvennogo universiteta,
+1947,Tulane Law Review,
+1948,Turun Historiallisen Yhdistyksen julkaisuja,
+1949,Tyche,
+1950,Tydskrif vir wetenskap en kuns N.R.,
+1951,Tyndale Bulletin,
+1952,Ucenye zapiski Gor'kovskogo Gosudarstvennogo Universiteta. Serija,
+1953,Ucenye zapiski Jaroslavskogo gosudarstvennogo ped. Instituta fasc.,
+1954,Uitzicht,
+1955,Unijournal. Zeitschrift der Universität Trier. Themenheft.,
+1956,Universitas,
+1957,Université Libre de Bruxelles. Faculté de Droit. Travaux et Conférences,
+1958,University of California Publications in Classical Philology,
+1959,University of California Publications in Semitic Philology X,
+1960,University of Toronto Quarterly,
+1961,Universum,
+1962,Varia Aegyptologica,
+1963,Vedute sull'Egitto antico. Annuario,
+1964,Veleia,
+1965,Verbatim,
+1966,Vereniging van Vrienden Allard Pierson Museum Amsterdam. Mededelingenblad,
+1967,Vergleich und Analogieschluss in,
+1968,Veritas (Pôrto Alegre),
+1969,Vichiana,
+1970,Vichiana N.S.,
+1972,Vistas in Astronomy,
+1973,Vita e Pensiero N.S.,
+1974,Vivre et Penser,
+1975,Vizantijskij Vremennik,
+1976,Volume offert au Professeur Justin,
+1977,Volumen Homenaje al Rev. P.D. Benito,
+1978,Vspomogatel'nye istoriceskie discipliny,
+1980,Wetenschappelijke Tijdingen,
+1982,Wiadomosci Numizmatyczne,
+1983,Wiadomosci Numizmatyczne - Polish Numismatic News,
+1984,Widnokregi No.,
+1985,Wiedza i zycie,
+1986,"William M. CALDER III et Jaap MANSFELD (Entretiens préparés et présidés par), Hermann Diels",
+1987,Wissenschaftliche Annalen,
+1988,Wissenschaftliche Konferenz,
+1989,Xenia Antiqua,
+1990,Yale Review,
+1991,Year Book of the American Philosophical Society,
+1992,Zagadnienia rodzajów literackich,
+1993,"Zbornik radova Vizantološkog instituta [Recueil des travaux de l’Institut d’études byzantines, Belgrade]",
+1994,"Zeitschr. f, Geschichtswiss.",
+1995,Zeitschrift für altorientalische und biblische Rechtsgeschichte,
+1997,Zeitschrift für mathematischen und naturwissenschaftlichen Unterricht,
+1998,Zeitschrift für Neues Testament,
+1999,Zeitschrift für Semitistik,
+2000,Zeitschrift von Schweizerischen Recht,
+2001,Zeitwende,
+2002,Zentralblatt für Psychotherapie und ihre Grenzgebiete,
+2003,"Zeszyty naukowe Uniwersytetu Wroclawskiego Seria A, Nr.",
+2004,Zetesis,
+2005,Zion,
+2006,Zycie szkoly wyzszej,
+2007,Il Diritto marittimo,
+2008,The Picus,
+2009,Acta Poloniae historica,
+2010,Agostino Soldati PP,
+2011,American Journal of Comparative Law,
+2012,Anabases,
+2013,Analecta Malacitana (Málaga),
+2014,Analecta Sacra Tarraconensia,
+2015,Ancient Society. Resources for Teachers,
+2016,Andrews University Seminary Studies,
+2017,Annali della Fondazione italiana per la storia amministrativa,
+2022,Archivo teológico Granadino,
+2023,Bernard Boyaval REA,
+2024,Bulletin de l'Association des Classiques de l'Université de Liège,
+2026,Bulletin des Bibliothèques de France. Bulletin de documentation bibliographique,
+2027,Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja',
+2028,Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja' 3a ser.,
+2029,Bullettino dell'Istituto di Diritto Romano 'Vittorio Scialoja' 3e s.,
+2030,Bullettino dell'Istituto di Diritto Romano,
+2031,Bullettino dell'Istituto di Diritto Romano 3e s.,
+2032,Bullettino dell'Istituto di Diritto Romano 3a s.,
+2033,Cahiers d'Histoire,
+2034,Classical Weekly,
+2035,Collationes (Gand),
+2036,Columbia Law Review,
+2037,Confrontations (Tournai),
+2038,Die Welt des Orients,
+2039,Eiskasmos,
+2040,Ellenika,
+2041,Erasmus,
+2045,Euphrosyne N.S.,
+2046,Euphrosyne,
+2047,Exemplaria Classica,ExClass
+2048,Forum der Letteren,
+2049,Galesianum,
+2050,Graecolatina et Orientalia,
+2051,Gregorianum,
+2052,Hellenica,
+2053,Historische Literatur,
+2054,International Journal of African Historical Studies,
+2055,Jewish Studies Quarterly,
+2056,Journal of Australasian Universities Language and Literature Association,
+2057,Journal of Semitic Studies,
+2058,Kirjath Sepher,
+2059,Kratylos,
+2061,Laudate,
+2062,Libraries &amp; Culture,
+2063,Litterae Caelestes,
+2064,Medioevo greco,
+2066,Minima Epigraphica et Papyrologica,
+2067,Mouseion,
+2069,Museum,
+2070,Nieuwe Theologische Studiën,
+2071,Ordia prima,
+2072,Paedagogica Historica. International Journal of the History of Education,
+2073,Papyrologica Lupiensia,
+2074,Philologia (Sofia),
+2075,Platôn,
+2077,Primum legere,
+2078,Przeglad Historyczny,
+2079,Religio,
+2080,Rendiconti dell'Istituto Lombardo. Parte Generale e Atti Ufficiali,
+2081,Rhetoric Society Quarterly,
+2082,Revista Española de teologia,
+2083,Revolutionary History,
+2084,Revue Bénédictine,
+2085,Revue d'ascétique et de mystique,
+2088,Rivista di Egittologia e di Antichità Copte,
+2090,Salesianum,
+2092,Scholastik,
+2093,Signs,
+2094,Sobornost,
+2095,Studi medievali,
+2096,Studi medievali 3a s.,
+2097,Studia historica. Historia antigua [Universidad de Salamanca],
+2098,Südost-Forschungen,
+2099,Svensk teologisk kvartal Skrift,
+2100,The Classical Weekly,
+2101,The Irish Jurist N.S.,
+2102,Theologia,
+2103,Vetera Christianorum,
+2106,Zeitschrift für Religions- und Geistesgeschichte,
+2107,ARAM,
+2110,BollClass N.S.,
+2111,Bulletin de la Société d'Archéologie Copte,BSAC
+2112,Bulletin de la Société d'Études historiques et géographiques de l'Isthme de Suez,
+2113,Bulletin de la Société Royale de Géographie d'Égypte,
+2116,Dacia N.S.,
+2117,Eunomia (Ephemeridis Listy Filologické Supplementum),
+2120,ONOMA,
+2123,TAPHA,
+2124,Main Titulo,
+2125,Atti della Accademia Roveretana degli Agiati,
+2127,Bollettino della Badia greca di Grottaferrata,
+2128,Bulletin de la Société Neuchâteloise de Géographie,
+2129,Das Antiquariat,
+2130,Didactica Classica Gandensia,
+2131,Hephaistos,
+2132,Journal of Ancient Egyptian Interconnections,
+2133,Journal of Biosocial Science,
+2134,Journal of Late Antiquity,
+2135,Meroitica,
+2136,Philologia antiqua,
+2137,Phoibos,
+2138,Pro Memorie. Bijdragen tot de rechtsgeschiedenis der Nederlanden,
+2139,Revue de l'Occident Musulman et de la Méditerranée,
+2140,Revue de Qumran,
+2141,Riggisberger Berichte,
+2142,Roczniki Teologiczno-Kanoniczne,
+2143,Rocznyk Muzeum Narodorvego w Warszawie,
+2144,Schweizerisches Archiv für Volkskunde,
+2145,Scripta Hierosolymitana,
+2146,Slovenska Akademija znanosti in umetnosti. Razred za filoloske in literarne vede. Razprave,
+2147,Studi tardoantichi,
+2148,Studies in Ancient Art and Civilization,
+2149,Théologie historique,
+2150,Zboenik Pravnog Fakulteta u Zagrebu,
+2151,Μήνη,
+2152,Νέα Ῥώμη. Rivista di ricerche bizantinistiche,
+2153,Acta facultatis politico-iuridicae universitatis scientiarum Budapestinensis de Rolando Eötvös nominatae,
+2154,Acta Universitatis Lodziensis. Folio Iuridica,
+2155,Annali di Storia delle Università Italiane,
+2156,Annali di Storia moderna e contemporanea,
+2157,Ateliers,
+2158,Berichte und Arbeiten aus der Universitätsbibliothek Giessen,
+2159,Bibliotheksforum Bayern,
+2160,Droit et Cultures. Revue semestrielle d'anthropologie et d'histoire,
+2161,Eretz-Israel,
+2162,Historical Social Research,
+2164,Literary &amp; Linguistic Computing,
+2165,The Oriental Institute of the University of Chicago. Studies in Ancient Oriental Civilization,
+2167,Jahrbuch des Bernischen Historischen Museums,JBM
+2168,Dictynna,
+2169,British Museum Studies in Ancient Egypt and Sudan,
+2170,Japan Studies in Classical Antiquity,
+2171,Lucida Intervalla,
+2172,Aestimatio,
+2173,Mediterranean Archaeology and Archaeometry,
+2174,Revue des études tardo-antiques,
+2175,Lanx,
+2176,Ηπειρωτικά Γράμματα,
+2177,Journal of Indian Ocean Archaeology,
+2178,Égypte Nilotique et Méditerranéenne,ENiM
+2179,Dresdner Numismatische Hefte,
+2180,The Classical and Medieval Numismatic Society Journal,
+2181,Fundamina. A Journal of Legal History [Pretoria],
+2182,Quaderni della Soprintendenza Archeologica del Piemonte,
+2183,Mètis N.S.,
+2184,Aitia,
+2186,Ágora,
+2187,,C&amp;C
+2188,aMun. Magazin für die Freunde der Ägyptischen Museen,
+2189,Byzantion Nea Hellás,
+2190,CentoPagine,
+2191,Disciplina,
+2192,Eruditio Antiqua,
+2193,Faculty of Tourism and Hotels Magazine,
+2194,Geomorphology,
+2195,História Revista,
+2196,Historiká. Studi di storia greca e romana,
+2197,"Il Maurolico. Giornale di storia, scienze, lettere e arti",
+2198,Iura Orientalia,
+2199,Journal of Ancient Near Eastern Religions,
+2200,Journal of the Canadian Society for Coptic Studies / Journal de la société canadienne pour les études coptes,
+2201,Mare Nostrum. Estudos sobre o Mediterrâneo Antigo,
+2202,Méditerranée. Revue géographique des pays méditerranéens,
+2203,MOSAIKjournal,
+2204,Notícia Bibliográfica e Histórica,
+2205,"Oracula. Revista de Estudos de Apocalíptica, Misticismo e Fenômenos Visionarios",
+2206,Revista de História,
+2207,Revista do Museu de Arqueologia e Etnologia,
+2208,Scripta. An International Journal of Codicology and Palaeography,Scripta
+2210,Semitica et Classica,
+2211,Studia Antiqua et Archaeologica,
+2212,Studia Liturgica,
+2213,Revista de Estudos Filosóficos e Históricos da Antiguidade,
+2214,,SHHA
+2215,Journal of Egyptian History,
+2216,Early Christianity,
+2217,eTopoi. Journal for Ancient Studies. Special Volume.,
+2218,Atene e Roma N.S.,AeR N.S.
+2219,Zeitschrift für Arabische Linguistik,ZAL
+2220,Dionysus ex machina,
+2221,El Futuro del Pasado,
+2222,PalArch's Journal of Archaeology of Egypt / Egyptology,
+2223,ExClass,
+2224,Alétheia,
+2225,Eugesta. Revue sur le genre dans l'Antiquité,
+2226,Roman Legal Tradition,
+2227,Studia Iuridica,
+2228,U Schyłku Starożytności. Studia Źródłoznawcze,
+2229,Past Imperfect,
+2230,Mainake,
+2231,Materia Giudaica,
+2232,Tetradio,
+2233,Vegetation History and Archaeobotany,
+2234,Revista de Estudios Históricos-Juridicos,
+2235,"Histos [The On-line Journal of Ancient Historiography, Florida State University - Newcastle University]",Histos
+2236,Radiocarbon,
+2237,Conserveries matérielles. Revue transdisciplinaire de jeunes chercheurs,
+2238,Aigis,
+2240,"AJA, Online Book Reviews",
+2241,AHB Online Reviews,
+2242,AnnIsl,
+2243,Annuaire de l'École Pratique des Hautes Études. Section des Sciences religieuses,
+2244,ArchPF. Beiheft,
+2245,BEFAR,
+2246,Bollettino di Archeologia On Line,
+2247,BAR International Series,
+2248,BCH. Supplément,
+2249,BAssBude,
+2252,Bulletin of the History of Archaeology,
+2253,Byzantinische Forschungen,
+2254,CENiM,
+2255,"Cahiers ""Mondes anciens""",
+2256,Camenae,
+2257,Camenulae,
+2258,Classical Studies (Kyoto),
+2259,Classics@: An Online Journal,
+2260,Dacia,
+2261,Didaskalia,
+2262,Digressus,
+2263,Dossiers d'Archéologie,
+2264,ECA,
+2265,EClas,
+2266,Etudes,
+2267,Ferrovissime,
+2268,Goettinger Miszellen,
+2269,Histara,
+2270,Historia Religionum,
+2271,Historika ?,
+2273,Ítaca,
+2274,JMuench,
+2275,JANER?,
+2276,Kyphi,
+2277,Levant,
+2278,Littera Antiqua,
+2279,M.P.E.R.,
+2280,Mitteilungen der Sudanarchaeologischen Gesellschaft zu Berlin e.V. (Der antike Sudan),
+2281,ὅρμος,
+2282,Plekos,
+2283,Plêthos,
+2284,Polish Archaeology in the Mediterranean,
+2285,Pomoerium,
+2286,Res Antiquae,
+2287,Revue des études militaires anciennes,
+2288,RoemQSchr,
+2289,SBMuench,
+2291,SAOC,
+2292,Vergilius,
+2293,Bryn Mawr Classical Review,BMCRev
+2294,«Abhandl. Königl. Preuss. Akad. Wiss.» philos.-hist. Kl.,
+2295,Jahrbücher für classische Philologie,
+2296,Studi filologici e storici,
+2297,Bulletin de l'Académie Impériale des Sciences de St. Pétersbourg,
+2298,Classici e Neolatini,
+2299,Giornale degli Scavi di Pompei,
+2300,Il Pensiero,
+2301,Lexicon Philosophicum,
+2302,Museo italiano di antichità classiche,
+2303,Museum Philologum Londiniense,
+2304,Nachrichten von der Gesellschaft der Wissenschaften zu Göttingen,
+2305,Studi Classici e Orientali,
+2306,Журнал Министерства народного просвещения (Žurnal Ministerstva narodnogo prosveščenija),
+2307,The Law Quarterly Review,
+2308,Nouvelle revue historique de droit français et étranger,RD
+2309,Seminarios Complutenses de derecho romano,
+2310,Rotulus,
+2311,Transactions of the Royal Irish Academy,
+2312,Electrum,
+2313,Eleutheria,
+2314,Journal of the Royal Asiatic Society,
+2315,Religious Studies Review,
+2316,Sehepunkte,
+2317,Early Medieval Europe,
+2318,Proceedings of the Society of Biblical Archaeology,
+2319,Scripta Biblica et Orientalia,
+2320,Cistercian Studies Quarterly,
+2321,Coptica,
+2322,Critical Sociology,
+2323,Der Islam,
+2324,Dotawo. A Journal of Nubian Studies,
+2325,Eastern Christian Art,
+2326,Ekklesiastikos Pharos,
+2327,Electryone,
+2328,Incontri di filologia classica,
+2329,Informes y trabajos,
+2330,International Journal of Paleopathology,
+2331,Islamic Law and Society,
+2332,Israel Numismatic Research,
+2333,Journal of Agrarian Change,
+2334,Journal of Ancient History,
+2335,Journal of Ancient Indian History,
+2336,Médiévales,
+2337,Mediterranean Language Review,
+2338,Mnemon,
+2339,Nowy Filomata,
+2340,Olba,
+2341,Przegląd Religioznawczy,
+2342,Revista Alétheia,
+2343,Revista Numismática Hécate,
+2344,Revue historique de Dunkerque et du littoral,
+2345,Rivista di diritto ellenico,
+2346,Studia Orientalia Electronica,
+2347,Światowit. Annual of the Institute of Archaeology of the University of Warsaw,
+2348,"Truppendienst. Zeitschrift für Ausbildung, Führung und Einsatz im Österreichischen Bundesheer",
+2349,Papyrotheke. Rivista online di Papirologie dell'Università di Parma,
+2350,Romanitas. Revista de Estudos Grecolatinos,
+2351,Antiguo Oriente. Cuadernos del Centro de Estudios de Historia del Antiguo Oriente,
+2352,Arabica,
+2353,Archaeological Review from Cambridge,
+2354,Archai. Revista sobre as origens do pensamento ocidental,
+2355,Architecture and Modern Information Technologies,
+2356,Arkeoloji Dergisi,
+2357,Cahiers Caribéens d'Égyptologie,
+2358,Gephyra. Journal for the Ancient History and Cultures of the Eastern Mediterranean,
+2359,Greek and Roman Musical Studies,
+2360,"Systasis. E-journal of the Association of Classical Philologists ""Antika""",
+2361,Anabasis. Studia Classica et Orientalia,
+2362,CHS Research Bulletin,
+2363,Bulletin de l'Académie Belge pour l'Étude des Langues Anciennes et Orientales,BABELAO
+2364,Archimède. Archéologie et histoire ancienne,
+2365,Biblica et Patristica Thoruniensia,
+2366,Atti del Sodalizio Glottologico Milanese,
+2367,Annuaire de la Société Française de Numismatique et d'Archéologie,
+2368,Musica Disciplina,
+2369,Archiv für Bibliographie,
+2370,Archivum Mentis,
+2371,Polygraphia,
+2372,Sciamus,
+2373,Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften zu Berlin,
+2374,Pylon,
+2376,Epigraphica Anatolica,
+2377,Manuscripta,
+2378,Cuneiform Digital Library Bulletin,
+2379,Baghdader Mitteilungen,
+2380,Oxoniensia,
+2381,Journal of Raman Spectroscopy,
+2382,Manuscript Cultures,
+2383,Archaeological and Anthropological Sciences,
+2384,Gazette du livre médiéval,
+2385,Heritage Science,
+2386,Chemické listy,
+2387,Ulster Journal of Archaeology,
+2388,Droit et Cultures. Revue internationale interdisciplinaire,
+2389,Journal of Greek Linguistics,
+2390,Journal of the General Union of Arab Archaeologists,
+2391,Amtliche Berichte aus den Königlichen Kunstsammlungen,
+2392,IWNW,
+2393,Classical Papers,
+2394,Eastern Theological Journal,
+2395,Vjesnik Arheološkog muzeja u Zagrebu,
+2396,Archivio Glottologico Italiano,
+2397,ISAW Papers,
+2398,Египет и сопредельные страны / Egypt and Neighbouring Countries,
+2399,Laografia / Λαογραφία : Δελτίον τῆς Ἑλληνικῆς Λαογραφικῆς Ἑταιρείας,
+2400,Philosophical Perspectives,
+2401,Historical Research,
+2402,Philosophical Papyri,
+2403,Göttingischer gelehrte Anzeigen,
+2404,Mediaeval Studies,
+2405,Forum Archaeologiae - Zeitschrift für klassische Archäologie,
+2406,History of Philosophy &amp; Logical Analysis,
+2407,Bollettino di Studi Latini,
+2408,Recueil de travaux relatifs à la philologie et à l'archéologie égyptiennes et assyriennes,
+2409,Revue de l'Égypte ancienne,
+2410,Revue égyptologique,
+2411,Studî della Scuola Papirologica,
+2412,Études de papyrologie,
+2413,Bollettino del Comitato per la preparazione dell'Edizione nazionale dei Classici greci e latini,BPEC
+2414,Bulletin of the United States Bureau of Plant Industry,
+2415,Sacris erudiri. Jaarboek voor Godsdienstwetenschappen,SEJG
+2416,Prace Archeologiczne,
+2417,Acta Belgica Historiae Medicinae,

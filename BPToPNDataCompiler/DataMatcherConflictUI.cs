@@ -536,7 +536,7 @@ public class DataMatcherConflictUI
                 entriesMatches[(int) Comparisons.InternetMatch], selectedRow == 5,
                 _editedChoices.GetValueOrDefault(5) ?? string.Empty);
 
-        if (entry.HasName || matchingEntry.HasName && ShouldCompareName)
+        if ((entry.HasName || matchingEntry.HasName) && ShouldCompareName)
             PrintWrappedRow(6, "Name", entry.Name, matchingEntry.Name, entriesMatches[(int) Comparisons.NameMatch],
                 selectedRow == 6, _editedChoices.GetValueOrDefault(6) ?? string.Empty);
 

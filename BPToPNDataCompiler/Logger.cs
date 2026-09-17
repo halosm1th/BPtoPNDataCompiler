@@ -14,6 +14,7 @@ public class Logger
 
     private readonly string _logDirectory;
     private readonly string _sessionFolder;
+    private readonly object _writeLock = new();
     private Dictionary<string, StreamWriter> _logWriters;
 
     /// <summary>
@@ -65,10 +66,14 @@ public class Logger
               Console.WriteLine(logMessage);
               Console.ForegroundColor = originalColor;
       */
-        // Write to file
-        if (_logWriters.ContainsKey(logType))
+        // Write to file. Entries can now come from multiple threads (parallel file/web loading),
+        // and StreamWriter isn't safe for concurrent writes, so serialize access here.
+        lock (_writeLock)
         {
-            _logWriters[logType].WriteLine(logMessage);
+            if (_logWriters.TryGetValue(logType, out var writer))
+            {
+                writer.WriteLine(logMessage);
+            }
         }
     }
 

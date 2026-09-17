@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using System.Xml;
 using BPtoPNDataCompiler;
 
@@ -8,17 +9,17 @@ public class XMLEntryGatherer
 {
     private static readonly Dictionary<string, Action<XmlElement, XMLDataEntry>> AttributeSetters = new()
     {
-        {"idno:pi", (node, entry) => entry.PNNumber = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"idno:bp", (node, entry) => entry.BPNumber = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:indexBis", (node, entry) => entry.IndexBis = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:index", (node, entry) => entry.Index = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:titre", (node, entry) => entry.Title = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:publication", (node, entry) => entry.Publication = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:cr", (node, entry) => entry.CR = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:nom", (node, entry) => entry.Name = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:resume", (node, entry) => entry.Resume = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:internet", (node, entry) => entry.Internet = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")},
-        {"seg:sbSeg", (node, entry) => entry.sbSeg = Regex.Replace(node.InnerText.Trim(), " {2, }", " ")}
+        {"idno:pi", (node, entry) => entry.PNNumber = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"idno:bp", (node, entry) => entry.BPNumber = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:indexBis", (node, entry) => entry.IndexBis = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:index", (node, entry) => entry.Index = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:titre", (node, entry) => entry.Title = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:publication", (node, entry) => entry.Publication = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:cr", (node, entry) => entry.CR = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:nom", (node, entry) => entry.Name = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:resume", (node, entry) => entry.Resume = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:internet", (node, entry) => entry.Internet = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")},
+        {"seg:sbSeg", (node, entry) => entry.sbSeg = Regex.Replace(node.InnerText.Trim(), @"\s{2,}", " ")}
     };
 
     public XMLEntryGatherer(string path, Logger? logger)
@@ -67,7 +68,7 @@ public class XMLEntryGatherer
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Ran inot an error processing file: {filePath}: {e}");
             Console.ResetColor();
-            logger.LogError($"Ran inot an error processing file: {filePath}.", e);
+            logger?.LogError($"Ran inot an error processing file: {filePath}.", e);
 
             return null;
         }
@@ -75,56 +76,37 @@ public class XMLEntryGatherer
 
     private void SetEntryAttributes(XmlElement node, XMLDataEntry entry)
     {
-        foreach (var key in AttributeSetters.Keys)
-        {
-            var parts = key.Split(':');
-            if (node.LocalName == parts[0] && node.OuterXml.Contains($"subtype=\"{parts[1]}\""))
-            {
-                AttributeSetters[key](node, entry);
-                break;
-            }
-            else if (parts[0] == "idno" && node.LocalName == "idno" && node.OuterXml.Contains($"type=\"{parts[1]}\""))
-            {
-                AttributeSetters[key](node, entry);
-                break;
-            }
-        }
-    }
+        // idno elements key on "type", seg elements key on "subtype"; reading the attribute directly
+        // and doing a single dictionary lookup avoids re-serializing the whole node (OuterXml) and
+        // scanning all 11 setters for every single element, which dominated load time on large Biblio sets.
+        var attributeValue = node.GetAttribute(node.LocalName == "idno" ? "type" : "subtype");
+        if (string.IsNullOrEmpty(attributeValue)) return;
 
-    private List<XMLDataEntry> GetEntriesFromFolder(string folder)
-    {
-        logger?.Log($"Getting entries from folder {folder}");
-        logger?.LogProcessingInfo($"Getting entries from folder {folder}");
-        var dataEntries = new List<XMLDataEntry>();
-        foreach (var file in Directory.GetFiles(folder).Where(x => Path.GetExtension(x) == ".xml"))
+        if (AttributeSetters.TryGetValue($"{node.LocalName}:{attributeValue}", out var setter))
         {
-            var entry = GetEntry(file);
-            //logger.LogProcessingInfo($"Gathered {entry.Title} from file {file}");
-            if (entry != null)
-                dataEntries.Add(entry);
+            setter(node, entry);
         }
-
-        return dataEntries;
     }
 
     public List<XMLDataEntry> GatherEntries()
     {
-        //logger.LogProcessingInfo("Gathering XMl Entries");
-        var entries = new List<XMLDataEntry>();
+        var entries = new ConcurrentBag<XMLDataEntry>();
         try
         {
-            foreach (var folder in Directory.GetDirectories(BiblioPath))
+            var allFiles = Directory.GetDirectories(BiblioPath)
+                .SelectMany(folder => Directory.GetFiles(folder).Where(x => Path.GetExtension(x) == ".xml"))
+                .ToList();
+
+            logger?.LogProcessingInfo($"Found {allFiles.Count} XML files to load, reading them in parallel.");
+            Console.WriteLine($"Found {allFiles.Count} XML files, loading in parallel...");
+
+            // Reading and parsing each PN biblio file is independent of every other one, so loading them
+            // in parallel lets this scale with available CPU cores/disk throughput instead of one-at-a-time.
+            Parallel.ForEach(allFiles, file =>
             {
-                logger?.LogProcessingInfo($"Adding XML files in {folder}");
-                logger?.Log("Adding XMl Files in {folder}");
-                Console.WriteLine($"adding files in : {folder}");
-                foreach (var entry in GetEntriesFromFolder(folder))
-                {
-                    //logger.Log($"Adding {entry.Title} from {folder} to entries");
-                    //logger.LogProcessingInfo($"Adding {entry.Title} from {folder} to entries");
-                    entries.Add(entry);
-                }
-            }
+                var entry = GetEntry(file);
+                if (entry != null) entries.Add(entry);
+            });
         }
         catch (Exception e)
         {
@@ -133,6 +115,6 @@ public class XMLEntryGatherer
         }
 
         logger?.LogProcessingInfo($"Gathered {entries.Count} XML entries for processing.");
-        return entries;
+        return entries.ToList();
     }
 }

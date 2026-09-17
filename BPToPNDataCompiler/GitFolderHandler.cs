@@ -29,46 +29,41 @@ public class GitFolderHandler
 
     private string ScanForGitDirectory()
     {
-        if (logger != null)
+        logger?.LogProcessingInfo("Scanning for git directors");
+        var currentDirectory = Directory.GetCurrentDirectory();
+        logger?.LogProcessingInfo($"Current directory: {currentDirectory}");
+        //If the current directory isn't the IDP data or biblio directory, throw an error
+        if (!currentDirectory.Contains(IDP_DATA_DATA) && !currentDirectory.Contains(BIBLIO))
         {
-            logger.LogProcessingInfo("Scanning for git directors");
-            var currentDirectory = Directory.GetCurrentDirectory();
-            logger.LogProcessingInfo($"Current directory: {currentDirectory}");
-            //If the current directory isn't the IDP data or biblio directory, throw an error
-            if (!currentDirectory.Contains(IDP_DATA_DATA) && !currentDirectory.Contains(BIBLIO))
+            logger?.LogProcessingInfo(
+                "Current path does not contain IDP_DATA folder or Biblio folder.\nChecking subdirectory folders");
+            //check if a subdirectory is actually the IDP directory, and if so, lets move to that.
+            //We can check the idp directory for the biblio directory in a bit
+            var avaiableDirs = Directory.GetDirectories(currentDirectory);
+            if (avaiableDirs.Any(x => x.Contains(IDP_DATA_DATA)))
             {
-                logger.LogProcessingInfo(
-                    "Current path does not contain IDP_DATA folder or Biblio folder.\nChecking subdirectory folders");
-                //check if a subdirectory is actually the IDP directory, and if so, lets move to that.
-                //We can check the idp directory for the biblio directory in a bit
-                var avaiableDirs = Directory.GetDirectories(currentDirectory);
-                if (avaiableDirs.Any(x => x.Contains(IDP_DATA_DATA)))
-                {
-                    logger.LogProcessingInfo("Found IDP_DATAchanging directory to that folder.");
-                    logger.Log("IDP-Data found, changing to that directory.");
-                    currentDirectory = avaiableDirs.First(x => x.Contains(IDP_DATA_DATA));
-                    Directory.SetCurrentDirectory(currentDirectory);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(
-                        $"idp.data directory has been found. Program working directory set to: {currentDirectory}");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
-                else
-                {
-                    logger.Log("Could not find IDP-data directory");
-                    logger.LogProcessingInfo("Could not find IDP-Data directory.");
-                    throw new DirectoryNotFoundException("Error cannot find the directory idp.data.\n " +
-                                                         "Please run the program either in the idp.data directory, " +
-                                                         "or in the parent directory of idp.data.\n" +
-                                                         "If you do not have the idp.data, get it from: https://github.com/papyri/idp.data " +
-                                                         $"The current directory is: {currentDirectory}.");
-                }
+                logger?.LogProcessingInfo("Found IDP_DATAchanging directory to that folder.");
+                logger?.Log("IDP-Data found, changing to that directory.");
+                currentDirectory = avaiableDirs.First(x => x.Contains(IDP_DATA_DATA));
+                Directory.SetCurrentDirectory(currentDirectory);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(
+                    $"idp.data directory has been found. Program working directory set to: {currentDirectory}");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
-
-            return currentDirectory;
+            else
+            {
+                logger?.Log("Could not find IDP-data directory");
+                logger?.LogProcessingInfo("Could not find IDP-Data directory.");
+                throw new DirectoryNotFoundException("Error cannot find the directory idp.data.\n " +
+                                                     "Please run the program either in the idp.data directory, " +
+                                                     "or in the parent directory of idp.data.\n" +
+                                                     "If you do not have the idp.data, get it from: https://github.com/papyri/idp.data " +
+                                                     $"The current directory is: {currentDirectory}.");
+            }
         }
 
-        return "";
+        return currentDirectory;
     }
 
     private string BiblioDirectoryCheck(string currentDirectory, string oldDir)

@@ -6,6 +6,9 @@ namespace DefaultNamespace;
 
 public class BPEntryGatherer
 {
+    // How many times to retry a single BP page request after a network/TLS-level failure
+    // (e.g. transient "SSL connection could not be established" errors) before giving up on it.
+    private const int MaxNetworkRetries = 3;
     private int EndYear;
 
     private int ENTRY_END = 9999;
@@ -24,28 +27,61 @@ public class BPEntryGatherer
 
     Logger? logger { get; }
 
+    /// <summary>
+    /// Loads a page, retrying on transient network/TLS failures. If every attempt fails, the last
+    /// exception is allowed to propagate - callers use that to tell "we couldn't reach the server"
+    /// apart from "the server answered and there's no entry here", since those mean very different
+    /// things for deciding whether we've reached the end of a year's entries.
+    /// </summary>
+    private HtmlDocument LoadWithRetry(string url)
+    {
+        for (var attempt = 1; attempt <= MaxNetworkRetries; attempt++)
+        {
+            try
+            {
+                return new HtmlWeb().Load(url);
+            }
+            catch (Exception e) when (attempt < MaxNetworkRetries)
+            {
+                logger?.LogProcessingInfo(
+                    $"Attempt {attempt}/{MaxNetworkRetries} to load {url} failed ({e.GetType().Name}: {e.Message}); retrying...");
+                Thread.Sleep(750 * attempt);
+            }
+        }
+
+        // Unreachable: the final attempt above either returns or its exception (uncaught, since the
+        // `when` guard is false on the last iteration) propagates out of the method.
+        throw new InvalidOperationException("Unreachable");
+    }
+
+    /// <summary>
+    /// Fetches and parses a single BP entry. Throws if the page could not be retrieved at all after
+    /// retries (a network/TLS problem - the entry's existence is unknown); returns null only when the
+    /// page loaded successfully but has no "scheda" table (a confirmed "this entry doesn't exist").
+    /// </summary>
     private BPDataEntry? GetEntry(int currentYear, int currentIndex)
     {
+        logger?.LogProcessingInfo("Getting BP entry from BP website.");
+        BPDataEntry? entry = null;
+        var yearText = Convert.ToString(currentYear);
+        var indexText = Convert.ToString(currentIndex);
+        if (indexText.Length < 4)
+        {
+            for (int i = indexText.Length; i < 4; i++)
+            {
+                indexText = "0" + indexText;
+            }
+        }
+
+        // HTTPS to bibpap.be currently fails the TLS handshake outright (confirmed independent of this
+        // app - reproduces with plain PowerShell requests and in a real browser, "SSL received a record
+        // that exceeded the maximum permissible length"), while the same page loads fine over plain
+        // HTTP. Using HTTP here until bibpap.be's TLS setup is fixed on their end.
+        var URL = $"http://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
+        var htmlDoc = LoadWithRetry(URL);
+
         try
         {
-            logger?.LogProcessingInfo("Getting BP entry from BP website.");
-            BPDataEntry? entry = null;
-            var yearText = Convert.ToString(currentYear);
-            var indexText = Convert.ToString(currentIndex);
-            if (indexText.Length < 4)
-            {
-                for (int i = indexText.Length; i < 4; i++)
-                {
-                    indexText = "0" + indexText;
-                }
-            }
-
-            var URL = $"https://bibpap.be/BP_enl/?fs=2&n={yearText}-{indexText}";
-            //logger.LogProcessingInfo($"URl for BP Request: {URL}");
-            var web = new HtmlWeb();
-            var htmlDoc = web.Load(URL);
-            //logger.LogProcessingInfo("Loaded URL from web, parsing HTML.");
-
             var table = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='scheda']");
 
             if (table != null)
@@ -149,6 +185,10 @@ public class BPEntryGatherer
 
     private List<BPDataEntry> GetEntriesForYear(int currentYear, string saveLocation)
     {
+        // NOTE: this was briefly parallelized (a few concurrent requests per batch) to speed up
+        // scraping, but the exact same TLS failure (see LoadWithRetry) reproduced with plain
+        // sequential requests too, so concurrency wasn't the cause - reverted anyway since a batch
+        // failing together could still have caused a spurious "end of year" stop.
         logger?.LogProcessingInfo(
             $"Getting entries for the year {currentYear}, starting at {ENTRY_START} to {ENTRY_END}");
         bool hasFailed = false;
@@ -160,13 +200,29 @@ public class BPEntryGatherer
             Console.WriteLine($"Gathering entry: {currentYear}-{entryIndex}");
             //logger.LogProcessingInfo($"Gathering Entry: {currentYear}-{entryIndex}");
             BPDataEntry? entry = null;
+            var isNetworkFailure = false;
             try
             {
                 entry = GetEntry(currentYear, entryIndex);
             }
             catch (Exception e)
             {
-                logger?.LogError($"Could not gather entry {currentYear}-{entryIndex}", e);
+                // GetEntry only throws when the page couldn't be retrieved at all after retries -
+                // that tells us nothing about whether this entry exists, so it must NOT be treated
+                // the same as a confirmed "no entry here" for the end-of-year detection below.
+                isNetworkFailure = true;
+                logger?.LogError(
+                    $"Could not reach the server for entry {currentYear}-{entryIndex} after retries; skipping it without counting it toward end-of-year detection.",
+                    e);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(
+                    $"Entry {currentYear}-{entryIndex} could not be verified (network/SSL error, see log) - not treated as proof the year is over. Consider re-checking this number.");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+
+            if (isNetworkFailure)
+            {
+                continue;
             }
 
             if (entry == null)

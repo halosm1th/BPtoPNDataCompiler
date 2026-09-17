@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using DefaultNamespace;
 
 namespace BPtoPNDataCompiler;
@@ -67,33 +68,178 @@ public class CRReviewData
     public string PageStart { get; } = "[NONE]";
     public string PageEnd { get; } = "[NONE]";
 
+
+    private static Dictionary<string, string> _LongJournalTitles { get; set; }
+    private static Dictionary<string, string> _ShortJournalTitles { get; set; }
+
     private string GetJournalID(string journal)
     {
+        logger.LogProcessingInfo($"Getting journal ID for: {journal} in {CRData}");
         try
         {
-            var file = File.ReadAllLines(startingPath + "/PN_Journal_IDs.csv");
-            var listOFJournals = new Dictionary<string, string>();
-            foreach (var line in file)
+            if (journal.Contains("-") || journal.Contains("p.") || string.IsNullOrEmpty(journal))
             {
-                var text = line.Split(',');
-                if (!listOFJournals.ContainsKey(text[0])) listOFJournals.Add(text[0], text[1]);
+                Console.WriteLine($"There was an error parsing the journal for: {CRData}");
+                logger?.LogProcessingInfo($"\tThere was an error parsing the journal for: {CRData}");
+            }
+            else
+            {
+                if (journal == "")
+                {
+                    Console.WriteLine("no journal given");
+                    logger?.LogProcessingInfo("\tno journal given");
+                }
+
+                var listOFJournals = GetJounrals();
+
+                try
+                {
+                    if (journal != " " && !string.IsNullOrEmpty(journal))
+                    {
+                        if (journal.Contains(","))
+                        {
+                            journal = journal.Replace(",", "");
+                        }
+
+                        var id = "";
+                        var checkText = " 3e s.";
+
+
+                        if (journal.Contains(" 3e s.")) id = GetJournalIDWithCheckText(" 3e s.", journal);
+                        else if (journal.Contains(" 4e s.")) id = GetJournalIDWithCheckText(" 4e s.", journal);
+                        else if (journal.Contains("N.S.")) id = GetJournalIDWithCheckText("N.S.", journal);
+                        else
+                        {
+                            id = JournalInJournalList(journal);
+                            if (string.IsNullOrEmpty(id))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine($"ERROR Could not find journal: {journal}");
+                                logger?.Log($"ERROR Could not find journal: {journal}");
+                                Console.ResetColor();
+                            }
+                        }
+
+
+                        logger.LogProcessingInfo($"\tFound ID {id}.");
+                        return id;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No journal name found?");
+                        logger?.LogProcessingInfo("\tNo journal name found?");
+                        return "-1";
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"had an error parsing journal: {journal}: {e}");
+                    Console.ResetColor();
+                    logger?.LogError($"had an error parsing journal: {journal}", e);
+                    return "-1";
+                }
             }
 
-            var id = listOFJournals[journal];
-
-            return id;
+            return "-1";
         }
         catch (Exception e)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Could not find a journal to match {journal}. Threw error: {e}");
-            logger.LogProcessingInfo($"Could not find a journal to match {journal}. Threw error: {e}");
+            logger?.LogProcessingInfo($"\tCould not find a journal to match {journal}. Threw error: {e}");
             Console.ResetColor();
             return "-1";
         }
 
         throw new NotImplementedException();
     }
+
+    private string? JournalInJournalList(string journal)
+    {
+        if (_ShortJournalTitles.Any(x => x.Key == journal))
+        {
+            return _ShortJournalTitles[journal];
+        }
+
+        if (_LongJournalTitles.Any(x => x.Key == journal))
+        {
+            return _LongJournalTitles[journal];
+        }
+
+        return null;
+    }
+
+    private string? GetJournalIDWithCheckText(string checkText, string journal)
+    {
+        if (journal.Contains(checkText))
+        {
+            var jTitle = JournalInJournalList(journal);
+            if (jTitle != null) return jTitle;
+
+
+            var shortName = journal.Replace(checkText, "").Trim();
+            return JournalInJournalList(shortName);
+        }
+
+        return null;
+    }
+
+    private (Dictionary<string, string>, Dictionary<string, string>) GetJounrals()
+    {
+        if (_ShortJournalTitles == null || _ShortJournalTitles.Count == 0)
+        {
+            var file = File.ReadAllLines(Directory.GetCurrentDirectory() + "/PN_Journal_IDs.csv");
+            var listOFShortJournals = new Dictionary<string, string>();
+            var listOFLongJournals = new Dictionary<string, string>();
+            foreach (var line in file)
+            {
+                var text = SplitCsvLine(line);
+                if (text.Count < 3) continue;
+
+                // Use indexer assignment (not Add) since some short/long titles repeat across rows.
+                listOFShortJournals[text[2]] = text[2];
+                listOFLongJournals[text[1]] = text[1];
+            }
+
+            _ShortJournalTitles = listOFShortJournals;
+            _LongJournalTitles = listOFLongJournals;
+        }
+
+        return (_ShortJournalTitles, _LongJournalTitles);
+    }
+
+    /// <summary>
+    /// Splits a CSV line on commas, respecting double-quoted fields that may contain commas of their own
+    /// (several long journal titles in PN_Journal_IDs.csv do, e.g. "Atti della Accademia ..., Lettere ed Arti di Napoli").
+    /// </summary>
+    private static List<string> SplitCsvLine(string line)
+    {
+        var fields = new List<string>();
+        var current = new StringBuilder();
+        var inQuotes = false;
+
+        foreach (var c in line)
+        {
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                fields.Add(current.ToString());
+                current.Clear();
+            }
+            else
+            {
+                current.Append(c);
+            }
+        }
+
+        fields.Add(current.ToString());
+        return fields;
+    }
+
 
     public override string ToString()
     {

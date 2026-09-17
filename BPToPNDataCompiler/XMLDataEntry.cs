@@ -171,9 +171,9 @@ public class XMLDataEntry : BPDataEntry
         matches[((int) Comparisons.bpNumMatch)] =
             (entry.HasBPNum && HasBPNum) && (entry.BPNumber == BPNumber);
         matches[((int) Comparisons.crMatch)] = (entry.HasCR && HasCR) && (entry.CR == CR);
-        matches[((int) Comparisons.indexMatch)] = (entry.HasBPNum && HasIndex) && (entry.Index == Index);
-        matches[((int) Comparisons.indexBisMatch)] = (entry.HasBPNum && HasIndexBis) && (entry.IndexBis == IndexBis);
-        matches[((int) Comparisons.internetMatch)] = (entry.HasBPNum && HasInternet) && (entry.Internet == Internet);
+        matches[((int) Comparisons.indexMatch)] = (entry.HasIndex && HasIndex) && (entry.Index == Index);
+        matches[((int) Comparisons.indexBisMatch)] = (entry.HasIndexBis && HasIndexBis) && (entry.IndexBis == IndexBis);
+        matches[((int) Comparisons.internetMatch)] = (entry.HasInternet && HasInternet) && (entry.Internet == Internet);
 
         if (shouldCompareNames)
             matches[((int) Comparisons.nameMatch)] = (entry.HasBPNum && HasName) && (entry.Name == Name);
